@@ -16,7 +16,7 @@ public class BasicGame implements GameLoop {
     }
 
     @Override
-    public void loop() { //fhhdfhdhfdfdhtestetstetstetstedjgjdnfj
+    public void loop() {
     }
 
     @Override
