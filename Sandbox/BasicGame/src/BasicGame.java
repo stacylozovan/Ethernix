@@ -16,7 +16,7 @@ public class BasicGame implements GameLoop {
     }
 
     @Override
-    public void loop() { //skmskvmskv
+    public void loop() { //Naufal the goat
     }
 
     @Override
