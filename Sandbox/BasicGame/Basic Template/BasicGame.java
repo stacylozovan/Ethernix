@@ -10,9 +10,13 @@ public class BasicGame implements GameLoop {
         SaxionApp.startGameLoop(new BasicGame(), 1000, 1000, 40);
     }
 
+    mainPlayer player;
+
     @Override
     public void init() {
-
+        player = new mainPlayer();
+        player.x = 100;
+        player.y = 100;
     }
 
     @Override
