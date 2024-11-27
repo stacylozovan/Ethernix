@@ -27,7 +27,17 @@ public class BasicGame implements GameLoop {
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
-
+        if (keyboardEvent.isKeyPressed()) {
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_UP || keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
+                player.y = player.y - 4; // UP
+            } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_DOWN || keyboardEvent.getKeyCode() == KeyboardEvent.VK_S) {
+                player.y = player.y + 4; // DOWN
+            } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT || keyboardEvent.getKeyCode() == KeyboardEvent.VK_A) {
+                player.x = player.x - 4; // LEFT
+            } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT || keyboardEvent.getKeyCode() == KeyboardEvent.VK_D) {
+                player.x = player.x + 4; // RIGHT
+            }
+        }
     }
 
     @Override
