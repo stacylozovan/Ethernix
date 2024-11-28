@@ -1,9 +1,10 @@
 <component name="libraryTable">
   <library name="SaxionApp">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Sandbox/resources/SaxionApp.jar!/" />
+      <root url="file://$PROJECT_DIR$/resources" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/resources" recursive="false" />
   </library>
 </component>

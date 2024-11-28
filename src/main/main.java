@@ -4,10 +4,10 @@ import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
-public class BasicGame implements GameLoop {
+public class main implements GameLoop {
 
     public static void main(String[] args) {
-        SaxionApp.startGameLoop(new BasicGame(), 1000, 1000, 40);
+        SaxionApp.startGameLoop(new main(), 1000, 1000, 40);
     }
 
     mainPlayer player;
