@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d535061-023f-4e3c-9770-1d5110301765" name="Changes" comment="Initial commitxcvs">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sandbox/BasicGame/src/BasicGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Sandbox/BasicGame/Basic Template/BasicGame.java" afterDir="false" />
-    </list>
+    <list default="true" id="2d535061-023f-4e3c-9770-1d5110301765" name="Changes" comment="refactor organized folders structure" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,10 +14,16 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="ET52" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -50,25 +52,39 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.BasicGame.executor": "Run",
+    "Application.main.executor": "Run",
+    "JAR Application.SaxionApp.jar.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "ET80",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/GerSer/IdeaProjects/Ethernix",
+    "last_opened_file_path": "C:/Users/GerSer/IdeaProjects/Ethernix/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src" />
+      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix" />
+      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src\resources" />
+      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\.idea" />
       <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\Sandbox\BasicGame\entity" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -76,6 +92,10 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration name="SaxionApp.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/resources/SaxionApp.jar" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="Ethernix" />
       <method v="2">
@@ -89,6 +109,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JAR Application.SaxionApp.jar" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -111,7 +136,52 @@
       <workItem from="1732629682998" duration="235000" />
       <workItem from="1732630077742" duration="88000" />
       <workItem from="1732630244896" duration="439000" />
+      <workItem from="1732630720291" duration="1264000" />
+      <workItem from="1732701195719" duration="15000" />
+      <workItem from="1732701995635" duration="2432000" />
+      <workItem from="1732786533583" duration="4129000" />
+      <workItem from="1732791635074" duration="74000" />
+      <workItem from="1732791867638" duration="123000" />
+      <workItem from="1732792007010" duration="191000" />
+      <workItem from="1732792235351" duration="19000" />
+      <workItem from="1732792480613" duration="45000" />
+      <workItem from="1732792570207" duration="109000" />
+      <workItem from="1732792689385" duration="104000" />
+      <workItem from="1732792862072" duration="413000" />
     </task>
+    <task id="LOCAL-00001" summary="Initial commitxcvs">
+      <option name="closed" value="true" />
+      <created>1732630923654</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1732630923654</updated>
+    </task>
+    <task id="LOCAL-00002" summary="I created classes for main,monster,object">
+      <option name="closed" value="true" />
+      <created>1732630958272</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1732630958272</updated>
+    </task>
+    <task id="LOCAL-00003" summary="I created classes for main,monster,object plus">
+      <option name="closed" value="true" />
+      <created>1732631004907</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1732631004907</updated>
+    </task>
+    <task id="LOCAL-00004" summary="refactor organized folders structure">
+      <option name="closed" value="true" />
+      <created>1732793204770</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1732793204770</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -119,6 +189,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commitxcvs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commitxcvs" />
+    <MESSAGE value="I created classes for main,monster,object" />
+    <MESSAGE value="I created classes for main,monster,object plus" />
+    <MESSAGE value="refactor organized folders structure" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor organized folders structure" />
   </component>
 </project>
