@@ -11,6 +11,7 @@ public class main implements GameLoop {
     }
 
     mainPlayer player;
+    boolean[] keys = new boolean[256]; // for tracking the keys
 
     @Override
     public void init() {
@@ -23,26 +24,40 @@ public class main implements GameLoop {
     public void loop() { //Naufal the goat
         SaxionApp.clear();
         SaxionApp.drawText(player.character, player.x, player.y, 70); // This will be changed in the future to the character image.
+        handleMovement();
     }
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
-        if (keyboardEvent.isKeyPressed()) {
-            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_UP || keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
-                player.y = player.y - 4; // UP
-            } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_DOWN || keyboardEvent.getKeyCode() == KeyboardEvent.VK_S) {
-                player.y = player.y + 4; // DOWN
-            } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT || keyboardEvent.getKeyCode() == KeyboardEvent.VK_A) {
-                player.x = player.x - 4; // LEFT
-            } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT || keyboardEvent.getKeyCode() == KeyboardEvent.VK_D) {
-                player.x = player.x + 4; // RIGHT
-            }
+        int keyCode = keyboardEvent.getKeyCode();
+
+        if (keyCode >= 0 && keyCode < keys.length) {
+            keys[keyCode] = keyboardEvent.isKeyPressed(); // checks what key is pressed and assigns it to the boolean variable
         }
     }
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
 
+    }
+
+    public void handleMovement() {
+
+        if (keys[KeyboardEvent.VK_UP] || keys[KeyboardEvent.VK_W]) {
+            player.y -= 10; // UP
+        }
+
+        if (keys[KeyboardEvent.VK_DOWN] || keys[KeyboardEvent.VK_S]) {
+            player.y += 10; // DOWN
+        }
+
+        if (keys[KeyboardEvent.VK_LEFT] || keys[KeyboardEvent.VK_A]) {
+            player.x -= 10; // LEFT
+        }
+
+        if (keys[KeyboardEvent.VK_RIGHT] || keys[KeyboardEvent.VK_D]) {
+            player.x += 10; // RIGHT
+        }
     }
 }
 
