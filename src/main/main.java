@@ -10,6 +10,9 @@ public class main implements GameLoop {
         SaxionApp.startGameLoop(new main(), 1000, 1000, 40);
     }
 
+    public static final int TILE_SIZE = 64;
+//    public static final int GRID_WIDTH = 32;
+//    public static final int GRID_HEIGHT = 32;
     mainPlayer player;
 
     @Override
