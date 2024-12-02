@@ -83,7 +83,12 @@ public class main implements GameLoop {
                 int x = col * TILE_SIZE;
                 int y = row * TILE_SIZE;
 
+                int tileType = TILE_MAP[row][col];
 
+                String tileImage = TILE_IMAGES[tileType];
 
-
-
+                SaxionApp.drawImage(tileImage, x, y, TILE_SIZE, TILE_SIZE);
+            }
+        }
+    }
+}
