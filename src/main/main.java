@@ -10,6 +10,33 @@ public class main implements GameLoop {
         SaxionApp.startGameLoop(new main(), 1000, 1000, 40);
     }
 
+
+
+    public static final int TILE_SIZE = 64;
+//    public static final int GRID_WIDTH = 32;
+//    public static final int GRID_HEIGHT = 32;
+
+    public static final String[] TILE_IMAGES = {
+            "src/object/tiles/grass.png",
+            "src/object/tiles/tree.png",
+            "src/object/tiles/wall.png",
+            "src/object/tiles/sand.png",
+    };
+
+// This must be change later for the custom map
+    public static final int[][] TILE_MAP = {
+            {0, 0, 1, 1, 1, 0, 0, 0, 3, 3, 1},
+            {0, 0, 1, 2, 2, 0, 0, 3, 3, 3},
+            {1, 1, 2, 2, 2, 1, 1, 3, 3, 0},
+            {2, 2, 0, 0, 2, 1, 1, 0, 3, 0},
+            {2, 1, 1, 0, 0, 3, 3, 0, 0, 0},
+            {0, 0, 1, 1, 3, 3, 0, 0, 0, 0},
+            {0, 3, 3, 1, 1, 0, 0, 0, 2, 2},
+            {0, 0, 2, 0, 0, 1, 1, 0, 3, 2},
+            {3, 2, 0, 1, 1, 3, 3, 0, 0, 0},
+            {3, 0, 0, 0, 2, 0, 3, 3, 2, 2}
+    };
+
     mainPlayer player;
     boolean[] keys = new boolean[256]; // for tracking the keys
 
@@ -23,6 +50,10 @@ public class main implements GameLoop {
     @Override
     public void loop() {
         SaxionApp.clear();
+
+        drawBackground();
+
+        // Draw the player
         SaxionApp.drawText(player.character, player.x, player.y, 70); // This will be changed in the future to the character image.
         handleMovement();
     }
@@ -59,10 +90,19 @@ public class main implements GameLoop {
             player.x += 10; // RIGHT
         }
     }
+
+    public void drawBackground() {
+        for (int row = 0; row < TILE_MAP.length; row++) {
+            for (int col = 0; col < TILE_MAP[row].length; col++) {
+                int x = col * TILE_SIZE;
+                int y = row * TILE_SIZE;
+
+                int tileType = TILE_MAP[row][col];
+
+                String tileImage = TILE_IMAGES[tileType];
+
+                SaxionApp.drawImage(tileImage, x, y, TILE_SIZE, TILE_SIZE);
+            }
+        }
+    }
 }
-
-
-
-
-
-
