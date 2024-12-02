@@ -10,9 +10,33 @@ public class main implements GameLoop {
         SaxionApp.startGameLoop(new main(), 1000, 1000, 40);
     }
 
+
+
     public static final int TILE_SIZE = 64;
 //    public static final int GRID_WIDTH = 32;
 //    public static final int GRID_HEIGHT = 32;
+
+    public static final String[] TILE_IMAGES = {
+            "src/object/tiles/grass.png",
+            "src/object/tiles/tree.png",
+            "src/object/tiles/wall.png",
+            "src/object/tiles/sand.png",
+    };
+
+
+    public static final int[][] TILE_MAP = {
+            {0, 0, 1, 1, 1, 0, 0, 0, 3, 3, 1},
+            {0, 0, 1, 2, 2, 0, 0, 3, 3, 3},
+            {1, 1, 2, 2, 2, 1, 1, 3, 3, 0},
+            {2, 2, 0, 0, 2, 1, 1, 0, 3, 0},
+            {2, 1, 1, 0, 0, 3, 3, 0, 0, 0},
+            {0, 0, 1, 1, 3, 3, 0, 0, 0, 0},
+            {0, 3, 3, 1, 1, 0, 0, 0, 2, 2},
+            {0, 0, 2, 0, 0, 1, 1, 0, 3, 2},
+            {3, 2, 0, 1, 1, 3, 3, 0, 0, 0},
+            {3, 0, 0, 0, 2, 0, 3, 3, 2, 2}
+    };
+
     mainPlayer player;
 
     @Override
