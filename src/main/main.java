@@ -75,7 +75,6 @@ public class main implements GameLoop {
     public void mouseEvent(MouseEvent mouseEvent) {
 
     }
-}
 
     public void drawBackground() {
         for (int row = 0; row < TILE_MAP.length; row++) {
