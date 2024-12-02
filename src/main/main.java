@@ -77,6 +77,11 @@ public class main implements GameLoop {
     }
 }
 
+    public void drawBackground() {
+        for (int row = 0; row < TILE_MAP.length; row++) {
+            for (int col = 0; col < TILE_MAP[row].length; col++) {
+                int x = col * TILE_SIZE;
+                int y = row * TILE_SIZE;
 
 
 
