@@ -21,7 +21,7 @@ public class main implements GameLoop {
     }
 
     @Override
-    public void loop() { //Naufal the goat
+    public void loop() {
         SaxionApp.clear();
         SaxionApp.drawText(player.character, player.x, player.y, 70); // This will be changed in the future to the character image.
         handleMovement();
