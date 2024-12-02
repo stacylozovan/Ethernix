@@ -23,7 +23,7 @@ public class main implements GameLoop {
             "src/object/tiles/sand.png",
     };
 
-
+// This must be change later for the custom map
     public static final int[][] TILE_MAP = {
             {0, 0, 1, 1, 1, 0, 0, 0, 3, 3, 1},
             {0, 0, 1, 2, 2, 0, 0, 3, 3, 3},
