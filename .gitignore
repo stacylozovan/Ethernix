@@ -22,6 +22,9 @@ target/
 *.ear
 *.jar
 
+# EXCEPTION: Do not ignore SaxionApp.jar
+!resources/SaxionApp.jar
+
 # Ignore Maven and Gradle files
 *.pom
 *.mvn/
