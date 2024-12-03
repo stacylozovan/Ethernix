@@ -1,5 +1,6 @@
 # Ignore system files
 .DS_Store
+__MACOSX/
 Thumbs.db
 
 # Ignore IDE folders
