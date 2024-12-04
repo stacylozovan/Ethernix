@@ -5,8 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d535061-023f-4e3c-9770-1d5110301765" name="Changes" comment="Deleted old SaxionApp useless files">
+      <change afterPath="$PROJECT_DIR$/src/entity/Entity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/entity/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sandbox.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Sandbox.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/OBJ_for_world.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/OBJ_for_world.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/itachi_boss.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/itachi_boss.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/mainPlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/mainPlayer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/npc.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/tile/Map.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/tile/Map.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/tile/Tile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/tile/Tile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entity/npc.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +28,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -61,7 +73,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "ET80",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/naufa/IdeaProjects/Ethernix/resources/._SaxionApp.jar",
@@ -70,7 +82,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
@@ -84,11 +96,11 @@
       <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/reso/player" />
+      <recent name="$PROJECT_DIR$/src/res/player" />
+      <recent name="$PROJECT_DIR$/src/reso" />
       <recent name="C:\Users\naufa\IdeaProjects\Ethernix\resources" />
       <recent name="C:\Users\naufa\IdeaProjects\Ethernix" />
-      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src" />
-      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix" />
-      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src\resources" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
@@ -122,8 +134,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
       </set>
     </attachedChunks>
   </component>
@@ -152,6 +164,7 @@
       <workItem from="1732792570207" duration="109000" />
       <workItem from="1732792689385" duration="104000" />
       <workItem from="1732792862072" duration="126000" />
+      <workItem from="1733308459285" duration="4436000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commitxcvs">
       <option name="closed" value="true" />
