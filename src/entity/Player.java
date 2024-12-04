@@ -21,21 +21,22 @@ public class Player extends entity.Entity {
 
     public void getPlayerImage() {
             down1 = "src/res/player/naruto_down_1.png";
-//            down2 = "/player/naruto_down_2.png";
-//            down3 = "/player/naruto_down_3.png";
-//            down4 = "/player/naruto_down_4.png";
-//            down5 = "/player/naruto_down_5.png";
-//            down6 = "/player/naruto_down_6.png";
-//            down7 = "/player/naruto_down_7.png";
-//            down8 = "/player/naruto_down_8.png";
-//            down9 = "/player/naruto_down_9.png";
-//            down10 = "/player/naruto_down_10.png";
-//            down11 = "/player/naruto_down_11.png";
-//            down12 = "/player/naruto_down_12.png";
-//            down13 = "/player/naruto_down_13.png";
-//            down14 = "/player/naruto_down_14.png";
-//            down15 = "/player/naruto_down_15.png";
-//            down16 = "/player/naruto_down_16.png";
+            down2 = "src/res/player/naruto_down_2.png";
+            down3 = "src/res/player/naruto_down_3.png";
+            down4 = "src/res/player/naruto_down_4.png";
+            down5 = "src/res/player/naruto_down_5.png";
+            down6 = "src/res/player/naruto_down_6.png";
+            down7 = "src/res/player/naruto_down_7.png";
+            down8 = "src/res/player/naruto_down_8.png";
+            down9 = "src/res/player/naruto_down_9.png";
+            down10 = "src/res/player/naruto_down_10.png";
+            down11 = "src/res/player/naruto_down_11.png";
+            down12 = "src/res/player/naruto_down_12.png";
+            down13 = "src/res/player/naruto_down_13.png";
+            down14 = "src/res/player/naruto_down_14.png";
+            down15 = "src/res/player/naruto_down_15.png";
+            down16 = "src/res/player/naruto_down_16.png";
+
             right1 = "src/res/player/naruto_right_1.png";
             left1 = "src/res/player/naruto_left_1.png";
     }
@@ -57,6 +58,9 @@ public class Player extends entity.Entity {
             direction = "right";
             this.x += speed;
         }
+
+        spriteCounter++;
+        if()
     }
 
     public void draw() {
@@ -66,7 +70,7 @@ public class Player extends entity.Entity {
                 image = down1;
                 break;
             case "down":
-                image = down1;
+                image = setImageDown(spriteNum);
                 break;
             case "left":
                 image = left1;
@@ -76,6 +80,43 @@ public class Player extends entity.Entity {
                 break;
         }
         SaxionApp.drawImage(image, x, y, 36, 36);
+    }
+
+    private String setImageDown(int spriteNum) {
+        switch (spriteNum) {
+            case 1:
+                return down1;
+            case 2:
+                return down2;
+            case 3:
+                return down3;
+            case 4:
+                return down4;
+            case 5:
+                return down5;
+            case 6:
+                return down6;
+            case 7:
+                return down7;
+            case 8:
+                return down8;
+            case 9:
+                return down9;
+            case 10:
+                return down10;
+            case 11:
+                return down11;
+            case 12:
+                return down12;
+            case 13:
+                return down13;
+            case 14:
+                return down14;
+            case 15:
+                return down15;
+            case 16:
+                return down16;
+        }
     }
 }
 
