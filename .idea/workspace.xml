@@ -4,9 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d535061-023f-4e3c-9770-1d5110301765" name="Changes" comment="Deleted old SaxionApp useless files">
+    <list default="true" id="2d535061-023f-4e3c-9770-1d5110301765" name="Changes" comment="Initial commitxcvs">
+      <change afterPath="$PROJECT_DIR$/src/main/character/gojo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/character/itachi.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/itachi_boss.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/itachi_boss.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/mainPlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/mainPlayer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/npc.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/npc.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/tile/Map.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/tile/Map.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/tile/Tile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/tile/Tile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/boss/itachi_boss.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/boss/itachi_boss.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/mainPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/mainPlayer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +35,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="ET80" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -35,12 +46,12 @@
     &quot;assignee&quot;: &quot;NaufalS9&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/stacylozovan/Ethernix.git&quot;,
-    &quot;accountId&quot;: &quot;b24d5886-dde9-42f7-a6ba-545cdecd0fd5&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/stacylozovan/Ethernix.git",
+    "accountId": "00799885-956b-4883-b1e8-78bbb436a2e8"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -61,10 +72,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "ET53",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/naufa/IdeaProjects/Ethernix/resources/._SaxionApp.jar",
+    "last_opened_file_path": "C:/Users/GerSer/IdeaProjects/Ethernix/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -84,11 +95,11 @@
       <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\naufa\IdeaProjects\Ethernix\resources" />
-      <recent name="C:\Users\naufa\IdeaProjects\Ethernix" />
+      <recent name="C:\Users\stacy\IdeaProjects\Ethernix\src\main\character" />
       <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src" />
       <recent name="C:\Users\GerSer\IdeaProjects\Ethernix" />
       <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\src\resources" />
+      <recent name="C:\Users\GerSer\IdeaProjects\Ethernix\.idea" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
@@ -114,7 +125,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JAR Application.SaxionApp.jar" />
         <item itemvalue="JAR Application.SaxionApp.jar" />
       </list>
     </recent_temporary>
@@ -152,6 +162,7 @@
       <workItem from="1732792570207" duration="109000" />
       <workItem from="1732792689385" duration="104000" />
       <workItem from="1732792862072" duration="126000" />
+      <workItem from="1733303764101" duration="4784000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commitxcvs">
       <option name="closed" value="true" />
@@ -177,23 +188,7 @@
       <option name="project" value="LOCAL" />
       <updated>1732631004907</updated>
     </task>
-    <task id="LOCAL-00004" summary="Added SaxionApp.jar">
-      <option name="closed" value="true" />
-      <created>1732809066647</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1732809066647</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Deleted old SaxionApp useless files">
-      <option name="closed" value="true" />
-      <created>1732809104488</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1732809104488</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,8 +198,6 @@
     <MESSAGE value="Initial commitxcvs" />
     <MESSAGE value="I created classes for main,monster,object" />
     <MESSAGE value="I created classes for main,monster,object plus" />
-    <MESSAGE value="Added SaxionApp.jar" />
-    <MESSAGE value="Deleted old SaxionApp useless files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted old SaxionApp useless files" />
+    <option name="LAST_COMMIT_MESSAGE" value="I created classes for main,monster,object plus" />
   </component>
 </project>
