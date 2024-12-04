@@ -1,0 +1,40 @@
+# Ignore system files
+.DS_Store
+__MACOSX/
+Thumbs.db
+
+# Ignore IDE folders
+.idea/
+*.iml
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore build files
+bin/
+build/
+target/
+
+# Ignore temporary settings and caches
+*.class
+*.war
+*.ear
+*.jar
+
+# EXCEPTION: Do not ignore SaxionApp.jar
+!resources/SaxionApp.jar
+
+# Ignore Maven and Gradle files
+*.pom
+*.mvn/
+.gradle/
+.gradle-cache/
+
+# Ignore Eclipse configurations
+.classpath
+.project
+.settings/
+
+# Ignore downloaded libraries
+lib/
