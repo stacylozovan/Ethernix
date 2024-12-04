@@ -1,13 +1,9 @@
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+public class player extends entity.entity {
 
-public class Player extends entity.Entity {
-
-    public Player(){
+    public player(){
         setDefaultValues();
         getPlayerImage();
     }
@@ -15,7 +11,7 @@ public class Player extends entity.Entity {
     public void setDefaultValues() {
         x = 100;
         y = 100;
-        speed = 10;
+        speed = 8;
         direction = "down";
     }
 
@@ -42,25 +38,38 @@ public class Player extends entity.Entity {
     }
 
     public void update(boolean[] keys) {
+        boolean keyPressed = false;
+
         if (keys[KeyboardEvent.VK_UP] || keys[KeyboardEvent.VK_W]) {
             direction = "up";
             this.y -= speed;
+            keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_DOWN] || keys[KeyboardEvent.VK_S]) {
             direction = "down";
             this.y += speed;
+            keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_LEFT] || keys[KeyboardEvent.VK_A]) {
             direction = "left";
             this.x -= speed;
+            keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_RIGHT] || keys[KeyboardEvent.VK_D]) {
             direction = "right";
             this.x += speed;
+            keyPressed = true;
         }
 
-        spriteCounter++;
-        if()
+        if (keyPressed) {
+            spriteCounter++;
+            if(spriteCounter < 16){
+                spriteNum++;
+            } else {
+                spriteCounter = 0;
+                spriteNum = 1;
+            }
+        }
     }
 
     public void draw() {
@@ -79,7 +88,7 @@ public class Player extends entity.Entity {
                 image = right1;
                 break;
         }
-        SaxionApp.drawImage(image, x, y, 36, 36);
+        SaxionApp.drawImage(image, x, y, 50, 50);
     }
 
     private String setImageDown(int spriteNum) {
@@ -116,6 +125,8 @@ public class Player extends entity.Entity {
                 return down15;
             case 16:
                 return down16;
+            default:
+                return "Invalid sprite number";
         }
     }
 }

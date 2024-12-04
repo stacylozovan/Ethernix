@@ -7,7 +7,7 @@ import tile.Map;
 public class main implements GameLoop {
 
     private Map map;
-    private Player player;
+    private player player;
     private boolean[] keys = new boolean[256];
 
     public static void main(String[] args) {
@@ -16,7 +16,7 @@ public class main implements GameLoop {
 
     @Override
     public void init() {
-        player = new Player();
+        player = new player();
         player.setDefaultValues();
 
         map = new Map();
