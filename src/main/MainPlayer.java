@@ -1,4 +1,4 @@
-public class mainPlayer {
+public class MainPlayer {
     int x;
     int y;
     String character = "Player"; // I named this string player, but ofc this is only to test later if the code works

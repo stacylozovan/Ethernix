@@ -1,9 +1,10 @@
+package entity;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
 
-public class player extends entity.entity {
+public class Player extends Entity.entity {
 
-    public player(){
+    public Player(){
         setDefaultValues();
         getPlayerImage();
     }
