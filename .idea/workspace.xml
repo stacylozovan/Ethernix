@@ -6,14 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2d535061-023f-4e3c-9770-1d5110301765" name="Changes" comment="Deleted old SaxionApp useless files">
       <change afterPath="$PROJECT_DIR$/src/object/simple_map.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sandbox.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Sandbox.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/OBJ_for_world.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/itachi_boss.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/mainPlayer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/tile/Map.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/tile/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/tile/Map.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tile/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tile/Map.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="ET75" />
+        <entry key="$PROJECT_DIR$" value="ET80" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -68,7 +61,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging ET80",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/naufa/IdeaProjects/Ethernix/resources/._SaxionApp.jar",
