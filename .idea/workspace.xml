@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d535061-023f-4e3c-9770-1d5110301765" name="Changes" comment="Deleted old SaxionApp useless files">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/Player.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/entity/Entity.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/entity/Entity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sandbox/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sandbox/main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entity/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/entity/player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/entity/player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -88,7 +88,7 @@ public class player extends entity.entity {
                 image = right1;
                 break;
         }
-        SaxionApp.drawImage(image, x, y, 50, 50);
+        SaxionApp.drawImage(image, x, y, 100, 100);
     }
 
     private String setImageDown(int spriteNum) {
