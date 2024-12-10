@@ -4,19 +4,19 @@ import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 import tile.Map;
 
-public class main implements GameLoop {
+public class Main implements GameLoop {
 
     private Map map;
-    private player player;
+    private Player player;
     private boolean[] keys = new boolean[256];
 
     public static void main(String[] args) {
-        SaxionApp.startGameLoop(new main(), 1000, 1000, 40);
+        SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
     }
 
     @Override
     public void init() {
-        player = new player();
+        player = new Player();
         player.setDefaultValues();
 
         map = new Map();

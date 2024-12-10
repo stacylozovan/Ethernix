@@ -1,9 +1,9 @@
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
 
-public class player extends entity.entity {
+public class Player extends entity.Entity {
 
-    public player(){
+    public Player(){
         setDefaultValues();
         getPlayerImage();
     }
@@ -88,7 +88,7 @@ public class player extends entity.entity {
                 image = right1;
                 break;
         }
-        SaxionApp.drawImage(image, x, y, 100, 100);
+        SaxionApp.drawImage(image, x, y, 64, 64);
     }
 
     private String setImageDown(int spriteNum) {
