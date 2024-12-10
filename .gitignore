@@ -1,0 +1,7 @@
+# Ignore IDE files
+.idea/
+
+# Ignore compiled files and output directories
+/out/
+*.class
+*.jar
