@@ -90,7 +90,14 @@ public class Player extends entity.Entity {
         }
         SaxionApp.drawImage(image, x, y, 64, 64);
     }
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) health = 0;
+    }
 
+    public int getHealth() {
+        return health;
+    }
     private String setImageDown(int spriteNum) {
         switch (spriteNum) {
             case 1:
