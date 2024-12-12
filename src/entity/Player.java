@@ -3,7 +3,7 @@ import nl.saxion.app.SaxionApp;
 
 public class Player extends entity.Entity {
 
-    public Player(){
+    public Player() {
         setDefaultValues();
         getPlayerImage();
     }
@@ -72,7 +72,7 @@ public class Player extends entity.Entity {
         }
     }
 
-    public void draw() {
+    public void draw(int centerX, int centerY) {
         String image = "";
         switch (direction) {
             case "up":
@@ -88,7 +88,7 @@ public class Player extends entity.Entity {
                 image = right1;
                 break;
         }
-        SaxionApp.drawImage(image, x, y, 64, 64);
+        SaxionApp.drawImage(image, centerX, centerY, 64, 64); // Draw at the screen center
     }
 
     private String setImageDown(int spriteNum) {
