@@ -1,5 +1,3 @@
-package tile;
-
 import nl.saxion.app.SaxionApp;
 
 import java.io.BufferedReader;
@@ -8,12 +6,14 @@ import java.io.IOException;
 
 public class Map {
     private Tile[][] tile;
-    private String[] tileImages = {
+        private String[] tileImages = {
             "src/object/tiles/grass.png",
-            "src/object/tiles/tree.png",
             "src/object/tiles/wall.png",
-            "src/object/tiles/sand.png"
-    };
+            "src/object/tiles/water.png",
+            "src/object/tiles/earth.png",
+            "src/object/tiles/tree.png",
+            "src/object/tiles/sand.png",
+        };
 
     public Map() {
         loadMapFromFile("src/object/simple_map.txt");
@@ -24,8 +24,8 @@ public class Map {
             String line;
             int row = 0;
 
-            int rows = 64;
-            int cols = 64;
+            int rows = Math.max(50, 64);
+            int cols = Math.max(50, 64);
             tile = new Tile[rows][cols];
 
             while ((line = br.readLine()) != null && row < rows) {
@@ -34,8 +34,8 @@ public class Map {
                     int tileType = Integer.parseInt(values[col]);
                     tile[row][col] = new Tile();
                     tile[row][col].image = tileImages[tileType];
-                    tile[row][col].x = col * 32;
-                    tile[row][col].y = row * 32;
+                    tile[row][col].x = col * 50;
+                    tile[row][col].y = row * 50;
                 }
                 row++;
             }
@@ -44,13 +44,27 @@ public class Map {
         }
     }
 
-    public void draw() {
+    public void draw(int cameraX, int cameraY) {
         for (int row = 0; row < tile.length; row++) {
             for (int col = 0; col < tile[row].length; col++) {
                 if (tile[row][col] != null) {
-                    tile[row][col].drawTile();
+                    // Calculate the tile's screen position relative to the camera
+                    int drawX = tile[row][col].x - cameraX;
+                    int drawY = tile[row][col].y - cameraY;
+
+                    if (drawX + 50 > 0 && drawX < 1000 && drawY + 50 > 0 && drawY < 1000) {
+                        SaxionApp.drawImage(tile[row][col].image, drawX, drawY, 50, 50);
+                    }
                 }
             }
         }
+    }
+
+    public int getWidth() {
+        return tile[0].length;
+    }
+
+    public int getHeight() {
+        return tile.length; // Number of rows
     }
 }
