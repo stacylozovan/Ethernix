@@ -1,9 +1,9 @@
+import entity.CharacterManager;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 import tile.Map;
-import entity.Player;
 
 public class Main implements GameLoop {
     private Map map;

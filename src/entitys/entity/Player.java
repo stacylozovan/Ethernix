@@ -3,7 +3,6 @@ package entity;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
 
-
 public class Player extends Entity {
     private final String[] downImages = new String[9];
     private final String[] upImages = new String[9];

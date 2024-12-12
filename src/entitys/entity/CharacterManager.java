@@ -1,3 +1,5 @@
+package entity;
+
 public class CharacterManager {
 
     private Player player;
@@ -32,7 +34,7 @@ public class CharacterManager {
         }
 
         if (madara.getHealth() <= 0) {
-            System.out.println("Madara is defeated!");
+            System.out.println(" is defeated!");
 
         }
     }
@@ -46,7 +48,7 @@ public class CharacterManager {
 
     public void displayHealthStatus() {
         System.out.println("Player Health: " + player.getHealth());
-        System.out.println("Madara Health: " + madara.getHealth());
+        System.out.println(" Health: " + madara.getHealth());
     }
 
 
