@@ -1,24 +1,60 @@
 public class CharacterManager {
-        private Player player;
-        private Madara madara;
 
-        public CharacterManager(Player player, Madara madara) {
-            this.player = player;
-            this.madara = madara;
+    private Player player;
+    private Madara madara;
+
+    public CharacterManager() {
+
+        this.player = new Player();
+        this.madara = new Madara();
+
+
+        this.player.setDefaultValues();
+        this.madara.setDefaultValues();
+    }
+
+
+    public void update(boolean[] keys) {
+        player.update(keys);
+        madara.update(player);
+    }
+
+
+    public void handleCharacterInteractions() {
+        if (Math.abs(player.getX() - madara.getX()) < 50 && Math.abs(player.getY() - madara.getY()) < 50) {
+            player.takeDamage(10);
         }
 
-        // Basic interaction: when the player and Madara are close enough, damage is exchanged
-        public void handleCharacterInteractions() {
-            // Check if Player and Madara are close enough to interact (simple proximity check)
-            if (Math.abs(player.getX() - madara.getX()) < 50 && Math.abs(player.getY() - madara.getY()) < 50) {
-                // Madara attacks the player (Player takes damage)
-                player.takeDamage(10);  // Madara does 10 damage
-            }
+
+        if (player.getHealth() <= 0) {
+            System.out.println("Player is dead!");
+
         }
 
-        // Display health status (for debugging or later extension)
-        public void displayHealthStatus() {
-            System.out.println("Player Health: " + player.getHealth());
-            System.out.println("Madara Health: " + madara.getHealth());
+        if (madara.getHealth() <= 0) {
+            System.out.println("Madara is defeated!");
+
         }
     }
+
+
+    public void draw() {
+        player.draw();
+        madara.draw();
+    }
+
+
+    public void displayHealthStatus() {
+        System.out.println("Player Health: " + player.getHealth());
+        System.out.println("Madara Health: " + madara.getHealth());
+    }
+
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Madara getMadara() {
+        return madara;
+    }
+}

@@ -1,7 +1,7 @@
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
 
-public class Player extends entity.Entity {
+public class Player extends Entity {
 
     public Player(){
         setDefaultValues();

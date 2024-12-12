@@ -1,5 +1,5 @@
 import nl.saxion.app.SaxionApp;
-public class Madara extends entity.Entity {
+public class Madara extends Entity {
     public Madara() {
         setDefaultValues();
         getMadaraImage();

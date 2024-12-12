@@ -6,25 +6,16 @@ import tile.Map;
 
 public class Main implements GameLoop {
     private Map map;
-    private Player player;
-    private Madara madara;
     private CharacterManager characterManager;
     private boolean[] keys = new boolean[256];
 
     public static void main(String[] args) {
-        SaxionApp.startGameLoop(new Main(), 1000, 1000, 40); // 1000, 1000 for window size, 40 for FPS
+        SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
     }
 
     @Override
     public void init() {
-        player = new Player();
-        player.setDefaultValues();
-
-        madara = new Madara();
-        madara.setDefaultValues();
-
-        characterManager = new CharacterManager(player, madara);
-
+        characterManager = new CharacterManager();
         map = new Map();
     }
 
@@ -34,11 +25,8 @@ public class Main implements GameLoop {
 
         map.draw();
 
-        player.update(keys);
-        player.draw();
-
-        madara.update(player);
-        madara.draw();
+        characterManager.update(keys);
+        characterManager.draw();
 
         characterManager.handleCharacterInteractions();
 
