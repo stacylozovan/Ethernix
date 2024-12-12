@@ -3,7 +3,8 @@ package entity;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
 
-public class Player extends entity.Entity {
+
+public class Player extends Entity {
     private final String[] downImages = new String[9];
     private final String[] upImages = new String[9];
     private final String[] leftImages = new String[9];
@@ -80,7 +81,14 @@ public class Player extends entity.Entity {
         };
         SaxionApp.drawImage(image, x, y, 64, 64);
     }
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) health = 0;
+    }
 
+    public int getHealth() {
+        return health;
+    }
     private String setImageDown(int spriteNum) {
         if (spriteNum >= 1 && spriteNum <= 9) {
             return downImages[spriteNum - 1];

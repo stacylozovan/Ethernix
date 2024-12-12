@@ -6,9 +6,8 @@ import tile.Map;
 import entity.Player;
 
 public class Main implements GameLoop {
-
     private Map map;
-    private Player player;
+    private CharacterManager characterManager;
     private boolean[] keys = new boolean[256];
 
     public static void main(String[] args) {
@@ -17,9 +16,7 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
-        player = new Player();
-        player.setDefaultValues();
-
+        characterManager = new CharacterManager();
         map = new Map();
     }
 
@@ -29,16 +26,19 @@ public class Main implements GameLoop {
 
         map.draw();
 
-        player.update(keys);
-        player.draw();
+        characterManager.update(keys);
+        characterManager.draw();
+
+        characterManager.handleCharacterInteractions();
+
+        characterManager.displayHealthStatus();
     }
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
         int keyCode = keyboardEvent.getKeyCode();
-
         if (keyCode >= 0 && keyCode < keys.length) {
-            keys[keyCode] = keyboardEvent.isKeyPressed(); // Track key press states
+            keys[keyCode] = keyboardEvent.isKeyPressed();
         }
     }
 

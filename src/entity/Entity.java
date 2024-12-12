@@ -1,5 +1,3 @@
-package entity;
-
 public class Entity {
     public int x, y;
     public int speed;
@@ -13,6 +11,46 @@ public class Entity {
     public int spriteCounter = 0;
     public int spriteNum = 1;
 
+    public int health;
+
+
     public Entity() {
+        this.x = 0;
+        this.y = 0;
+        this.speed = 0;
+        this.direction = "down";
+        this.health = 100;
+    }
+
+
+    public void takeDamage(int damage) {
+        this.health -= damage;
+        if (this.health < 0) {
+            this.health = 0;
+        }
+    }
+
+
+    public int getHealth() {
+        return this.health;
+    }
+
+
+    public int getX() {
+        return this.x;
+    }
+
+
+    public int getY() {
+        return this.y;
+    }
+
+
+    public void reset() {
+        this.x = 0;
+        this.y = 0;
+        this.speed = 0;
+        this.health = 100;
+        this.direction = "down";
     }
 }
