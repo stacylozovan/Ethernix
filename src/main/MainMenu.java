@@ -15,6 +15,31 @@ public class MainMenu {
             SaxionApp.drawImage("src/res/menu/quit.png", 400, 550, 140, 56);
         }
 
+        public void mouseEvent(MouseEvent mouseEvent) {
+            if (mouseEvent.isMouseDown() && mouseEvent.isLeftMouseButton()) {
+                int mouseX = mouseEvent.getX();
+                int mouseY = mouseEvent.getY();
 
+                if (inMenu) {
+                    // Check if "Start Game" button is clicked
+                    if (isMouseOver(mouseX, mouseY, 350, 350, 200, 50)) {
+                        inMenu = false;
+                        gameStarted = true;
+                    }
+                    else if (isMouseOver(mouseX, mouseY, 350, 450, 200, 50)) {
+                        inMenu = false;
+                        gameStarted = true;
+                        SaxionApp.drawText("Settings", 350,550,50);
+                    }
+                    else if (isMouseOver(mouseX, mouseY, 350, 550, 200, 50)) {
+                        SaxionApp.quit();
+                    }
+                }
+            }
+        }
+
+        public boolean isMouseOver(int mouseX, int mouseY, int x, int y, int width, int height) {
+            return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+        }
 
     }
