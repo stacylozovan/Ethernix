@@ -9,9 +9,9 @@ public class Player extends entity.Entity {
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
-        speed = 8;
+        x = 500;
+        y = 500;
+        speed = 50;
         direction = "down";
     }
 
@@ -37,33 +37,33 @@ public class Player extends entity.Entity {
             left1 = "src/res/player/naruto_left_1.png";
     }
 
-    public void update(boolean[] keys) {
+    public void update(boolean[] keys, int mapWidth, int mapHeight, int tileSize) {
         boolean keyPressed = false;
 
         if (keys[KeyboardEvent.VK_UP] || keys[KeyboardEvent.VK_W]) {
             direction = "up";
-            this.y -= speed;
+            y = Math.max(0, y - speed);
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_DOWN] || keys[KeyboardEvent.VK_S]) {
             direction = "down";
-            this.y += speed;
+            y = Math.min((mapHeight * tileSize) - 64, y + speed);
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_LEFT] || keys[KeyboardEvent.VK_A]) {
             direction = "left";
-            this.x -= speed;
+            x = Math.max(0, x - speed);
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_RIGHT] || keys[KeyboardEvent.VK_D]) {
             direction = "right";
-            this.x += speed;
+            x = Math.min((mapWidth * tileSize) - 64, x + speed);
             keyPressed = true;
         }
 
         if (keyPressed) {
             spriteCounter++;
-            if(spriteCounter < 16){
+            if (spriteCounter < 16) {
                 spriteNum++;
             } else {
                 spriteCounter = 0;
@@ -72,11 +72,11 @@ public class Player extends entity.Entity {
         }
     }
 
-    public void draw(int centerX, int centerY) {
+    public void draw(int screenX, int screenY) {
         String image = "";
         switch (direction) {
             case "up":
-                image = down1;
+                image = down1; // Replace with actual "up" sprite if available
                 break;
             case "down":
                 image = setImageDown(spriteNum);
@@ -88,7 +88,7 @@ public class Player extends entity.Entity {
                 image = right1;
                 break;
         }
-        SaxionApp.drawImage(image, centerX, centerY, 64, 64); // Draw at the screen center
+        SaxionApp.drawImage(image, screenX, screenY, 64, 64);
     }
 
     private String setImageDown(int spriteNum) {

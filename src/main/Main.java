@@ -35,9 +35,13 @@ public class Main implements GameLoop {
 
         map.draw(cameraX, cameraY);
 
-        player.update(keys);
-        player.draw(screenWidth / 2, screenHeight / 2);
+        player.update(keys, map.getWidth(), map.getHeight(), tileSize);
+
+        int playerScreenX = player.x - cameraX;
+        int playerScreenY = player.y - cameraY;
+        player.draw(playerScreenX, playerScreenY);
     }
+
 
     private void updateCamera() {
         cameraX = player.x - screenWidth / 2;
@@ -56,11 +60,12 @@ public class Main implements GameLoop {
         int keyCode = keyboardEvent.getKeyCode();
 
         if (keyCode >= 0 && keyCode < keys.length) {
-            keys[keyCode] = keyboardEvent.isKeyPressed(); // Track key press states
+            keys[keyCode] = keyboardEvent.isKeyPressed();
         }
     }
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
+
     }
 }

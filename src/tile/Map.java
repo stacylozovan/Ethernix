@@ -45,26 +45,30 @@ public class Map {
     }
 
     public void draw(int cameraX, int cameraY) {
-        for (int row = 0; row < tile.length; row++) {
-            for (int col = 0; col < tile[row].length; col++) {
+        int startCol = Math.max(0, cameraX / 50);
+        int endCol = Math.min(tile[0].length, (cameraX + 1000) / 50 + 1);
+
+        int startRow = Math.max(0, cameraY / 50);
+        int endRow = Math.min(tile.length, (cameraY + 1000) / 50 + 1);
+
+        for (int row = startRow; row < endRow; row++) {
+            for (int col = startCol; col < endCol; col++) {
                 if (tile[row][col] != null) {
-                    // Calculate the tile's screen position relative to the camera
                     int drawX = tile[row][col].x - cameraX;
                     int drawY = tile[row][col].y - cameraY;
 
-                    if (drawX + 50 > 0 && drawX < 1000 && drawY + 50 > 0 && drawY < 1000) {
-                        SaxionApp.drawImage(tile[row][col].image, drawX, drawY, 50, 50);
-                    }
+                    SaxionApp.drawImage(tile[row][col].image, drawX, drawY, 50, 50);
                 }
             }
         }
     }
+
 
     public int getWidth() {
         return tile[0].length;
     }
 
     public int getHeight() {
-        return tile.length; // Number of rows
+        return tile.length;
     }
 }
