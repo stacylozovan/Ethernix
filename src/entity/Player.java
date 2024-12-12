@@ -1,7 +1,14 @@
+package entity;
+
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
 
+
 public class Player extends Entity {
+    private final String[] downImages = new String[9];
+    private final String[] upImages = new String[9];
+    private final String[] leftImages = new String[9];
+    private final String[] rightImages = new String[9];
 
     public Player(){
         setDefaultValues();
@@ -15,26 +22,17 @@ public class Player extends Entity {
         direction = "down";
     }
 
-    public void getPlayerImage() {
-            down1 = "src/res/player/naruto_down_1.png";
-            down2 = "src/res/player/naruto_down_2.png";
-            down3 = "src/res/player/naruto_down_3.png";
-            down4 = "src/res/player/naruto_down_4.png";
-            down5 = "src/res/player/naruto_down_5.png";
-            down6 = "src/res/player/naruto_down_6.png";
-            down7 = "src/res/player/naruto_down_7.png";
-            down8 = "src/res/player/naruto_down_8.png";
-            down9 = "src/res/player/naruto_down_9.png";
-            down10 = "src/res/player/naruto_down_10.png";
-            down11 = "src/res/player/naruto_down_11.png";
-            down12 = "src/res/player/naruto_down_12.png";
-            down13 = "src/res/player/naruto_down_13.png";
-            down14 = "src/res/player/naruto_down_14.png";
-            down15 = "src/res/player/naruto_down_15.png";
-            down16 = "src/res/player/naruto_down_16.png";
+    private String getImagePath(String direction, int frame) {
+        return String.format("src/res/player/naruto/%s/naruto_%s%d.png",direction, direction, frame);
+    }
 
-            right1 = "src/res/player/naruto_right_1.png";
-            left1 = "src/res/player/naruto_left_1.png";
+    public void getPlayerImage() {
+        for (int i = 0; i <= 8; i++) {
+            downImages[i] = getImagePath("down", i);
+            upImages[i] = getImagePath("up", i);
+            leftImages[i] = getImagePath("left", i);
+            rightImages[i] = getImagePath("right", i);
+        }
     }
 
     public void update(boolean[] keys) {
@@ -63,31 +61,24 @@ public class Player extends Entity {
 
         if (keyPressed) {
             spriteCounter++;
-            if(spriteCounter < 16){
-                spriteNum++;
-            } else {
+            if (spriteCounter >= 2) {
                 spriteCounter = 0;
-                spriteNum = 1;
+                spriteNum = spriteNum % 9 + 1;
             }
         }
     }
 
     public void draw() {
         String image = "";
-        switch (direction) {
-            case "up":
-                image = down1;
-                break;
-            case "down":
-                image = setImageDown(spriteNum);
-                break;
-            case "left":
-                image = left1;
-                break;
-            case "right":
-                image = right1;
-                break;
-        }
+        spriteNum = Math.max(1, Math.min(spriteNum, 9));
+
+        image = switch (direction) {
+            case "up" -> setImageUp(spriteNum);
+            case "down" -> setImageDown(spriteNum);
+            case "left" -> setImageLeft(spriteNum);
+            case "right" -> setImageRight(spriteNum);
+            default -> image;
+        };
         SaxionApp.drawImage(image, x, y, 64, 64);
     }
     public void takeDamage(int damage) {
@@ -99,42 +90,31 @@ public class Player extends Entity {
         return health;
     }
     private String setImageDown(int spriteNum) {
-        switch (spriteNum) {
-            case 1:
-                return down1;
-            case 2:
-                return down2;
-            case 3:
-                return down3;
-            case 4:
-                return down4;
-            case 5:
-                return down5;
-            case 6:
-                return down6;
-            case 7:
-                return down7;
-            case 8:
-                return down8;
-            case 9:
-                return down9;
-            case 10:
-                return down10;
-            case 11:
-                return down11;
-            case 12:
-                return down12;
-            case 13:
-                return down13;
-            case 14:
-                return down14;
-            case 15:
-                return down15;
-            case 16:
-                return down16;
-            default:
-                return "Invalid sprite number";
+        if (spriteNum >= 1 && spriteNum <= 9) {
+            return downImages[spriteNum - 1];
         }
+        return "Invalid sprite number";
+    }
+
+    private String setImageUp(int spriteNum) {
+        if (spriteNum >= 1 && spriteNum <= 9) {
+            return upImages[spriteNum - 1];
+        }
+        return "Invalid sprite number";
+    }
+
+    private String setImageRight(int spriteNum) {
+        if (spriteNum >= 1 && spriteNum <= 9) {
+            return rightImages[spriteNum - 1];
+        }
+        return "Invalid sprite number";
+    }
+
+    private String setImageLeft(int spriteNum) {
+        if (spriteNum >= 1 && spriteNum <= 9) {
+            return leftImages[spriteNum - 1];
+        }
+        return "Invalid sprite number";
     }
 }
 
