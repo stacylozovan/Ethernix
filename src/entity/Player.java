@@ -11,7 +11,7 @@ public class Player extends entity.Entity {
     public void setDefaultValues() {
         x = 500;
         y = 500;
-        speed = 50;
+        speed = 8;
         direction = "down";
     }
 
