@@ -1,12 +1,12 @@
+import entity.CharacterManager;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
 public class Main implements GameLoop {
-
     private Map map;
-    private Player player;
+    private CharacterManager characterManager;
     private boolean[] keys = new boolean[256];
 
     private int cameraX = 0;
@@ -21,9 +21,7 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
-        player = new Player();
-        player.setDefaultValues();
-
+        characterManager = new CharacterManager();
         map = new Map();
     }
 
@@ -40,6 +38,13 @@ public class Main implements GameLoop {
         int playerScreenX = player.x - cameraX;
         int playerScreenY = player.y - cameraY;
         player.draw(playerScreenX, playerScreenY);
+
+        characterManager.update(keys);
+        characterManager.draw();
+
+        characterManager.handleCharacterInteractions();
+
+        characterManager.displayHealthStatus();
     }
 
 
@@ -58,7 +63,6 @@ public class Main implements GameLoop {
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
         int keyCode = keyboardEvent.getKeyCode();
-
         if (keyCode >= 0 && keyCode < keys.length) {
             keys[keyCode] = keyboardEvent.isKeyPressed();
         }
