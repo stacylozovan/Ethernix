@@ -4,12 +4,13 @@ public class CharacterManager {
 
     private Player player;
     private Madara madara;
+    private NPC npc;
 
     public CharacterManager() {
 
         this.player = new Player();
         this.madara = new Madara();
-
+        this.npc = new NPC("mark", 500, 500, new String[]{"teste de dialogo", "teste dialogo 2"}, "down", "static");
 
         this.player.setDefaultValues();
         this.madara.setDefaultValues();
@@ -43,6 +44,7 @@ public class CharacterManager {
     public void draw() {
         player.draw();
         madara.draw();
+        npc.draw();
     }
 
 

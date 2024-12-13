@@ -3,6 +3,7 @@ package entity;
 public class Entity {
     public int x, y;
     public int speed;
+    public int width, height;
     public String down0, down1, down2, down3, down4, down5, down6, down7, down8,down9,down10,down11,down12,down13,down14,down15,down16;
     public String left0, left1, left2, left3, left4, left5, left6, left7, left8;
     public String right0, right1, right2, right3, right4, right5, right6, right7, right8;
@@ -14,7 +15,6 @@ public class Entity {
     public int spriteNum = 1;
 
     public int health;
-
 
     public Entity() {
         this.x = 0;
