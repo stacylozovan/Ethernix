@@ -67,7 +67,7 @@ public class Player extends Entity {
         }
     }
 
-    public void draw() {
+    public void draw(int screenX, int screenY) {
         String image = "";
         spriteNum = Math.max(1, Math.min(spriteNum, 9));
 
@@ -78,7 +78,7 @@ public class Player extends Entity {
             case "right" -> setImageRight(spriteNum);
             default -> image;
         };
-        SaxionApp.drawImage(image, x, y, 64, 64);
+        SaxionApp.drawImage(image, screenX, screenY, 64, 64);
     }
     public void takeDamage(int damage) {
         health -= damage;

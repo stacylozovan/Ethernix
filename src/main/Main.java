@@ -33,24 +33,18 @@ public class Main implements GameLoop {
 
         map.draw(cameraX, cameraY);
 
-        player.update(keys, map.getWidth(), map.getHeight(), tileSize);
-
-        int playerScreenX = player.x - cameraX;
-        int playerScreenY = player.y - cameraY;
-        player.draw(playerScreenX, playerScreenY);
-
         characterManager.update(keys);
-        characterManager.draw();
-
+        int playerScreenX = characterManager.getPlayer().getX() - cameraX;
+        int playerScreenY = characterManager.getPlayer().getY() - cameraY;
+        characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
         characterManager.handleCharacterInteractions();
-
         characterManager.displayHealthStatus();
+
     }
 
-
     private void updateCamera() {
-        cameraX = player.x - screenWidth / 2;
-        cameraY = player.y - screenHeight / 2;
+        cameraX = characterManager.getPlayer().getX() - screenWidth / 2;
+        cameraY = characterManager.getPlayer().getY() - screenHeight / 2;
 
         int maxCameraX = map.getWidth() * tileSize - screenWidth;
         int maxCameraY = map.getHeight() * tileSize - screenHeight;
@@ -58,7 +52,6 @@ public class Main implements GameLoop {
         cameraX = Math.max(0, Math.min(cameraX, maxCameraX));
         cameraY = Math.max(0, Math.min(cameraY, maxCameraY));
     }
-
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
@@ -70,6 +63,5 @@ public class Main implements GameLoop {
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
-
     }
 }
