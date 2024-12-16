@@ -11,9 +11,6 @@ public class Main implements GameLoop {
 
     private int cameraX = 0;
     private int cameraY = 0;
-    private int screenWidth = 1000;
-    private int screenHeight = 1000;
-    private int tileSize = 50;
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
@@ -39,10 +36,13 @@ public class Main implements GameLoop {
         characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
         characterManager.handleCharacterInteractions();
         characterManager.displayHealthStatus();
-
     }
 
     private void updateCamera() {
+        int screenWidth = 1000;
+        int screenHeight = 1000;
+        int tileSize = 50;
+
         cameraX = characterManager.getPlayer().getX() - screenWidth / 2;
         cameraY = characterManager.getPlayer().getY() - screenHeight / 2;
 

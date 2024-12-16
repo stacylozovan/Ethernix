@@ -25,20 +25,21 @@ public class Map {
 
     public void loadMapFromFile(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            int row = 0;
-
             int rows = 64;
             int cols = 64;
             tile = new Tile[rows][cols];
 
+            String line;
+            int row = 0;
             while ((line = br.readLine()) != null && row < rows) {
                 String[] values = line.split(" ");
                 for (int col = 0; col < values.length && col < cols; col++) {
                     int tileType = Integer.parseInt(values[col]);
                     tile[row][col] = new Tile();
-                    tile[row][col].image = Objects.requireNonNull(getClass().getResource(tileImages[tileType]),
-                            "Image not found: " + tileImages[tileType]).toString();
+                    tile[row][col].image = Objects.requireNonNull(
+                            getClass().getResource(tileImages[tileType]),
+                            "Image not found: " + tileImages[tileType]
+                    ).getPath();
                     tile[row][col].x = col * 50;
                     tile[row][col].y = row * 50;
                 }
@@ -48,6 +49,7 @@ public class Map {
             e.printStackTrace();
         }
     }
+
 
 
     public void draw(int cameraX, int cameraY) {

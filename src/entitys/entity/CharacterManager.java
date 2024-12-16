@@ -1,8 +1,8 @@
 package entity;
 
 public class CharacterManager {
-    private Player player;
-    private Madara madara;
+    private final Player player;
+    private final Madara madara;
 
     public CharacterManager() {
         this.player = new Player();
