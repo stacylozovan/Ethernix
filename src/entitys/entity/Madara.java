@@ -1,68 +1,65 @@
-package entity;
-
+import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
-public class Madara extends Entity {
-    public Madara() {
+
+public class Player extends entity.Entity {
+
+    public Player() {
         setDefaultValues();
-        getMadaraImage();
+        getPlayerImage();
     }
 
     public void setDefaultValues() {
-        x = 300;
-        y = 100;
-        speed = 4;
+        x = 500;
+        y = 500;
+        speed = 8;
         direction = "down";
     }
 
-    public void getMadaraImage() {
+    public void getPlayerImage() {
+            down1 = "src/res/player/naruto_down_1.png";
+            down2 = "src/res/player/naruto_down_2.png";
+            down3 = "src/res/player/naruto_down_3.png";
+            down4 = "src/res/player/naruto_down_4.png";
+            down5 = "src/res/player/naruto_down_5.png";
+            down6 = "src/res/player/naruto_down_6.png";
+            down7 = "src/res/player/naruto_down_7.png";
+            down8 = "src/res/player/naruto_down_8.png";
+            down9 = "src/res/player/naruto_down_9.png";
+            down10 = "src/res/player/naruto_down_10.png";
+            down11 = "src/res/player/naruto_down_11.png";
+            down12 = "src/res/player/naruto_down_12.png";
+            down13 = "src/res/player/naruto_down_13.png";
+            down14 = "src/res/player/naruto_down_14.png";
+            down15 = "src/res/player/naruto_down_15.png";
+            down16 = "src/res/player/naruto_down_16.png";
 
-        down1 = "src/res/madara/madara_fight_1.png";
-        down2 = "src/res/madara/madara_fight_2.png";
-        down3 = "src/res/madara/madara_fight_3.png";
-        down4 = "src/res/madara/madara_fight_4.png";
-        down5 = "src/res/madara/madara_fight_5.png";
-        down6 = "src/res/madara/madara_fight_6.png";
-        down7 = "src/res/madara/madara_fight_7.png";
-        down8 = "src/res/madara/madara_fight_8.png";
-        down9 = "src/res/madara/madara_fight_9.png";
-        down10 = "src/res/madara/madara_fight_10.png";
-        down11 = "src/res/madara/madara_fight_11.png";
-        down12 = "src/res/madara/madara_fight_12.png";
-        down13 = "src/res/madara/madara_fight_13.png";
-        down14 = "src/res/madara/madara_fight_14.png";
-        down15 = "src/res/madara/madara_fight_15.png";
-        down16 = "src/res/madara/madara_fight_15.png";
-
-        right1 = "src/res/madara/madara_fight_1.png";
-        left1 = "src/res/madara/madara_fight_2.png";
+            right1 = "src/res/player/naruto_right_1.png";
+            left1 = "src/res/player/naruto_left_1.png";
     }
 
-
-    public void update(Player player) {
+    public void update(boolean[] keys, int mapWidth, int mapHeight, int tileSize) {
         boolean keyPressed = false;
 
-
-        if (y < player.getY()) {
-            direction = "down";
-            y += speed;
-            keyPressed = true;
-        } else if (y > player.getY()) {
+        if (keys[KeyboardEvent.VK_UP] || keys[KeyboardEvent.VK_W]) {
             direction = "up";
-            y -= speed;
+            y = Math.max(0, y - speed);
             keyPressed = true;
         }
-
-
-        if (x < player.getX()) {
-            direction = "right";
-            x += speed;
+        if (keys[KeyboardEvent.VK_DOWN] || keys[KeyboardEvent.VK_S]) {
+            direction = "down";
+            y = Math.min((mapHeight * tileSize) - 64, y + speed);
             keyPressed = true;
-        } else if (x > player.getX()) {
+        }
+        if (keys[KeyboardEvent.VK_LEFT] || keys[KeyboardEvent.VK_A]) {
             direction = "left";
-            x -= speed;
+            x = Math.max(0, x - speed);
             keyPressed = true;
         }
-
+        if (keys[KeyboardEvent.VK_RIGHT] || keys[KeyboardEvent.VK_D]) {
+            direction = "right";
+            x = Math.min((mapWidth * tileSize) - 64, x + speed);
+            keyPressed = true;
+        }
 
         if (keyPressed) {
             spriteCounter++;
@@ -75,12 +72,11 @@ public class Madara extends Entity {
         }
     }
 
-
-    public void draw() {
+    public void draw(int screenX, int screenY) {
         String image = "";
         switch (direction) {
             case "up":
-                image = down1;
+                image = down1; // Replace with actual "up" sprite if available
                 break;
             case "down":
                 image = setImageDown(spriteNum);
@@ -92,15 +88,7 @@ public class Madara extends Entity {
                 image = right1;
                 break;
         }
-        SaxionApp.drawImage(image, x, y, 64, 64);
-    }
-    public void takeDamage(int damage) {
-        health -= damage;
-        if (health < 0) health = 0;
-    }
-
-    public int getHealth() {
-        return health;
+        SaxionApp.drawImage(image, screenX, screenY, 64, 64);
     }
 
     private String setImageDown(int spriteNum) {
