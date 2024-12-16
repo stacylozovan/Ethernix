@@ -50,10 +50,10 @@ public class Main implements GameLoop {
             gameMap.draw(cameraX, cameraY);
 
             characterManager.update(keys);
-            characterManager.draw();
-
+            int playerScreenX = characterManager.getPlayer().getX() - cameraX;
+            int playerScreenY = characterManager.getPlayer().getY() - cameraY;
+            characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
             characterManager.handleCharacterInteractions();
-
             characterManager.displayHealthStatus();
         }
     }
