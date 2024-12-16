@@ -34,16 +34,8 @@ public class Main implements GameLoop {
 
         if (mainMenu.isInSettings()) {
             SaxionApp.drawText("Settings", 150,150,50); // if I click the settings button, this will be changed into a settings method later
-
         } else if (inMenu) {
             mainMenu.drawMainMenu();
-
-            characterManager.update(keys);
-            int playerScreenX = characterManager.getPlayer().getX() - cameraX;
-            int playerScreenY = characterManager.getPlayer().getY() - cameraY;
-            characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
-            characterManager.handleCharacterInteractions();
-            characterManager.displayHealthStatus();
         } else if (gameStarted) {
             updateCamera();
 
