@@ -63,53 +63,35 @@ public class Madara extends Entity {
     }
 
     public void draw(int screenX, int screenY) {
-        String image = "";
-        switch (direction) {
-            case "up":
-                image = down1;
-                break;
-            case "down":
-                image = setImageDown(spriteNum);
-                break;
-            case "left":
-                image = left1;
-                break;
-            case "right":
-                image = right1;
-                break;
-        }
+        String image = switch (direction) {
+            case "up" -> down1;
+            case "down" -> setImageDown(spriteNum);
+            case "left" -> left1;
+            case "right" -> right1;
+            default -> "";
+        };
         SaxionApp.drawImage(image, screenX, screenY, 64, 64);
     }
 
-
-    public void takeDamage(int damage) {
-        health -= damage;
-        if (health < 0) health = 0;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
     private String setImageDown(int spriteNum) {
-        switch (spriteNum) {
-            case 1: return down1;
-            case 2: return down2;
-            case 3: return down3;
-            case 4: return down4;
-            case 5: return down5;
-            case 6: return down6;
-            case 7: return down7;
-            case 8: return down8;
-            case 9: return down9;
-            case 10: return down10;
-            case 11: return down11;
-            case 12: return down12;
-            case 13: return down13;
-            case 14: return down14;
-            case 15: return down15;
-            case 16: return down16;
-            default: return down1; // Default image fallback
-        }
+        return switch (spriteNum) {
+            case 1 -> down1;
+            case 2 -> down2;
+            case 3 -> down3;
+            case 4 -> down4;
+            case 5 -> down5;
+            case 6 -> down6;
+            case 7 -> down7;
+            case 8 -> down8;
+            case 9 -> down9;
+            case 10 -> down10;
+            case 11 -> down11;
+            case 12 -> down12;
+            case 13 -> down13;
+            case 14 -> down14;
+            case 15 -> down15;
+            case 16 -> down16;
+            default -> down1; // Default image fallback
+        };
     }
 }

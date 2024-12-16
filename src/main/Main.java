@@ -4,10 +4,15 @@ import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
+import java.util.Map;
+
 public class Main implements GameLoop {
-    private Map map;
+    private tile.Map gameMap;
     private CharacterManager characterManager;
     private boolean[] keys = new boolean[256];
+    private MainMenu mainMenu = new MainMenu();
+    private boolean inMenu = true;
+    private boolean gameStarted = false;
 
     private int cameraX = 0;
     private int cameraY = 0;
@@ -19,23 +24,38 @@ public class Main implements GameLoop {
     @Override
     public void init() {
         characterManager = new CharacterManager();
-        map = new Map();
+
+        gameMap = new tile.Map();
     }
 
     @Override
     public void loop() {
         SaxionApp.clear();
 
-        updateCamera();
+        if (mainMenu.isInSettings()) {
+            SaxionApp.drawText("Settings", 150,150,50); // if I click the settings button, this will be changed into a settings method later
 
-        map.draw(cameraX, cameraY);
+        } else if (inMenu) {
+            mainMenu.drawMainMenu();
 
-        characterManager.update(keys);
-        int playerScreenX = characterManager.getPlayer().getX() - cameraX;
-        int playerScreenY = characterManager.getPlayer().getY() - cameraY;
-        characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
-        characterManager.handleCharacterInteractions();
-        characterManager.displayHealthStatus();
+            characterManager.update(keys);
+            int playerScreenX = characterManager.getPlayer().getX() - cameraX;
+            int playerScreenY = characterManager.getPlayer().getY() - cameraY;
+            characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
+            characterManager.handleCharacterInteractions();
+            characterManager.displayHealthStatus();
+        } else if (gameStarted) {
+            updateCamera();
+
+            gameMap.draw(cameraX, cameraY);
+
+            characterManager.update(keys);
+            characterManager.draw();
+
+            characterManager.handleCharacterInteractions();
+
+            characterManager.displayHealthStatus();
+        }
     }
 
     private void updateCamera() {
@@ -46,8 +66,8 @@ public class Main implements GameLoop {
         cameraX = characterManager.getPlayer().getX() - screenWidth / 2;
         cameraY = characterManager.getPlayer().getY() - screenHeight / 2;
 
-        int maxCameraX = map.getWidth() * tileSize - screenWidth;
-        int maxCameraY = map.getHeight() * tileSize - screenHeight;
+        int maxCameraX = gameMap.getWidth() * tileSize - screenWidth;
+        int maxCameraY = gameMap.getHeight() * tileSize - screenHeight;
 
         cameraX = Math.max(0, Math.min(cameraX, maxCameraX));
         cameraY = Math.max(0, Math.min(cameraY, maxCameraY));
@@ -59,9 +79,26 @@ public class Main implements GameLoop {
         if (keyCode >= 0 && keyCode < keys.length) {
             keys[keyCode] = keyboardEvent.isKeyPressed();
         }
+
+        if (mainMenu.handlingKeyboardEscapeButton(keyboardEvent)) {
+            inMenu = true; // if we click ESC, the main menu appears
+        }
     }
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
+
+        if (inMenu) {
+            // If the mouse event returns true, start the game
+            if (mainMenu.mouseEvent(mouseEvent)) {
+                inMenu = false;
+                gameStarted = true;
+            }
+
+            else if (mainMenu.isInSettings()) {
+                // Show settings screen
+                inMenu = false;
+            }
+        }
     }
 }

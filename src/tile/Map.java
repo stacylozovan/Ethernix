@@ -1,3 +1,5 @@
+package tile;
+
 import nl.saxion.app.SaxionApp;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -5,7 +7,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Map {
-    private Tile[][] tile;
+    private tile.Tile[][] tile;
     private final String[] tileImages = {
             "/object/tiles/grass.png",
             "/object/tiles/wall.png",
@@ -22,12 +24,11 @@ public class Map {
         loadMapFromFile(mapPath);
     }
 
-
     public void loadMapFromFile(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             int rows = 64;
             int cols = 64;
-            tile = new Tile[rows][cols];
+            tile = new tile.Tile[rows][cols];
 
             String line;
             int row = 0;
@@ -35,7 +36,7 @@ public class Map {
                 String[] values = line.split(" ");
                 for (int col = 0; col < values.length && col < cols; col++) {
                     int tileType = Integer.parseInt(values[col]);
-                    tile[row][col] = new Tile();
+                    tile[row][col] = new tile.Tile();
                     tile[row][col].image = Objects.requireNonNull(
                             getClass().getResource(tileImages[tileType]),
                             "Image not found: " + tileImages[tileType]
@@ -49,8 +50,6 @@ public class Map {
             e.printStackTrace();
         }
     }
-
-
 
     public void draw(int cameraX, int cameraY) {
         int startCol = Math.max(0, cameraX / 50);

@@ -1,3 +1,5 @@
+package tile;
+
 import nl.saxion.app.SaxionApp;
 
 public class Tile {
