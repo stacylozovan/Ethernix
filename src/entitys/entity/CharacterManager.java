@@ -18,58 +18,55 @@ public class CharacterManager {
 
         this.player = new Player();
         this.madara = new Madara();
+        this.player.setDefaultValues();
+        this.madara.setDefaultValues();
 
         this.npcs = new ArrayList<>();
         npcs.add(new NPC("mark", 500, 500, npcDialogues.get("mark"), "down", "static"));
         npcs.add(new NPC("lucy", 600, 600, npcDialogues.get("lucy"), "up", "static"));
-
-        this.player.setDefaultValues();
-        this.madara.setDefaultValues();
     }
-
 
     public void update(boolean[] keys) {
         player.update(keys);
-        madara.update(player);
+        madara.update(player.getX(), player.getY());
     }
-
 
     public void handleCharacterInteractions() {
         if (Math.abs(player.getX() - madara.getX()) < 50 && Math.abs(player.getY() - madara.getY()) < 50) {
             player.takeDamage(10);
         }
 
-
         if (player.getHealth() <= 0) {
             System.out.println("Player is dead!");
-
         }
 
         if (madara.getHealth() <= 0) {
-            System.out.println(" is defeated!");
-
+            System.out.println("Madara is defeated!");
         }
     }
 
-
-    public void draw() {
-        player.draw();
-        madara.draw();
+    public void draw(int playerScreenX, int playerScreenY, int cameraX, int cameraY) {
+        player.draw(playerScreenX, playerScreenY);
+        int madaraScreenX = madara.getX() - cameraX;
+        int madaraScreenY = madara.getY() - cameraY;
+        madara.draw(madaraScreenX, madaraScreenY);
+        
         for (NPC npc : npcs) {
-            npc.draw();
+          int npcScreenX = npc.getX() - cameraX;
+          int npxScreenY = npc.getY() - cameraY;
+          npc.draw(npcScreenX, npcScreenY);
         }
     }
-
 
     public void displayHealthStatus() {
         System.out.println("Player Health: " + player.getHealth());
-        System.out.println(" Health: " + madara.getHealth());
+        System.out.println("Madara Health: " + madara.getHealth());
     }
-
 
     public Player getPlayer() {
         return player;
     }
+
 
     public Madara getMadara() {
         return madara;
@@ -89,3 +86,4 @@ public class CharacterManager {
         }
     }
 }
+
