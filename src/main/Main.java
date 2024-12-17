@@ -30,8 +30,7 @@ public class Main implements GameLoop {
         characterManager.draw();
 
         characterManager.handleCharacterInteractions();
-
-        characterManager.displayHealthStatus();
+//        characterManager.displayHealthStatus();
     }
 
     @Override
