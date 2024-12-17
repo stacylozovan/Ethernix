@@ -1,16 +1,27 @@
 package entity;
 
+import nl.saxion.app.CsvReader;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+
 public class CharacterManager {
 
-    private Player player;
-    private Madara madara;
-    private NPC npc;
+    private final Player player;
+    private final Madara madara;
+    private final List<NPC> npcs;
+
 
     public CharacterManager() {
+        CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
+        Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
         this.player = new Player();
         this.madara = new Madara();
-        this.npc = new NPC("mark", 500, 500, new String[]{"teste de dialogo", "teste dialogo 2"}, "down", "static");
+
+        this.npcs = new ArrayList<>();
+        npcs.add(new NPC("mark", 500, 500, npcDialogues.get("mark"), "down", "static"));
+        npcs.add(new NPC("lucy", 600, 600, npcDialogues.get("lucy"), "up", "static"));
 
         this.player.setDefaultValues();
         this.madara.setDefaultValues();
@@ -44,7 +55,9 @@ public class CharacterManager {
     public void draw() {
         player.draw();
         madara.draw();
-        npc.draw();
+        for (NPC npc : npcs) {
+            npc.draw();
+        }
     }
 
 
@@ -60,5 +73,19 @@ public class CharacterManager {
 
     public Madara getMadara() {
         return madara;
+    }
+
+//     this method exist just to test the dialogues imports
+    public void printNPCDialogues() {
+        for (NPC npc : npcs) {
+            System.out.println("NPC: " + npc.name);
+            if (npc.dialogue != null) {
+                for (int i = 0; i < npc.dialogue.length; i++) {
+                    System.out.println("  Dialogue " + (i + 1) + ": " + npc.dialogue[i]);
+                }
+            } else {
+                System.out.println("  No dialogues loaded!");
+            }
+        }
     }
 }
