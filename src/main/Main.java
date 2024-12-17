@@ -46,7 +46,7 @@ public class Main implements GameLoop {
             int playerScreenY = characterManager.getPlayer().getY() - cameraY;
             characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
             characterManager.handleCharacterInteractions();
-            characterManager.displayHealthStatus();
+//            characterManager.displayHealthStatus();
         }
     }
 
