@@ -14,7 +14,7 @@ public class CharacterManager {
 
     public void update(boolean[] keys) {
         player.update(keys);
-        madara.update(player.getX(), player.getY());
+        //madara.update(player.getX(), player.getY());
     }
 
     public void handleCharacterInteractions() {
