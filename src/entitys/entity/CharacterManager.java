@@ -22,8 +22,8 @@ public class CharacterManager {
         this.madara.setDefaultValues();
 
         this.npcs = new ArrayList<>();
-        npcs.add(new NPC("mark", 500, 500, npcDialogues.get("mark"), "down", "static"));
-        npcs.add(new NPC("lucy", 600, 600, npcDialogues.get("lucy"), "up", "static"));
+        npcs.add(new NPC("mark", 700, 700, npcDialogues.get("mark"), "down", "static"));
+        npcs.add(new NPC("lucy", 1150, 600, npcDialogues.get("lucy"), "up", "static"));
     }
 
     public void update(boolean[] keys) {
@@ -53,7 +53,7 @@ public class CharacterManager {
         
         for (NPC npc : npcs) {
           int npcScreenX = npc.getX() - cameraX;
-          int npxScreenY = npc.getY() - cameraY;
+          int npcScreenY = npc.getY() - cameraY;
           npc.draw(npcScreenX, npcScreenY);
         }
     }

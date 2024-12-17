@@ -41,7 +41,7 @@ public class NPC extends Entity {
         }
     }
 
-    public void draw(){
-        SaxionApp.drawImage(this.down0, this.x, this.y, this.width, this.height);
+    public void draw(int screenX, int screenY){
+        SaxionApp.drawImage(this.down0, screenX, screenY, this.width, this.height);
     }
 }
