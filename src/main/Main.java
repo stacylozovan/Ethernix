@@ -1,14 +1,15 @@
 import entity.CharacterManager;
+import entity.CombatSystemLogic;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
-import java.util.Map;
-
 public class Main implements GameLoop {
     private tile.Map gameMap;
     private CharacterManager characterManager;
+    private CombatSystemLogic combatSystem;
+
     private boolean[] keys = new boolean[256];
     private MainMenu mainMenu = new MainMenu();
     private boolean inMenu = true;
@@ -17,6 +18,11 @@ public class Main implements GameLoop {
     private int cameraX = 0;
     private int cameraY = 0;
 
+    private boolean inBattle = false;
+    private boolean attackKeyPressed = false; // New flag for detecting attacks
+
+    private String battleMapImage = "src/res/object/battlemap.png";
+
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
     }
@@ -24,7 +30,6 @@ public class Main implements GameLoop {
     @Override
     public void init() {
         characterManager = new CharacterManager();
-
         gameMap = new tile.Map();
     }
 
@@ -33,20 +38,32 @@ public class Main implements GameLoop {
         SaxionApp.clear();
 
         if (mainMenu.isInSettings()) {
-            SaxionApp.drawText("Settings", 150,150,50); // if I click the settings button, this will be changed into a settings method later
+            SaxionApp.drawText("Settings", 150, 150, 50);
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (gameStarted) {
-            updateCamera();
+            if (!inBattle) {
+                updateCamera();
+                checkForBattleTransition();
+                gameMap.draw(cameraX, cameraY);
+            } else {
+                drawBattleScene();
+            }
 
-            gameMap.draw(cameraX, cameraY);
-
-            characterManager.update(keys);
-            int playerScreenX = characterManager.getPlayer().getX() - cameraX;
-            int playerScreenY = characterManager.getPlayer().getY() - cameraY;
-            characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
-            characterManager.handleCharacterInteractions();
-            characterManager.displayHealthStatus();
+            if (!inBattle) {
+                // Normal game loop
+                characterManager.update(keys);
+                int playerScreenX = characterManager.getPlayer().getX() - cameraX;
+                int playerScreenY = characterManager.getPlayer().getY() - cameraY;
+                characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
+                characterManager.handleCharacterInteractions();
+                characterManager.displayHealthStatus();
+            } else {
+                // Combat loop
+                if (combatSystem.isBattleOver()) {
+                    endBattle();
+                }
+            }
         }
     }
 
@@ -65,30 +82,69 @@ public class Main implements GameLoop {
         cameraY = Math.max(0, Math.min(cameraY, maxCameraY));
     }
 
+    private void checkForBattleTransition() {
+        if (characterManager.isPlayerNearMadara()) {
+            switchToBattleMap();
+        }
+    }
+
+    private void switchToBattleMap() {
+        inBattle = true;
+
+        combatSystem = new CombatSystemLogic(characterManager.getPlayer(), characterManager.getMadara());
+        System.out.println("Transitioned to battle map. Combat starts!");
+    }
+
+    private void drawBattleScene() {
+
+        SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
+
+
+        combatSystem.drawHealthBars();
+
+
+        characterManager.getPlayer().draw(300, 800); // Player position
+        characterManager.getMadara().draw(700, 400); // Madara position
+
+        if (attackKeyPressed) {
+            combatSystem.handleCombat();
+            attackKeyPressed = false;
+        }
+    }
+
+    private void endBattle() {
+        inBattle = false;
+
+        System.out.println("Battle ended. Returning to the regular map...");
+
+        characterManager.getPlayer().setPosition(1180, 600);
+        characterManager.getMadara().setPosition(1180, 300);
+    }
+
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
         int keyCode = keyboardEvent.getKeyCode();
+
+        if (inBattle && keyboardEvent.isKeyPressed() && keyCode == KeyboardEvent.VK_A) {
+            attackKeyPressed = true;
+        }
+
         if (keyCode >= 0 && keyCode < keys.length) {
             keys[keyCode] = keyboardEvent.isKeyPressed();
         }
 
         if (mainMenu.handlingKeyboardEscapeButton(keyboardEvent)) {
-            inMenu = true; // if we click ESC, the main menu appears
+            inMenu = true;
         }
     }
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
-
         if (inMenu) {
-            // If the mouse event returns true, start the game
             if (mainMenu.mouseEvent(mouseEvent)) {
                 inMenu = false;
                 gameStarted = true;
-            }
-
-            else if (mainMenu.isInSettings()) {
-                // Show settings screen
+            } else if (mainMenu.isInSettings()) {
                 inMenu = false;
             }
         }

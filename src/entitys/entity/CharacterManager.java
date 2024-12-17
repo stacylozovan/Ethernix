@@ -14,7 +14,7 @@ public class CharacterManager {
 
     public void update(boolean[] keys) {
         player.update(keys);
-        //madara.update(player.getX(), player.getY());
+
     }
 
     public void handleCharacterInteractions() {
@@ -22,12 +22,16 @@ public class CharacterManager {
             player.takeDamage(10);
         }
 
+        // Handle player death
         if (player.getHealth() <= 0) {
             System.out.println("Player is dead!");
+
         }
 
+        // Handle Madara's death
         if (madara.getHealth() <= 0) {
             System.out.println("Madara is defeated!");
+
         }
     }
 
@@ -45,5 +49,21 @@ public class CharacterManager {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Madara getMadara() {
+        return madara;
+    }
+
+    // Check if the player is near Madara
+    public boolean isPlayerNearMadara() {
+        int playerX = player.getX();
+        int playerY = player.getY();
+
+        int madaraX = madara.getX();
+        int madaraY = madara.getY();
+
+        // Return true if the player is within a 50-pixel range of Madara's position
+        return Math.abs(playerX - madaraX) < 50 && Math.abs(playerY - madaraY) < 50;
     }
 }

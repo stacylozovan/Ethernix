@@ -16,7 +16,7 @@ public class Madara extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 500;
+        x = 1180;
         y = 300;
         exactX = x;
         exactY = y;
@@ -37,36 +37,6 @@ public class Madara extends Entity {
             rightImages[i] = getImagePath("right", i);
         }
     }
-
-//    public void update(int playerX, int playerY) {
-//        double deltaX = playerX - exactX;
-//        double deltaY = playerY - exactY;
-//
-//
-//        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-//        if (distance > speed) {
-//            exactX += (deltaX / distance) * speed;
-//            exactY += (deltaY / distance) * speed;
-//        }
-//
-//
-//        x = (int) exactX;
-//        y = (int) exactY;
-//
-//
-//        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-//            direction = (deltaX > 0) ? "right" : "left";
-//        } else {
-//            direction = (deltaY > 0) ? "down" : "up";
-//        }
-//
-//        // Handle sprite animation
-//        spriteCounter++;
-//        if (spriteCounter >= 5) { // Change frame every 5 updates for smoother animation
-//            spriteCounter = 0;
-//            spriteNum = (spriteNum % 9) + 1; // Cycle through frames 1 to 9
-//        }
-//    }
 
     public void draw(int screenX, int screenY) {
         String image = "";
@@ -89,5 +59,13 @@ public class Madara extends Entity {
 
     public int getHealth() {
         return health;
+    }
+
+    // New method to set position for teleportation
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.exactX = x;
+        this.exactY = y;
     }
 }
