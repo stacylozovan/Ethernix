@@ -3,95 +3,91 @@ package entity;
 import nl.saxion.app.SaxionApp;
 
 public class Madara extends Entity {
+    private final String[] downImages = new String[9];
+    private final String[] upImages = new String[9];
+    private final String[] leftImages = new String[9];
+    private final String[] rightImages = new String[9];
+
+    private double exactX, exactY;
+
     public Madara() {
         setDefaultValues();
-        getMadaraImage();
+        getMadaraImages();
     }
 
     public void setDefaultValues() {
         x = 500;
-        y = 500;
-        speed = 8;
+        y = 300;
+        exactX = x;
+        exactY = y;
+        speed = 3;
         direction = "down";
-        health = 100; // Default health value
+        health = 100;
     }
 
-    public void getMadaraImage() {
-        down1 = "src/res/madara/madara_fight_1.png";
-        down2 = "src/res/madara/madara_fight_2.png";
-        down3 = "src/res/madara/madara_fight_3.png";
-        down4 = "src/res/madara/madara_fight_4.png";
-        down5 = "src/res/madara/madara_fight_5.png";
-        down6 = "src/res/madara/madara_fight_6.png";
-        down7 = "src/res/madara/madara_fight_7.png";
-        down8 = "src/res/madara/madara_fight_8.png";
-        down9 = "src/res/madara/madara_fight_9.png";
-        down10 = "src/res/madara/madara_fight_10.png";
-        down11 = "src/res/madara/madara_fight_11.png";
-        down12 = "src/res/madara/madara_fight_12.png";
-        down13 = "src/res/madara/madara_fight_13.png";
-        down14 = "src/res/madara/madara_fight_14.png";
-        down15 = "src/res/madara/madara_fight_15.png";
-        down16 = "src/res/madara/madara_fight_16.png";
-        right1 = "src/res/madara/madara_fight_1.png";
-        left1 = "src/res/madara/madara_fight_2.png";
+    private String getImagePath(String direction, int frame) {
+        return String.format("src/res/madara/%s/%s%d.png", direction, direction, frame);
     }
 
-    public void update(int playerX, int playerY) {
-        // Logic to move towards the player's position
-        if (playerX < x) {
-            x = Math.max(0, x - speed);
-            direction = "left";
-        } else if (playerX > x) {
-            x = Math.min(x + speed, 1000); // Assuming screen width is 1000
-            direction = "right";
-        }
-
-        if (playerY < y) {
-            y = Math.max(0, y - speed);
-            direction = "up";
-        } else if (playerY > y) {
-            y = Math.min(y + speed, 1000); // Assuming screen height is 1000
-            direction = "down";
-        }
-
-        spriteCounter++;
-        if (spriteCounter > 15) {
-            spriteNum = (spriteNum % 16) + 1;
-            spriteCounter = 0;
+    public void getMadaraImages() {
+        for (int i = 0; i <= 8; i++) {
+            downImages[i] = getImagePath("down", i);
+            upImages[i] = getImagePath("up", i);
+            leftImages[i] = getImagePath("left", i);
+            rightImages[i] = getImagePath("right", i);
         }
     }
+
+//    public void update(int playerX, int playerY) {
+//        double deltaX = playerX - exactX;
+//        double deltaY = playerY - exactY;
+//
+//
+//        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+//        if (distance > speed) {
+//            exactX += (deltaX / distance) * speed;
+//            exactY += (deltaY / distance) * speed;
+//        }
+//
+//
+//        x = (int) exactX;
+//        y = (int) exactY;
+//
+//
+//        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+//            direction = (deltaX > 0) ? "right" : "left";
+//        } else {
+//            direction = (deltaY > 0) ? "down" : "up";
+//        }
+//
+//        // Handle sprite animation
+//        spriteCounter++;
+//        if (spriteCounter >= 5) { // Change frame every 5 updates for smoother animation
+//            spriteCounter = 0;
+//            spriteNum = (spriteNum % 9) + 1; // Cycle through frames 1 to 9
+//        }
+//    }
 
     public void draw(int screenX, int screenY) {
-        String image = switch (direction) {
-            case "up" -> down1;
-            case "down" -> setImageDown(spriteNum);
-            case "left" -> left1;
-            case "right" -> right1;
-            default -> "";
-        };
-        SaxionApp.drawImage(image, screenX, screenY, 64, 64);
+        String image = "";
+
+        switch (direction) {
+            case "up" -> image = upImages[spriteNum - 1];
+            case "down" -> image = downImages[spriteNum - 1];
+            case "left" -> image = leftImages[spriteNum - 1];
+            case "right" -> image = rightImages[spriteNum - 1];
+            default -> image = downImages[0];
+        }
+
+        SaxionApp.drawImage(image, screenX, screenY, 66, 66);
     }
 
-    private String setImageDown(int spriteNum) {
-        return switch (spriteNum) {
-            case 1 -> down1;
-            case 2 -> down2;
-            case 3 -> down3;
-            case 4 -> down4;
-            case 5 -> down5;
-            case 6 -> down6;
-            case 7 -> down7;
-            case 8 -> down8;
-            case 9 -> down9;
-            case 10 -> down10;
-            case 11 -> down11;
-            case 12 -> down12;
-            case 13 -> down13;
-            case 14 -> down14;
-            case 15 -> down15;
-            case 16 -> down16;
-            default -> down1; // Default image fallback
-        };
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) health = 0;
+    }
+
+    public int getHealth() {
+        return health;
     }
 }
