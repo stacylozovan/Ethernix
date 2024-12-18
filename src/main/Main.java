@@ -45,7 +45,8 @@ public class Main implements GameLoop {
             int playerScreenX = characterManager.getPlayer().getX() - cameraX;
             int playerScreenY = characterManager.getPlayer().getY() - cameraY;
             characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
-            characterManager.handleCharacterInteractions();
+//            characterManager.handleCharacterInteractions();
+//            characterManager.getPlayer().drawCollisionBox(cameraX, cameraY);
 //            characterManager.displayHealthStatus();
         }
     }

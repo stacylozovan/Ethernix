@@ -1,6 +1,8 @@
 package tile;
 
 import nl.saxion.app.SaxionApp;
+
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -67,6 +69,7 @@ public class Map {
                     int drawY = tile[row][col].y - cameraY;
 
                     SaxionApp.drawImage(tile[row][col].image, drawX, drawY, TILE_SIZE, TILE_SIZE);
+//                    tile[row][col].drawCollisionBox(cameraX, cameraY);
                 }
             }
         }
@@ -90,4 +93,31 @@ public class Map {
 
         return tile[tileY][tileX].isSolid;
     }
+
+    public boolean isCollision(Rectangle playerBox) {
+        int tileSize = Map.TILE_SIZE;
+
+        // Limitar os tiles que serão verificados
+        int startCol = Math.max(0, playerBox.x / tileSize);
+        int endCol = Math.min(tile[0].length - 1, (playerBox.x + playerBox.width) / tileSize);
+
+        int startRow = Math.max(0, playerBox.y / tileSize);
+        int endRow = Math.min(tile.length - 1, (playerBox.y + playerBox.height) / tileSize);
+
+        // Verificar apenas os tiles dentro da área do personagem
+        for (int row = startRow; row <= endRow; row++) {
+            for (int col = startCol; col <= endCol; col++) {
+                if (tile[row][col] != null && tile[row][col].isSolid) {
+                    Rectangle tileBox = tile[row][col].getCollisionBox();
+                    if (playerBox.intersects(tileBox)) {
+                        return true; // Colisão detectada
+                    }
+                }
+            }
+        }
+
+        return false; // Sem colisão
+    }
+
+
 }

@@ -2,6 +2,9 @@ package entity;
 
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
+import tile.Map;
+
+import java.awt.*;
 
 public class Player extends Entity {
     private final String[] downImages = new String[9];
@@ -41,30 +44,26 @@ public class Player extends Entity {
 
         if (keys[KeyboardEvent.VK_UP] || keys[KeyboardEvent.VK_W]) {
             direction = "up";
-            if (!gameMap.isTileSolid(this.x, this.y - speed)) {
-                this.y -= speed;
-            }
+            int maxMove = calculateMaxMove(this.x, this.y, 0, -speed, gameMap);
+            this.y -= maxMove;
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_DOWN] || keys[KeyboardEvent.VK_S]) {
             direction = "down";
-            if (!gameMap.isTileSolid(this.x, this.y + speed)) {
-                this.y += speed;
-            }
+            int maxMove = calculateMaxMove(this.x, this.y, 0, speed, gameMap);
+            this.y += maxMove;
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_LEFT] || keys[KeyboardEvent.VK_A]) {
             direction = "left";
-            if (!gameMap.isTileSolid(this.x - speed, this.y)) {
-                this.x -= speed;
-            }
+            int maxMove = calculateMaxMove(this.x, this.y, -speed, 0, gameMap);
+            this.x -= maxMove;
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_RIGHT] || keys[KeyboardEvent.VK_D]) {
             direction = "right";
-            if (!gameMap.isTileSolid(this.x + speed, this.y)) {
-                this.x += speed;
-            }
+            int maxMove = calculateMaxMove(this.x, this.y, speed, 0, gameMap);
+            this.x += maxMove;
             keyPressed = true;
         }
 
@@ -76,6 +75,79 @@ public class Player extends Entity {
             }
         }
     }
+
+    private int calculateMaxMove(int currentX, int currentY, int deltaX, int deltaY, tile.Map gameMap) {
+        int maxMove = 0;
+
+        // Iterar de 1 até o valor de speed, verificando colisão passo a passo
+        for (int i = 1; i <= Math.abs(deltaX + deltaY); i++) {
+            int testX = currentX + (deltaX != 0 ? (deltaX > 0 ? i : -i) : 0);
+            int testY = currentY + (deltaY != 0 ? (deltaY > 0 ? i : -i) : 0);
+
+            // Simula a caixa de colisão ajustada
+            Rectangle testBox = new Rectangle(testX, testY, 32, 48); // Use as mesmas dimensões da colisão
+
+            if (gameMap.isCollision(testBox)) {
+                break; // Parar se houver colisão
+            }
+
+            maxMove = i; // Atualizar a distância máxima possível
+        }
+
+        return maxMove;
+    }
+
+
+    public void drawCollisionBox(int cameraX, int cameraY) {
+        Rectangle collisionBox = getCollisionBox();
+        int drawX = collisionBox.x - cameraX;
+        int drawY = collisionBox.y - cameraY;
+
+        SaxionApp.setBorderColor(Color.RED);
+        SaxionApp.drawRectangle(drawX, drawY, collisionBox.width, collisionBox.height);
+    }
+
+
+//    public void update(boolean[] keys, tile.Map gameMap) {
+//        boolean keyPressed = false;
+//
+//        if (keys[KeyboardEvent.VK_UP] || keys[KeyboardEvent.VK_W]) {
+//            direction = "up";
+//            if (!gameMap.isTileSolid(this.x, this.y - speed)) {
+//                this.y -= speed;
+//            }
+//            keyPressed = true;
+//        }
+//        if (keys[KeyboardEvent.VK_DOWN] || keys[KeyboardEvent.VK_S]) {
+//            direction = "down";
+//            if (!gameMap.isTileSolid(this.x, this.y + speed)) {
+//                this.y += speed;
+//            }
+//            keyPressed = true;
+//        }
+//        if (keys[KeyboardEvent.VK_LEFT] || keys[KeyboardEvent.VK_A]) {
+//            direction = "left";
+//            if (!gameMap.isTileSolid(this.x - speed, this.y)) {
+//                this.x -= speed;
+//            }
+//            keyPressed = true;
+//        }
+//        if (keys[KeyboardEvent.VK_RIGHT] || keys[KeyboardEvent.VK_D]) {
+//            direction = "right";
+//            if (!gameMap.isTileSolid(this.x + speed, this.y)) {
+//                this.x += speed;
+//            }
+//            keyPressed = true;
+//        }
+//
+//        if (keyPressed) {
+//            spriteCounter++;
+//            if (spriteCounter >= 2) {
+//                spriteCounter = 0;
+//                spriteNum = spriteNum % 9 + 1;
+//            }
+//        }
+//    }
 
     public void draw(int screenX, int screenY) {
         String image = "";
@@ -124,6 +196,15 @@ public class Player extends Entity {
             return leftImages[spriteNum - 1];
         }
         return "Invalid sprite number";
+    }
+
+    public Rectangle getCollisionBox() {
+        int boxWidth = 32;  // Reduza o tamanho do retângulo (ajuste fino)
+        int boxHeight = 48; // Ajuste a altura para representar o "corpo" do personagem
+        int offsetX = (PLAYER_SIZE - boxWidth) / 2;  // Centraliza horizontalmente
+        int offsetY = (PLAYER_SIZE - boxHeight) / 2; // Centraliza verticalmente
+
+        return new Rectangle(this.x + offsetX, this.y + offsetY, boxWidth, boxHeight);
     }
 }
 
