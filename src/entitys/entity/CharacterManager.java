@@ -16,7 +16,7 @@ public class CharacterManager {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
         Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
-        this.player = new Player();
+        this.player = new Player("naruto");
         this.madara = new Madara();
         this.player.setDefaultValues();
         this.madara.setDefaultValues();

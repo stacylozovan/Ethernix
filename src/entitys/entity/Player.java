@@ -8,8 +8,11 @@ public class Player extends Entity {
     private final String[] upImages = new String[9];
     private final String[] leftImages = new String[9];
     private final String[] rightImages = new String[9];
+    private final String design;
 
-    public Player(){
+
+    public Player(String design){
+        this.design = design;
         setDefaultValues();
         getPlayerImage();
     }
@@ -22,7 +25,13 @@ public class Player extends Entity {
     }
 
     private String getImagePath(String direction, int frame) {
-        return String.format("src/res/player/naruto/%s/naruto_%s%d.png", direction, direction, frame);
+        if (design.equals("naruto")) {
+            return String.format("src/res/player/naruto/%s/naruto_%s%d.png",direction, direction, frame);
+        } else if (design.equals("gojo")) {
+            return String.format("src/res/player.%s/%s/%s_%s%d.png", design, direction, design, direction, frame);
+        } else {
+            return "";
+        }
     }
 
     public void getPlayerImage() {
@@ -78,9 +87,12 @@ public class Player extends Entity {
             case "right" -> setImageRight(spriteNum);
             default -> image;
         };
-        SaxionApp.drawImage(image, screenX, screenY, 64, 64);
+        if (design.equals("gojo")) {
+            SaxionApp.drawImage(image, screenX, screenY, 75, 75);
+        } else {
+            SaxionApp.drawImage(image, screenX, screenY, 64, 64);
+        }
     }
-
     public void takeDamage(int damage) {
         health -= damage;
         if (health < 0) health = 0;
@@ -89,13 +101,6 @@ public class Player extends Entity {
     public int getHealth() {
         return health;
     }
-
-    // New method to set player position
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
     private String setImageDown(int spriteNum) {
         if (spriteNum >= 1 && spriteNum <= 9) {
             return downImages[spriteNum - 1];
@@ -124,3 +129,4 @@ public class Player extends Entity {
         return "Invalid sprite number";
     }
 }
+
