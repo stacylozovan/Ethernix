@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class Map {
     private tile.Tile[][] tile;
+    public static final int TILE_SIZE = 50;
     private final String[] tileImages = {
             "/object/tiles/grass.png",
             "/object/tiles/wall.png",
@@ -41,8 +42,9 @@ public class Map {
                             getClass().getResource(tileImages[tileType]),
                             "Image not found: " + tileImages[tileType]
                     ).getPath();
-                    tile[row][col].x = col * 50;
-                    tile[row][col].y = row * 50;
+                    tile[row][col].x = col * TILE_SIZE;
+                    tile[row][col].y = row * TILE_SIZE;
+                    tile[row][col].isSolid = (tileType == 1 || tileType == 4); // define solids tiles
                 }
                 row++;
             }
@@ -52,11 +54,11 @@ public class Map {
     }
 
     public void draw(int cameraX, int cameraY) {
-        int startCol = Math.max(0, cameraX / 50);
-        int endCol = Math.min(tile[0].length, (cameraX + 1000) / 50 + 1);
+        int startCol = Math.max(0, cameraX / TILE_SIZE);
+        int endCol = Math.min(tile[0].length, (cameraX + 1000) / TILE_SIZE + 1);
 
-        int startRow = Math.max(0, cameraY / 50);
-        int endRow = Math.min(tile.length, (cameraY + 1000) / 50 + 1);
+        int startRow = Math.max(0, cameraY / TILE_SIZE);
+        int endRow = Math.min(tile.length, (cameraY + 1000) / TILE_SIZE + 1);
 
         for (int row = startRow; row < endRow; row++) {
             for (int col = startCol; col < endCol; col++) {
@@ -64,7 +66,7 @@ public class Map {
                     int drawX = tile[row][col].x - cameraX;
                     int drawY = tile[row][col].y - cameraY;
 
-                    SaxionApp.drawImage(tile[row][col].image, drawX, drawY, 50, 50);
+                    SaxionApp.drawImage(tile[row][col].image, drawX, drawY, TILE_SIZE, TILE_SIZE);
                 }
             }
         }
@@ -76,5 +78,16 @@ public class Map {
 
     public int getHeight() {
         return tile.length;
+    }
+
+    public boolean isTileSolid(int pixelX, int pixelY) {
+        int tileX = (pixelX + Map.TILE_SIZE / 2) / Map.TILE_SIZE;
+        int tileY = (pixelY + Map.TILE_SIZE / 2) / Map.TILE_SIZE;
+
+        if (tileX < 0 || tileY < 0 || tileX >= tile[0].length || tileY >= tile.length) {
+            return true;
+        }
+
+        return tile[tileY][tileX].isSolid;
     }
 }

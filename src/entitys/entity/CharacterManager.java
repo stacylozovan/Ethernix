@@ -26,8 +26,8 @@ public class CharacterManager {
         npcs.add(new NPC("lucy", 1150, 600, npcDialogues.get("lucy"), "up", "static"));
     }
 
-    public void update(boolean[] keys) {
-        player.update(keys);
+    public void update(boolean[] keys, tile.Map gamemap) {
+        player.update(keys, gamemap);
         //madara.update(player.getX(), player.getY());
     }
 

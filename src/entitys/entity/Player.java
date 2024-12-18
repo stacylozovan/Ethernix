@@ -8,7 +8,7 @@ public class Player extends Entity {
     private final String[] upImages = new String[9];
     private final String[] leftImages = new String[9];
     private final String[] rightImages = new String[9];
-
+    public static final int PLAYER_SIZE = 64;
     public Player(){
         setDefaultValues();
         getPlayerImage();
@@ -19,6 +19,8 @@ public class Player extends Entity {
         y = 500;
         speed = 8;
         direction = "down";
+        width = PLAYER_SIZE;
+        height = PLAYER_SIZE;
     }
 
     private String getImagePath(String direction, int frame) {
@@ -34,27 +36,35 @@ public class Player extends Entity {
         }
     }
 
-    public void update(boolean[] keys) {
+    public void update(boolean[] keys, tile.Map gameMap) {
         boolean keyPressed = false;
 
         if (keys[KeyboardEvent.VK_UP] || keys[KeyboardEvent.VK_W]) {
             direction = "up";
-            this.y -= speed;
+            if (!gameMap.isTileSolid(this.x, this.y - speed)) {
+                this.y -= speed;
+            }
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_DOWN] || keys[KeyboardEvent.VK_S]) {
             direction = "down";
-            this.y += speed;
+            if (!gameMap.isTileSolid(this.x, this.y + speed)) {
+                this.y += speed;
+            }
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_LEFT] || keys[KeyboardEvent.VK_A]) {
             direction = "left";
-            this.x -= speed;
+            if (!gameMap.isTileSolid(this.x - speed, this.y)) {
+                this.x -= speed;
+            }
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_RIGHT] || keys[KeyboardEvent.VK_D]) {
             direction = "right";
-            this.x += speed;
+            if (!gameMap.isTileSolid(this.x + speed, this.y)) {
+                this.x += speed;
+            }
             keyPressed = true;
         }
 
