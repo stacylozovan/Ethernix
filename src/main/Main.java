@@ -19,7 +19,7 @@ public class Main implements GameLoop {
     private int cameraY = 0;
 
     private boolean inBattle = false;
-    private boolean attackKeyPressed = false; // New flag for detecting attacks
+    private boolean attackKeyPressed = false;
 
     private String battleMapImage = "src/res/object/battlemap.png";
 
@@ -46,20 +46,12 @@ public class Main implements GameLoop {
                 updateCamera();
                 checkForBattleTransition();
                 gameMap.draw(cameraX, cameraY);
-            } else {
-                drawBattleScene();
-            }
-
-            if (!inBattle) {
-                // Normal game loop
                 characterManager.update(keys);
-                int playerScreenX = characterManager.getPlayer().getX() - cameraX;
-                int playerScreenY = characterManager.getPlayer().getY() - cameraY;
-                characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
+                drawMapAndCharacters();
                 characterManager.handleCharacterInteractions();
                 characterManager.displayHealthStatus();
             } else {
-                // Combat loop
+                drawBattleScene();
                 if (combatSystem.isBattleOver()) {
                     endBattle();
                 }
@@ -72,8 +64,8 @@ public class Main implements GameLoop {
         int screenHeight = 1000;
         int tileSize = 50;
 
-        cameraX = characterManager.getPlayer().getX() - screenWidth / 2;
-        cameraY = characterManager.getPlayer().getY() - screenHeight / 2;
+        cameraX = characterManager.getNaruto().getX() - screenWidth / 2;
+        cameraY = characterManager.getNaruto().getY() - screenHeight / 2;
 
         int maxCameraX = gameMap.getWidth() * tileSize - screenWidth;
         int maxCameraY = gameMap.getHeight() * tileSize - screenHeight;
@@ -91,20 +83,23 @@ public class Main implements GameLoop {
     private void switchToBattleMap() {
         inBattle = true;
 
-        combatSystem = new CombatSystemLogic(characterManager.getPlayer(), characterManager.getMadara());
+        combatSystem = new CombatSystemLogic(
+                characterManager.getNaruto(),
+                characterManager.getGojo(),
+                characterManager.getMadara()
+        );
         System.out.println("Transitioned to battle map. Combat starts!");
     }
 
     private void drawBattleScene() {
-
         SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
-
 
         combatSystem.drawHealthBars();
 
-
-        characterManager.getPlayer().draw(300, 800); // Player position
-        characterManager.getMadara().draw(700, 400); // Madara position
+        // Draw characters in their battle positions
+        characterManager.getNaruto().draw(300, 800);
+        characterManager.getGojo().draw(500, 800);
+        characterManager.getMadara().draw(700, 400);
 
         if (attackKeyPressed) {
             combatSystem.handleCombat();
@@ -112,21 +107,37 @@ public class Main implements GameLoop {
         }
     }
 
+    private void drawMapAndCharacters() {
+        characterManager.draw(cameraX, cameraY);
+    }
+
     private void endBattle() {
         inBattle = false;
 
         System.out.println("Battle ended. Returning to the regular map...");
 
-        characterManager.getPlayer().setPosition(1180, 600);
+        characterManager.getNaruto().setPosition(1180, 600);
         characterManager.getMadara().setPosition(1180, 300);
+
+        System.out.println("Gojo removed from active gameplay.");
     }
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
         int keyCode = keyboardEvent.getKeyCode();
 
-        if (inBattle && keyboardEvent.isKeyPressed() && keyCode == KeyboardEvent.VK_A) {
-            attackKeyPressed = true;
+        if (inBattle) {
+            if (keyboardEvent.isKeyPressed()) {
+                if (keyCode == KeyboardEvent.VK_A) {
+                    attackKeyPressed = true;
+                }
+                if (keyCode == KeyboardEvent.VK_1) {
+                    combatSystem.switchPlayer(1);
+                }
+                if (keyCode == KeyboardEvent.VK_2) {
+                    combatSystem.switchPlayer(2);
+                }
+            }
         }
 
         if (keyCode >= 0 && keyCode < keys.length) {

@@ -1,25 +1,29 @@
 package entity;
 
 import nl.saxion.app.CsvReader;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 public class CharacterManager {
-
-    private final Player player;
+    private final Player naruto;
+    private Player gojo;
+    private Player activePlayer;
     private final Madara madara;
     private final List<NPC> npcs;
-
 
     public CharacterManager() {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
         Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
-        this.player = new Player("naruto");
+        this.naruto = new Player("naruto");
         this.madara = new Madara();
-        this.player.setDefaultValues();
+
+        this.naruto.setDefaultValues();
         this.madara.setDefaultValues();
+
+        this.activePlayer = naruto;
 
         this.npcs = new ArrayList<>();
         npcs.add(new NPC("mark", 700, 700, npcDialogues.get("mark"), "down", "static"));
@@ -27,17 +31,17 @@ public class CharacterManager {
     }
 
     public void update(boolean[] keys) {
-        player.update(keys);
-        madara.update(player.getX(), player.getY());
+        activePlayer.update(keys);
+        madara.setPosition(madara.getX(), madara.getY());
     }
 
     public void handleCharacterInteractions() {
-        if (Math.abs(player.getX() - madara.getX()) < 50 && Math.abs(player.getY() - madara.getY()) < 50) {
-            player.takeDamage(10);
+        if (isNear(activePlayer)) {
+            activePlayer.takeDamage(10);
         }
 
-        if (player.getHealth() <= 0) {
-            System.out.println("Player is dead!");
+        if (naruto.getHealth() <= 0) {
+            System.out.println("Naruto is dead!");
         }
 
         if (madara.getHealth() <= 0) {
@@ -45,34 +49,68 @@ public class CharacterManager {
         }
     }
 
-    public void draw(int playerScreenX, int playerScreenY, int cameraX, int cameraY) {
-        player.draw(playerScreenX, playerScreenY);
-        int madaraScreenX = madara.getX() - cameraX;
-        int madaraScreenY = madara.getY() - cameraY;
-        madara.draw(madaraScreenX, madaraScreenY);
-        
+    public void draw(int cameraX, int cameraY) {
+        drawCharacter(naruto, cameraX, cameraY);
+        drawCharacter(madara, cameraX, cameraY);
+
         for (NPC npc : npcs) {
-          int npcScreenX = npc.getX() - cameraX;
-          int npcScreenY = npc.getY() - cameraY;
-          npc.draw(npcScreenX, npcScreenY);
+            drawCharacter(npc, cameraX, cameraY);
         }
     }
 
     public void displayHealthStatus() {
-        System.out.println("Player Health: " + player.getHealth());
+        System.out.println("Naruto Health: " + naruto.getHealth());
+        if (gojo != null) {
+            System.out.println("Gojo Health: " + gojo.getHealth());
+        }
         System.out.println("Madara Health: " + madara.getHealth());
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getNaruto() {
+        return naruto;
     }
 
+    public Player getGojo() {
+        if (gojo == null) {
+            gojo = new Player("gojo");
+            gojo.setDefaultValues();
+        }
+        return gojo;
+    }
 
     public Madara getMadara() {
         return madara;
     }
 
-//     this method exist just to test the dialogues imports
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public void switchActivePlayer(int playerNumber) {
+        if (playerNumber == 1) {
+            activePlayer = naruto;
+            System.out.println("Switched to Naruto.");
+        } else if (playerNumber == 2 && gojo != null) {
+            activePlayer = gojo;
+            System.out.println("Switched to Gojo.");
+        }
+    }
+
+    public boolean isPlayerNearMadara() {
+        return isNear(activePlayer);
+    }
+
+    private boolean isNear(Player player) {
+        return Math.abs(player.getX() - madara.getX()) < 50 &&
+                Math.abs(player.getY() - madara.getY()) < 50;
+    }
+
+    private void drawCharacter(Entity character, int cameraX, int cameraY) {
+        int screenX = character.getX() - cameraX;
+        int screenY = character.getY() - cameraY;
+        character.draw(screenX, screenY);
+    }
+
     public void printNPCDialogues() {
         for (NPC npc : npcs) {
             System.out.println("NPC: " + npc.name);
@@ -86,4 +124,3 @@ public class CharacterManager {
         }
     }
 }
-

@@ -10,8 +10,9 @@ public class Player extends Entity {
     private final String[] rightImages = new String[9];
     private final String design;
 
+    private double exactX, exactY;
 
-    public Player(String design){
+    public Player(String design) {
         this.design = design;
         setDefaultValues();
         getPlayerImage();
@@ -20,19 +21,31 @@ public class Player extends Entity {
     public void setDefaultValues() {
         x = 500;
         y = 500;
+        exactX = x;
+        exactY = y;
         speed = 8;
         direction = "down";
     }
 
-    private String getImagePath(String direction, int frame) {
-        if (design.equals("naruto")) {
-            return String.format("src/res/player/naruto/%s/naruto_%s%d.png",direction, direction, frame);
-        } else if (design.equals("gojo")) {
-            return String.format("src/res/player.%s/%s/%s_%s%d.png", design, direction, design, direction, frame);
-        } else {
-            return "";
-        }
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.exactX = x;
+        this.exactY = y;
     }
+
+    private String getImagePath(String direction, int frame) {
+        String basePath;
+        if (design.equals("naruto")) {
+            basePath = "src/res/player/naruto";
+        } else if (design.equals("gojo")) {
+            basePath = "src/res/player.gojo";
+        } else {
+            return ""; // Invalid design
+        }
+        return String.format("%s/%s/%s_%s%d.png", basePath, direction, design, direction, frame);
+    }
+
 
     public void getPlayerImage() {
         for (int i = 0; i <= 8; i++) {
@@ -87,12 +100,14 @@ public class Player extends Entity {
             case "right" -> setImageRight(spriteNum);
             default -> image;
         };
+
         if (design.equals("gojo")) {
             SaxionApp.drawImage(image, screenX, screenY, 75, 75);
         } else {
             SaxionApp.drawImage(image, screenX, screenY, 64, 64);
         }
     }
+
     public void takeDamage(int damage) {
         health -= damage;
         if (health < 0) health = 0;
@@ -101,6 +116,7 @@ public class Player extends Entity {
     public int getHealth() {
         return health;
     }
+
     private String setImageDown(int spriteNum) {
         if (spriteNum >= 1 && spriteNum <= 9) {
             return downImages[spriteNum - 1];
@@ -129,4 +145,3 @@ public class Player extends Entity {
         return "Invalid sprite number";
     }
 }
-
