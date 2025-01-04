@@ -96,10 +96,7 @@ public class Main implements GameLoop {
 
         combatSystem.drawHealthBars();
 
-        // Draw characters in their battle positions
-        characterManager.getNaruto().draw(300, 800);
-        characterManager.getGojo().draw(500, 800);
-        characterManager.getMadara().draw(700, 400);
+        combatSystem.drawBattleField();
 
         if (attackKeyPressed) {
             combatSystem.handleCombat();
@@ -119,7 +116,7 @@ public class Main implements GameLoop {
         characterManager.getNaruto().setPosition(1180, 600);
         characterManager.getMadara().setPosition(1180, 300);
 
-        System.out.println("Gojo removed from active gameplay.");
+        System.out.println("Battle over. Resuming exploration.");
     }
 
     @Override
@@ -129,13 +126,13 @@ public class Main implements GameLoop {
         if (inBattle) {
             if (keyboardEvent.isKeyPressed()) {
                 if (keyCode == KeyboardEvent.VK_A) {
-                    attackKeyPressed = true;
+                    attackKeyPressed = true; // Attack triggered by 'A' key
                 }
                 if (keyCode == KeyboardEvent.VK_1) {
-                    combatSystem.switchPlayer(1);
+                    combatSystem.switchPlayer(1); // Switch to Naruto
                 }
                 if (keyCode == KeyboardEvent.VK_2) {
-                    combatSystem.switchPlayer(2);
+                    combatSystem.switchPlayer(2); // Switch to Gojo
                 }
             }
         }
@@ -151,6 +148,12 @@ public class Main implements GameLoop {
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
+        if (inBattle) {
+            if (mouseEvent.isMouseDown() && mouseEvent.isLeftMouseButton()) {
+                attackKeyPressed = true; // Attack triggered by left mouse button
+            }
+        }
+
         if (inMenu) {
             if (mainMenu.mouseEvent(mouseEvent)) {
                 inMenu = false;

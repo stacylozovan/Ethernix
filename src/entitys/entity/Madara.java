@@ -22,7 +22,7 @@ public class Madara extends Entity {
         exactY = y;
         speed = 3;
         direction = "down";
-        health = 100;
+        health = 200;
     }
 
     private String getImagePath(String direction, int frame) {

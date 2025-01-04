@@ -1,7 +1,6 @@
 package entity;
 
 import nl.saxion.app.SaxionApp;
-
 import java.awt.Color;
 
 public class CombatSystemLogic {
@@ -23,33 +22,47 @@ public class CombatSystemLogic {
 
     public void teleportToBattlePositions() {
         naruto.setPosition(300, 800);
-        gojo.setPosition(500, 800);
+        gojo.setPosition(500, 800); // Gojo's position is set but not used unless switched to
         madara.setPosition(700, 400);
     }
 
     public void drawHealthBars() {
-        // Naruto Health Bar
-        SaxionApp.setFill(Color.RED);
-        int narutoHealthWidth = naruto.getHealth() * 2;
-        SaxionApp.drawRectangle(250, 750, narutoHealthWidth, 20);
-        SaxionApp.setFill(Color.BLACK);
-        SaxionApp.drawText("Naruto Health: " + naruto.getHealth(), 250, 740, 12);
 
-        // Gojo Health Bar
-        if (gojo != null) {
-            SaxionApp.setFill(Color.RED);
-            int gojoHealthWidth = gojo.getHealth() * 2;
-            SaxionApp.drawRectangle(450, 750, gojoHealthWidth, 20);
-            SaxionApp.setFill(Color.BLACK);
-            SaxionApp.drawText("Gojo Health: " + gojo.getHealth(), 450, 740, 12);
-        }
-
-        // Madara Health Bar
         SaxionApp.setFill(Color.RED);
         int madaraHealthWidth = madara.getHealth() * 2;
         SaxionApp.drawRectangle(650, 350, madaraHealthWidth, 20);
         SaxionApp.setFill(Color.BLACK);
         SaxionApp.drawText("Madara Health: " + madara.getHealth(), 650, 340, 12);
+
+
+        if (activePlayer != null) {
+            int healthBarWidth = activePlayer.getHealth() * 2;
+            int healthBarX = activePlayer.getX() - (healthBarWidth / 2);
+            int healthBarY = activePlayer.getY() - 25; // Adjusted slightly for visibility
+
+            SaxionApp.setFill(Color.RED);
+            SaxionApp.drawRectangle(healthBarX, healthBarY, healthBarWidth, 10);
+            SaxionApp.setFill(Color.BLACK);
+            SaxionApp.drawText(
+                    (activePlayer == naruto ? "Naruto" : "Gojo") + " Health: " + activePlayer.getHealth(),
+                    healthBarX, healthBarY - 10, 10
+            );
+        } else {
+            System.err.println("Error: Active player is null. Cannot draw health bar.");
+        }
+    }
+
+
+
+
+
+    public void drawBattleField() {
+        if (activePlayer == naruto) {
+            naruto.draw(300, 800);
+        } else if (activePlayer == gojo) {
+            gojo.draw(300, 800); // Active player always drawn in the same position
+        }
+        madara.draw(700, 400);
     }
 
     public void handleCombat() {
@@ -57,7 +70,6 @@ public class CombatSystemLogic {
             madara.takeDamage(20);
             System.out.println((activePlayer == naruto ? "Naruto" : "Gojo") + " attacks Madara for 20 damage!");
         } else {
-
             if (Math.random() < 0.5) {
                 naruto.takeDamage(15);
                 System.out.println("Madara attacks Naruto for 15 damage!");

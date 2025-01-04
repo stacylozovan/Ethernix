@@ -40,8 +40,8 @@ public class CharacterManager {
             activePlayer.takeDamage(10);
         }
 
-        if (naruto.getHealth() <= 0) {
-            System.out.println("Naruto is dead!");
+        if (naruto.getHealth() <= 0 && (gojo == null || gojo.getHealth() <= 0)) {
+            System.out.println("Both Naruto and Gojo are dead!");
         }
 
         if (madara.getHealth() <= 0) {
@@ -50,7 +50,11 @@ public class CharacterManager {
     }
 
     public void draw(int cameraX, int cameraY) {
-        drawCharacter(naruto, cameraX, cameraY);
+        if (activePlayer == naruto) {
+            drawCharacter(naruto, cameraX, cameraY);
+        } else if (activePlayer == gojo) {
+            drawCharacter(gojo, cameraX, cameraY);
+        }
         drawCharacter(madara, cameraX, cameraY);
 
         for (NPC npc : npcs) {
@@ -87,14 +91,21 @@ public class CharacterManager {
     }
 
     public void switchActivePlayer(int playerNumber) {
-        if (playerNumber == 1) {
+        if (playerNumber == 1 && activePlayer != naruto) {
+            naruto.setPosition(activePlayer.getX(), activePlayer.getY());
             activePlayer = naruto;
-            System.out.println("Switched to Naruto.");
-        } else if (playerNumber == 2 && gojo != null) {
+            System.out.println("Switched to Naruto. Position: " + naruto.getX() + ", " + naruto.getY());
+        } else if (playerNumber == 2 && (gojo == null || activePlayer != gojo)) {
+            if (gojo == null) {
+                gojo = new Player("gojo");
+                gojo.setDefaultValues();
+            }
+            gojo.setPosition(activePlayer.getX(), activePlayer.getY());
             activePlayer = gojo;
-            System.out.println("Switched to Gojo.");
+            System.out.println("Switched to Gojo. Position: " + gojo.getX() + ", " + gojo.getY());
         }
     }
+
 
     public boolean isPlayerNearMadara() {
         return isNear(activePlayer);
