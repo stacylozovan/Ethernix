@@ -25,7 +25,9 @@ public class Player extends Entity {
         exactY = y;
         speed = 8;
         direction = "down";
+        health = 200;
     }
+
 
     public void setPosition(int x, int y) {
         this.x = x;

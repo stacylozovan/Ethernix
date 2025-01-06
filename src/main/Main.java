@@ -21,7 +21,7 @@ public class Main implements GameLoop {
     private boolean inBattle = false;
     private boolean attackKeyPressed = false;
 
-    private String battleMapImage = "src/res/object/battlemap.png";
+    private String battleMapImage = "src/res/object/battlemap1.png";
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
