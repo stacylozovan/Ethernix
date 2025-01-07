@@ -256,7 +256,7 @@ public class CombatSystemLogic {
             startNarutoAttackAnimation("ultimate");
             madara.takeDamage(100);
             narutoUltimateReady = false;
-            System.out.println("Naruto used his ultimate attack! Madara takes 100 damage.");
+            System.out.println("Naruto uses his ultimate attack! Madara takes 100 damage.");
         }
     }
 
