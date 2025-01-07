@@ -5,7 +5,8 @@ public class AudioHelper {
     private static Thread playerThread;
 
     // Private constructor to prevent instantiation
-    private AudioHelper() {}
+    private AudioHelper() {
+    }
 
     /**
      * Plays the specified audio file in a loop if specified.
@@ -128,5 +129,15 @@ public class AudioHelper {
     public static synchronized void newSong(String filename, boolean loop) {
         stop(); // Stop any existing playback
         play(filename, loop); // Start playing the new song
+    }
+
+    public static boolean isSongInArray(String song, String[] songs) {
+        if (song == null) return false;
+        for (String s : songs) {
+            if (song.equals(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,3 +1,4 @@
+import entity.AudioHelper;
 import entity.CharacterManager;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
@@ -13,6 +14,7 @@ public class Main implements GameLoop {
     private MainMenu mainMenu = new MainMenu();
     private boolean inMenu = true;
     private boolean gameStarted = false;
+    private AudioHelper audioHelper;
 
     private int cameraX = 0;
     private int cameraY = 0;
@@ -37,6 +39,22 @@ public class Main implements GameLoop {
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (gameStarted) {
+
+            String[] songs = {
+                    "src/res/audio/first_map_audio_1.wav",
+                    "src/res/audio/first_map_audio_2.wav",
+                    "src/res/audio/first_map_audio_3.wav"
+            }; // 3 songs randomized
+
+
+
+            if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
+                // Select a random song from the list and play it
+                int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
+                String selectedSong = songs[randomIndex];
+                AudioHelper.newSong(selectedSong, false); // Play the selected song
+            }
+
             updateCamera();
 
             gameMap.draw(cameraX, cameraY);
@@ -91,6 +109,7 @@ public class Main implements GameLoop {
                 // Show settings screen
                 inMenu = false;
             }
+
         }
     }
 }
