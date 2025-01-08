@@ -150,7 +150,7 @@ public class Main implements GameLoop {
     public void mouseEvent(MouseEvent mouseEvent) {
         if (inBattle) {
             if (mouseEvent.isMouseDown() && mouseEvent.isLeftMouseButton()) {
-                attackKeyPressed = true; // Attack triggered by left mouse button
+                attackKeyPressed = true;
             }
         }
 

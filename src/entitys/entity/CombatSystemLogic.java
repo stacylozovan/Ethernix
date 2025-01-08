@@ -22,8 +22,8 @@ public class CombatSystemLogic {
     private boolean narutoSpecialReady = false;
     private boolean narutoUltimateReady = false;
 
-    private int attackStep = 0; // For animation steps
-    private boolean isAnimatingAttack = false; // Track if animation is running
+    private int attackStep = 0;
+    private boolean isAnimatingAttack = false;
     private String currentProjectileImage = null;
 
     private final String madaraNormalBall = "src/res/object/balls/ball1.png";
@@ -33,6 +33,9 @@ public class CombatSystemLogic {
     private final String narutoNormalBall = "src/res/object/balls/ball4.png";
     private final String narutoSpecialBall = "src/res/object/balls/ball5.png";
     private final String narutoUltimateBall = "src/res/object/balls/ball6.png";
+    private long narutoLastAttackTime = 0;
+    private final long narutoAttackCooldown = 1000;
+
 
     public CombatSystemLogic(Player naruto, Player gojo, Madara madara) {
         this.naruto = naruto;
@@ -88,6 +91,16 @@ public class CombatSystemLogic {
 
     public void handleCombat() {
         if (playerTurn) {
+
+            if (activePlayer == naruto) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - narutoLastAttackTime < narutoAttackCooldown) {
+                    System.out.println("Naruto is on cooldown!");
+                    return; // Skip if cooldown hasn't passed
+                }
+                narutoLastAttackTime = currentTime;
+            }
+
             int damage = 15;
             madara.takeDamage(damage);
             startNarutoAttackAnimation("normal");
@@ -95,7 +108,7 @@ public class CombatSystemLogic {
             if (activePlayer == naruto) {
                 narutoDamageCounter += damage;
 
-                if (narutoDamageCounter >= 50 && !narutoSpecialReady) {
+                if (narutoDamageCounter >= 60 && !narutoSpecialReady) {
                     narutoSpecialPoints += 10;
                 }
 
@@ -122,6 +135,7 @@ public class CombatSystemLogic {
         }
         System.out.println("Madara Health: " + madara.getHealth());
     }
+
 
     private void startNarutoAttackAnimation(String attackType) {
         isAnimatingAttack = true;
@@ -222,24 +236,82 @@ public class CombatSystemLogic {
 
     private void madaraRegularAttack() {
         if (activePlayer != null && activePlayer.getHealth() > 0) {
-            activePlayer.takeDamage(15);
-            System.out.println("Madara attacks " + (activePlayer == naruto ? "Naruto" : "Gojo") + " for 15 damage!");
+            int baseDamage = 20; // Normal attack damage
+            activePlayer.takeDamage(baseDamage);
+            System.out.println("Madara attacks " + (activePlayer == naruto ? "Naruto" : "Gojo") + " for " + baseDamage + " damage!");
+
+
+            if (Math.random() < 0.2) {
+                String effect = (Math.random() < 0.5) ? "stun" : "slow"; // 50% chance for either effect
+                applyStatusEffect(activePlayer, effect);
+            }
+        }
+    }
+    private void applyStatusEffect(Player player, String effect) {
+        if (effect.equals("stun")) {
+            player.setStunned(true); // Assuming Player has a setStunned method
+            System.out.println(player.getName() + " is stunned!");
+            Timer stunTimer = new Timer();
+            stunTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    player.setStunned(false);
+                    System.out.println(player.getName() + " is no longer stunned!");
+                }
+            }, 5000); // Stun duration: 5 seconds
+        } else if (effect.equals("slow")) {
+            int originalSpeed = player.getSpeed();
+            player.setSpeed(originalSpeed / 2);
+            System.out.println(player.getName() + " is slowed!");
+            Timer slowTimer = new Timer();
+            slowTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    player.setSpeed(originalSpeed);
+                    System.out.println(player.getName() + " is no longer slowed!");
+                }
+            }, 5000); // Slow duration: 5 seconds
         }
     }
 
     private void checkMadaraHealthForUltimate() {
-        int madaraMaxHealth = 200;
+        int madaraMaxHealth = 300;
 
-        if (!ultimateUsedAt50 && madara.getHealth() <= madaraMaxHealth * 0.5) {
+        // Trigger ultimate at 40% health
+        if (!ultimateUsedAt50 && madara.getHealth() <= madaraMaxHealth * 0.4) {
             startMadaraAttackAnimation("ultimate");
             ultimateUsedAt50 = true;
+            System.out.println("Madara's ultimate attack triggered at 40% health!");
         }
 
-        if (!ultimateUsedAt25 && madara.getHealth() <= madaraMaxHealth * 0.25) {
+        if (!ultimateUsedAt25 && madara.getHealth() <= madaraMaxHealth * 0.5) {
             startMadaraAttackAnimation("ultimate");
             ultimateUsedAt25 = true;
+
+
+            applyMadaraBuff();
+            System.out.println("Madara gains a temporary buff at 25% health!");
         }
     }
+    private void applyMadaraBuff() {
+        madara.setAttackDamage(madara.getAttackDamage() + 10);
+
+        if (attackTimer != null) {
+            attackTimer.cancel();
+        }
+        attackTimer = new Timer();
+        attackTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (madara.getHealth() > 0) {
+                    startMadaraAttackAnimation("normal");
+                }
+            }
+        }, 0, 15000);
+    }
+
+
+
 
     public void triggerSpecialAttack() {
         if (narutoSpecialReady && activePlayer == naruto) {
