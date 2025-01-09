@@ -16,9 +16,9 @@ public class CharacterManager {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
         Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
-        this.player = new Player(100, 100);
+        this.player = new Player("gojo");
         this.madara = new Madara();
-//        this.player.setDefaultValues();
+        this.player.setDefaultValues();
         this.madara.setDefaultValues();
 
         this.npcs = new ArrayList<>();
@@ -27,7 +27,7 @@ public class CharacterManager {
     }
 
     public void update(boolean[] keys) {
-        player.move(keys);
+        player.update(keys);
         //madara.update(player.getX(), player.getY());
     }
 
@@ -50,11 +50,11 @@ public class CharacterManager {
         int madaraScreenX = madara.getX() - cameraX;
         int madaraScreenY = madara.getY() - cameraY;
         madara.draw(madaraScreenX, madaraScreenY);
-
+        
         for (NPC npc : npcs) {
           int npcScreenX = npc.getX() - cameraX;
           int npcScreenY = npc.getY() - cameraY;
-          npc.draw(npcScreenX, npcScreenY, 60);
+          npc.draw(npcScreenX, npcScreenY);
         }
     }
 

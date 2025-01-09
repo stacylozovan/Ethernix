@@ -1,3 +1,4 @@
+import entity.AudioHelper;
 import entity.CharacterManager;
 import entity.DialogueLoader;
 import entity.NPC;
@@ -17,6 +18,7 @@ public class Main implements GameLoop {
     private MainMenu mainMenu = new MainMenu();
     private boolean inMenu = true;
     private boolean gameStarted = false;
+    private AudioHelper audioHelper;
     private int frameCount = 0;
 
     private int cameraX = 0;
@@ -35,7 +37,6 @@ public class Main implements GameLoop {
     public void init() {
         characterManager = new CharacterManager();
 
-        // Initialize the map
         gameMap = new tile.Map();
 
         // Initialize NPCs
@@ -61,16 +62,30 @@ public class Main implements GameLoop {
         SaxionApp.clear();
 
         if (mainMenu.isInSettings()) {
-            SaxionApp.drawText("Settings", 150, 150, 50); // Settings screen placeholder
+            SaxionApp.drawText("Settings", 150,150,50); // if I click the settings button, this will be changed into a settings method later
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (gameStarted) {
+
+            String[] songs = {
+                    "src/res/audio/first_map_audio_1.wav",
+                    "src/res/audio/first_map_audio_2.wav",
+                    "src/res/audio/first_map_audio_3.wav"
+            }; // 3 songs randomized
+
+
+
+            if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
+                // Select a random song from the list and play it
+                int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
+                String selectedSong = songs[randomIndex];
+                AudioHelper.newSong(selectedSong, false); // Play the selected song
+            }
+
             updateCamera();
 
-            // Draw the map
             gameMap.draw(cameraX, cameraY);
 
-            // Update and draw characters
             characterManager.update(keys);
             int playerScreenX = characterManager.getPlayer().getX() - cameraX;
             int playerScreenY = characterManager.getPlayer().getY() - cameraY;
@@ -134,7 +149,7 @@ public class Main implements GameLoop {
         }
 
         if (mainMenu.handlingKeyboardEscapeButton(keyboardEvent)) {
-            inMenu = true; // Return to main menu on ESC
+            inMenu = true; // if we click ESC, the main menu appears
         }
     }
 
@@ -147,7 +162,11 @@ public class Main implements GameLoop {
             } else if (mainMenu.isInSettings()) {
                 inMenu = false; // Show settings screen
             }
+
+            else if (mainMenu.isInSettings()) {
+                // Show settings screen
+                inMenu = false;
+            }
         }
     }
-
 }
