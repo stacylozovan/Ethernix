@@ -10,13 +10,15 @@ public class CharacterManager {
     private final Player player;
     private final Madara madara;
     private final List<NPC> npcs;
+    private final main.CollisionChecker cChecker;
 
 
-    public CharacterManager() {
+    public CharacterManager(main.CollisionChecker cChecker) {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
         Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
-        this.player = new Player();
+        this.cChecker = cChecker;
+        this.player = new Player(cChecker);
         this.madara = new Madara();
         this.player.setDefaultValues();
         this.madara.setDefaultValues();

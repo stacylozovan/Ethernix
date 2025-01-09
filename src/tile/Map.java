@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Map {
-    private tile.Tile[][] tile;
+    public static tile.Tile[][] tile;
     public static final int TILE_SIZE = 50;
     private final String[] tileImages = {
             "/object/tiles/grass.png",
@@ -46,7 +46,7 @@ public class Map {
                     ).getPath();
                     tile[row][col].x = col * TILE_SIZE;
                     tile[row][col].y = row * TILE_SIZE;
-                    tile[row][col].isSolid = (tileType == 1 || tileType == 4); // define solids tiles
+                    tile[row][col].collision = (tileType == 1 || tileType == 4);
                 }
                 row++;
             }
@@ -69,7 +69,6 @@ public class Map {
                     int drawY = tile[row][col].y - cameraY;
 
                     SaxionApp.drawImage(tile[row][col].image, drawX, drawY, TILE_SIZE, TILE_SIZE);
-//                    tile[row][col].drawCollisionBox(cameraX, cameraY);
                 }
             }
         }
@@ -82,42 +81,5 @@ public class Map {
     public int getHeight() {
         return tile.length;
     }
-
-    public boolean isTileSolid(int pixelX, int pixelY) {
-        int tileX = (pixelX + Map.TILE_SIZE / 2) / Map.TILE_SIZE;
-        int tileY = (pixelY + Map.TILE_SIZE / 2) / Map.TILE_SIZE;
-
-        if (tileX < 0 || tileY < 0 || tileX >= tile[0].length || tileY >= tile.length) {
-            return true;
-        }
-
-        return tile[tileY][tileX].isSolid;
-    }
-
-    public boolean isCollision(Rectangle playerBox) {
-        int tileSize = Map.TILE_SIZE;
-
-        // Limitar os tiles que serão verificados
-        int startCol = Math.max(0, playerBox.x / tileSize);
-        int endCol = Math.min(tile[0].length - 1, (playerBox.x + playerBox.width) / tileSize);
-
-        int startRow = Math.max(0, playerBox.y / tileSize);
-        int endRow = Math.min(tile.length - 1, (playerBox.y + playerBox.height) / tileSize);
-
-        // Verificar apenas os tiles dentro da área do personagem
-        for (int row = startRow; row <= endRow; row++) {
-            for (int col = startCol; col <= endCol; col++) {
-                if (tile[row][col] != null && tile[row][col].isSolid) {
-                    Rectangle tileBox = tile[row][col].getCollisionBox();
-                    if (playerBox.intersects(tileBox)) {
-                        return true; // Colisão detectada
-                    }
-                }
-            }
-        }
-
-        return false; // Sem colisão
-    }
-
 
 }

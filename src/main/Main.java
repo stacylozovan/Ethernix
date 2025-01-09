@@ -1,4 +1,5 @@
 import entity.CharacterManager;
+import main.CollisionChecker;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
@@ -23,9 +24,10 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
-        characterManager = new CharacterManager();
-
         gameMap = new tile.Map();
+        CollisionChecker collisionChecker = new CollisionChecker(gameMap);
+
+        characterManager = new CharacterManager(collisionChecker);
     }
 
     @Override
