@@ -11,6 +11,10 @@ public class Player extends Entity {
     private final String design;
 
     private double exactX, exactY;
+    private int shield = 0; // Shield amount
+    private double attackMultiplier = 1.0; // Attack power multiplier (default is 1.0)
+    private boolean isBuffed = false; // Buff status
+
 
     public Player(String design) {
         this.design = design;
@@ -110,10 +114,30 @@ public class Player extends Entity {
         }
     }
 
+    @Override
     public void takeDamage(int damage) {
-        health -= damage;
-        if (health < 0) health = 0;
+        if (shield > 0) { // Check if a shield is active
+            int remainingDamage = damage - shield;
+            shield = Math.max(0, shield - damage); // Reduce shield first
+            if (remainingDamage > 0) { // Apply leftover damage to health
+                health -= remainingDamage;
+            }
+        } else {
+            health -= damage; // No shield, damage goes directly to health
+        }
+        if (health < 0) {
+            health = 0; // Prevent health from going negative
+        }
     }
+    public void setShield(int shield) {
+        this.shield = shield;
+        System.out.println(getName() + " gains a shield of " + shield + " HP!");
+    }
+    public void removeShield() {
+        this.shield = 0; // Set shield value to 0
+        System.out.println(getName() + "'s shield has been removed!");
+    }
+
 
     public int getHealth() {
         return health;

@@ -21,7 +21,7 @@ public class Main implements GameLoop {
     private boolean inBattle = false;
     private boolean attackKeyPressed = false;
 
-    private String battleMapImage = "src/res/object/battlemap1.png";
+    private String battleMapImage = "src/res/object/battlemap.png";
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
@@ -88,8 +88,11 @@ public class Main implements GameLoop {
                 characterManager.getGojo(),
                 characterManager.getMadara()
         );
+
+        combatSystem.startBattle(); // Enable battle mode
         System.out.println("Transitioned to battle map. Combat starts!");
     }
+
 
     private void drawBattleScene() {
         SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
@@ -111,6 +114,7 @@ public class Main implements GameLoop {
     private void endBattle() {
         inBattle = false;
 
+        combatSystem.endBattle();
         System.out.println("Battle ended. Returning to the regular map...");
 
         characterManager.getNaruto().setPosition(1180, 600);
@@ -118,6 +122,7 @@ public class Main implements GameLoop {
 
         System.out.println("Battle over. Resuming exploration.");
     }
+
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
