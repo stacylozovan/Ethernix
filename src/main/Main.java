@@ -1,9 +1,13 @@
 import entity.CharacterManager;
+import entity.DialogueLoader;
+import entity.NPC;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Main implements GameLoop {
@@ -13,9 +17,15 @@ public class Main implements GameLoop {
     private MainMenu mainMenu = new MainMenu();
     private boolean inMenu = true;
     private boolean gameStarted = false;
+    private int frameCount = 0;
 
     private int cameraX = 0;
     private int cameraY = 0;
+
+    // NPC-related variables
+    private List<NPC> npcs;
+    private boolean interactingWithNPC = false;
+    private NPC currentInteractingNPC;
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
@@ -25,28 +35,79 @@ public class Main implements GameLoop {
     public void init() {
         characterManager = new CharacterManager();
 
+        // Initialize the map
         gameMap = new tile.Map();
+
+        // Initialize NPCs
+        initNPCs();
+    }
+
+    private void initNPCs() {
+        npcs = new ArrayList<>();
+        Map<String, String[]> dialogues = DialogueLoader.loadDialogues(new nl.saxion.app.CsvReader("src/res/npcs/npc_dialogues.csv"));
+
+        // Example NPCs
+        NPC npc1 = new NPC("villager", 300, 300, dialogues.get("villager"), "down", "static");
+        NPC npc2 = new NPC("merchant", 500, 500, dialogues.get("merchant"), "down", "static");
+
+        npcs.add(npc1);
+        npcs.add(npc2);
     }
 
     @Override
     public void loop() {
+        frameCount++; // Increment frame counter
+
         SaxionApp.clear();
 
         if (mainMenu.isInSettings()) {
-            SaxionApp.drawText("Settings", 150,150,50); // if I click the settings button, this will be changed into a settings method later
+            SaxionApp.drawText("Settings", 150, 150, 50); // Settings screen placeholder
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (gameStarted) {
             updateCamera();
 
+            // Draw the map
             gameMap.draw(cameraX, cameraY);
 
+            // Update and draw characters
             characterManager.update(keys);
             int playerScreenX = characterManager.getPlayer().getX() - cameraX;
             int playerScreenY = characterManager.getPlayer().getY() - cameraY;
             characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
-            characterManager.handleCharacterInteractions();
-//            characterManager.displayHealthStatus();
+
+            // Draw and handle NPC interactions
+            handleNPCInteractions(playerScreenX, playerScreenY, frameCount); // Pass frameCount to handle animation
+        }
+    }
+
+    private void handleNPCInteractions(int playerScreenX, int playerScreenY, int frameCount) {
+        if (interactingWithNPC && currentInteractingNPC != null) {
+            // Display interaction text
+            currentInteractingNPC.interact();
+
+            // End dialog on spacebar press
+            if (keys[' ']) {
+                interactingWithNPC = false;
+                currentInteractingNPC = null;
+            }
+        } else {
+            // Check for nearby NPCs
+            for (NPC npc : npcs) {
+                if (npc.isVisible) {
+                    // Draw NPC
+                    int npcScreenX = npc.x - cameraX;
+                    int npcScreenY = npc.y - cameraY;
+                    npc.draw(npcScreenX, npcScreenY, frameCount); // Pass frameCount to NPC
+
+                    // Check for interaction
+                    if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys['E']) {
+                        interactingWithNPC = true;
+                        currentInteractingNPC = npc;
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -73,24 +134,20 @@ public class Main implements GameLoop {
         }
 
         if (mainMenu.handlingKeyboardEscapeButton(keyboardEvent)) {
-            inMenu = true; // if we click ESC, the main menu appears
+            inMenu = true; // Return to main menu on ESC
         }
     }
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
-
         if (inMenu) {
-            // If the mouse event returns true, start the game
             if (mainMenu.mouseEvent(mouseEvent)) {
                 inMenu = false;
                 gameStarted = true;
-            }
-
-            else if (mainMenu.isInSettings()) {
-                // Show settings screen
-                inMenu = false;
+            } else if (mainMenu.isInSettings()) {
+                inMenu = false; // Show settings screen
             }
         }
     }
+
 }
