@@ -12,14 +12,11 @@ public class Player extends Entity {
     private final String[] leftImages = new String[9];
     private final String[] rightImages = new String[9];
     public static final int PLAYER_SIZE = 64;
-  
+    private final String design;
+
     main.CollisionChecker cChecker;
 
     public Player(String design, main.CollisionChecker cChecker){
-
-
-
-    public Player(String design){
         this.design = design;
         setDefaultValues();
         getPlayerImage();
