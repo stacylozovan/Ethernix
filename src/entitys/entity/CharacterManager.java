@@ -18,7 +18,7 @@ public class CharacterManager {
         Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
         this.cChecker = cChecker;
-        this.player = new Player(cChecker);
+        this.player = new Player("naruto", cChecker);
         this.madara = new Madara();
         this.player.setDefaultValues();
         this.madara.setDefaultValues();

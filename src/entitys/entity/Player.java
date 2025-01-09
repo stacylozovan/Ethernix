@@ -14,7 +14,7 @@ public class Player extends Entity {
     public static final int PLAYER_SIZE = 64;
     main.CollisionChecker cChecker;
 
-    public Player(main.CollisionChecker cChecker){
+    public Player(String design, main.CollisionChecker cChecker){
         setDefaultValues();
         getPlayerImage();
         this.cChecker = cChecker;
