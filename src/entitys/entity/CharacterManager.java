@@ -19,6 +19,7 @@ public class CharacterManager {
 
         this.cChecker = cChecker;
         this.player = new Player("naruto", cChecker);
+
         this.madara = new Madara();
         this.player.setDefaultValues();
         this.madara.setDefaultValues();
