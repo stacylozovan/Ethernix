@@ -36,10 +36,7 @@ public class Main implements GameLoop {
     @Override
     public void init() {
         characterManager = new CharacterManager();
-
         gameMap = new tile.Map();
-
-        // Initialize NPCs
         initNPCs();
     }
 
@@ -47,7 +44,6 @@ public class Main implements GameLoop {
         npcs = new ArrayList<>();
         Map<String, String[]> dialogues = DialogueLoader.loadDialogues(new nl.saxion.app.CsvReader("src/res/npcs/npc_dialogues.csv"));
 
-        // Example NPCs
         NPC npc1 = new NPC("villager", 300, 300, dialogues.get("villager"), "down", "static");
         NPC npc2 = new NPC("merchant", 500, 500, dialogues.get("merchant"), "down", "static");
 
@@ -57,29 +53,23 @@ public class Main implements GameLoop {
 
     @Override
     public void loop() {
-        frameCount++; // Increment frame counter
-
         SaxionApp.clear();
 
         if (mainMenu.isInSettings()) {
-            SaxionApp.drawText("Settings", 150,150,50); // if I click the settings button, this will be changed into a settings method later
+            SaxionApp.drawText("Settings", 150, 150, 50);
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (gameStarted) {
-
             String[] songs = {
                     "src/res/audio/first_map_audio_1.wav",
                     "src/res/audio/first_map_audio_2.wav",
                     "src/res/audio/first_map_audio_3.wav"
-            }; // 3 songs randomized
-
-
+            };
 
             if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
-                // Select a random song from the list and play it
                 int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
                 String selectedSong = songs[randomIndex];
-                AudioHelper.newSong(selectedSong, false); // Play the selected song
+                AudioHelper.newSong(selectedSong, false);
             }
 
             updateCamera();
@@ -91,32 +81,22 @@ public class Main implements GameLoop {
             int playerScreenY = characterManager.getPlayer().getY() - cameraY;
             characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
 
-            // Draw and handle NPC interactions
-            handleNPCInteractions(playerScreenX, playerScreenY, frameCount); // Pass frameCount to handle animation
+            handleNPCInteractions(playerScreenX, playerScreenY);
         }
     }
 
-    private void handleNPCInteractions(int playerScreenX, int playerScreenY, int frameCount) {
+    private void handleNPCInteractions(int playerScreenX, int playerScreenY) {
         if (interactingWithNPC && currentInteractingNPC != null) {
-            // Display interaction text
             currentInteractingNPC.interact();
 
-            // End dialog on spacebar press
-            if (keys[' ']) {
+            if (keys[KeyboardEvent.VK_SPACE]) {
                 interactingWithNPC = false;
                 currentInteractingNPC = null;
             }
         } else {
-            // Check for nearby NPCs
             for (NPC npc : npcs) {
                 if (npc.isVisible) {
-                    // Draw NPC
-                    int npcScreenX = npc.x - cameraX;
-                    int npcScreenY = npc.y - cameraY;
-                    npc.draw(npcScreenX, npcScreenY, frameCount); // Pass frameCount to NPC
-
-                    // Check for interaction
-                    if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys['E']) {
+                    if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys[KeyboardEvent.VK_E]) {
                         interactingWithNPC = true;
                         currentInteractingNPC = npc;
                         break;
@@ -149,7 +129,7 @@ public class Main implements GameLoop {
         }
 
         if (mainMenu.handlingKeyboardEscapeButton(keyboardEvent)) {
-            inMenu = true; // if we click ESC, the main menu appears
+            inMenu = true;
         }
     }
 
@@ -160,11 +140,6 @@ public class Main implements GameLoop {
                 inMenu = false;
                 gameStarted = true;
             } else if (mainMenu.isInSettings()) {
-                inMenu = false; // Show settings screen
-            }
-
-            else if (mainMenu.isInSettings()) {
-                // Show settings screen
                 inMenu = false;
             }
         }

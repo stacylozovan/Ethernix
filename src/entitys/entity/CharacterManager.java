@@ -54,7 +54,7 @@ public class CharacterManager {
         for (NPC npc : npcs) {
           int npcScreenX = npc.getX() - cameraX;
           int npcScreenY = npc.getY() - cameraY;
-          npc.draw(npcScreenX, npcScreenY, 60);
+          npc.draw(npcScreenX, npcScreenY);
         }
     }
 
