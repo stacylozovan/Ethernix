@@ -11,9 +11,9 @@ public class Player extends Entity {
     private final String design;
 
     private double exactX, exactY;
-    private int shield = 0; // Shield amount
-    private double attackMultiplier = 1.0; // Attack power multiplier (default is 1.0)
-    private boolean isBuffed = false; // Buff status
+    private int shield = 0;
+    private double attackMultiplier = 1.0;
+    private boolean isBuffed = false;
 
 
     public Player(String design) {
@@ -116,17 +116,17 @@ public class Player extends Entity {
 
     @Override
     public void takeDamage(int damage) {
-        if (shield > 0) { // Check if a shield is active
+        if (shield > 0) {
             int remainingDamage = damage - shield;
-            shield = Math.max(0, shield - damage); // Reduce shield first
-            if (remainingDamage > 0) { // Apply leftover damage to health
+            shield = Math.max(0, shield - damage);
+            if (remainingDamage > 0) {
                 health -= remainingDamage;
             }
         } else {
-            health -= damage; // No shield, damage goes directly to health
+            health -= damage;
         }
         if (health < 0) {
-            health = 0; // Prevent health from going negative
+            health = 0;
         }
     }
     public void setShield(int shield) {

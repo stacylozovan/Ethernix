@@ -25,9 +25,12 @@ public class CombatSystemLogic {
     private int attackStep = 0;
     private boolean isAnimatingAttack = false;
     private String currentProjectileImage = null;
+
     private final String narutoBattleSprite = "src/res/battle/naruto_battle.png";
     private final String gojoBattleSprite = "src/res/battle/gojo_battle.png";
     private final String madaraBattleSprite = "src/res/battle/madara_battle.png";
+    private final String charactersChoiceImage = "src/res/object/choice1.png";
+    private final String attackChoiceImage = "src/res/object/attack_choice.png";
     private final String madaraNormalBall = "src/res/object/balls/ball1.png";
     private final String madaraSpecialBall = "src/res/object/balls/ball2.png";
     private final String madaraUltimateBall = "src/res/object/balls/ball3.png";
@@ -62,22 +65,22 @@ public class CombatSystemLogic {
     }
 
     public void teleportToBattlePositions() {
-        naruto.setPosition(300, 800);
-        gojo.setPosition(500, 600);
-        madara.setPosition(700, 400);
+        naruto.setPosition(300, 600);
+        gojo.setPosition(300, 600);
+        madara.setPosition(600, 600);
     }
 
     public void drawHealthBars() {
         SaxionApp.setFill(Color.RED);
         int madaraHealthWidth = madara.getHealth() * 2;
-        SaxionApp.drawRectangle(650, 350, madaraHealthWidth, 20);
+        SaxionApp.drawRectangle(275, 70, madaraHealthWidth, 20);
         SaxionApp.setFill(Color.BLACK);
-        SaxionApp.drawText("Madara Health: " + madara.getHealth(), 650, 340, 12);
+        SaxionApp.drawText("Madara Health: " + madara.getHealth(), 275, 70, 20);
 
         if (activePlayer != null) {
             int healthBarWidth = activePlayer.getHealth() * 2;
-            int healthBarX = activePlayer.getX() - (healthBarWidth / 2);
-            int healthBarY = activePlayer.getY() - 25;
+            int healthBarX = 150;
+            int healthBarY = (activePlayer == naruto) ? 900 : 950;
 
             SaxionApp.setFill(Color.RED);
             SaxionApp.drawRectangle(healthBarX, healthBarY, healthBarWidth, 10);
@@ -89,34 +92,40 @@ public class CombatSystemLogic {
         }
     }
 
+
     public void drawBattleField() {
         if (inBattleMode) {
-            // Draw Naruto if active
-            if (activePlayer == naruto) {
-                SaxionApp.drawImage(narutoBattleSprite, 150, 500, 300, 300);
-            }
 
-            // Draw Gojo if active
-            if (activePlayer == gojo) {
-                SaxionApp.drawImage(gojoBattleSprite, 150, 500, 300, 300);
-            }
+            SaxionApp.drawImage(charactersChoiceImage, 150, 700, 350, 275);
 
-            // Draw Madara
-            SaxionApp.drawImage(madaraBattleSprite, 600, 200, 400, 400);
-        } else {
-            // Draw regular sprites for the map
+            SaxionApp.drawImage("src/res/object/attack_choice.png", 550, 700, 450, 300);
+
             if (activePlayer == naruto) {
-                naruto.draw(300, 800);
+                SaxionApp.drawImage(narutoBattleSprite, 150, 450, 300, 300);
             } else if (activePlayer == gojo) {
-                gojo.draw(300, 800);
+                SaxionApp.drawImage(gojoBattleSprite, 150, 450, 300, 300);
             }
-            madara.draw(700, 400);
+
+
+            SaxionApp.drawImage(madaraBattleSprite, 350, 200, 400, 400);
+        } else {
+
+            if (activePlayer == naruto) {
+                naruto.draw(400, 600);
+            } else if (activePlayer == gojo) {
+                gojo.draw(400, 600);
+            }
+            madara.draw(600, 800);
         }
 
+        // Draw attack animation if active
         if (isAnimatingAttack) {
             drawAttackAnimation();
         }
     }
+
+
+
 
     public void handleCombat() {
         if (playerTurn) {
@@ -330,7 +339,7 @@ public class CombatSystemLogic {
     private void checkMadaraHealthForUltimate() {
         int madaraMaxHealth = 300;
 
-        // Trigger ultimate at 40% health
+
         if (!ultimateUsedAt50 && madara.getHealth() <= madaraMaxHealth * 0.4) {
             startMadaraAttackAnimation("ultimate");
             ultimateUsedAt50 = true;
