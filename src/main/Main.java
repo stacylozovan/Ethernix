@@ -21,7 +21,7 @@ public class Main implements GameLoop {
     private boolean inBattle = false;
     private boolean attackKeyPressed = false;
 
-    private String battleMapImage = "src/res/object/battlemap.png";
+    private String battleMapImage = "src/res/object/battlemap1.png";
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
@@ -89,7 +89,7 @@ public class Main implements GameLoop {
                 characterManager.getMadara()
         );
 
-        combatSystem.startBattle(); // Enable battle mode
+        combatSystem.startBattle();
         System.out.println("Transitioned to battle map. Combat starts!");
     }
 
@@ -134,10 +134,10 @@ public class Main implements GameLoop {
                     attackKeyPressed = true; // Attack triggered by 'A' key
                 }
                 if (keyCode == KeyboardEvent.VK_1) {
-                    combatSystem.switchPlayer(1); // Switch to Naruto
+                    combatSystem.switchPlayer(1);
                 }
                 if (keyCode == KeyboardEvent.VK_2) {
-                    combatSystem.switchPlayer(2); // Switch to Gojo
+                    combatSystem.switchPlayer(2);
                 }
             }
         }
