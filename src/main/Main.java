@@ -25,7 +25,6 @@ public class Main implements GameLoop {
     private int cameraY = 0;
 
     // NPC-related variables
-    private List<NPC> npcs;
     private boolean interactingWithNPC = false;
     private NPC currentInteractingNPC;
 
@@ -37,18 +36,6 @@ public class Main implements GameLoop {
     public void init() {
         characterManager = new CharacterManager();
         gameMap = new tile.Map();
-        initNPCs();
-    }
-
-    private void initNPCs() {
-        npcs = new ArrayList<>();
-        Map<String, String[]> dialogues = DialogueLoader.loadDialogues(new nl.saxion.app.CsvReader("src/res/npcs/npc_dialogues.csv"));
-
-        NPC npc1 = new NPC("villager", 300, 300, dialogues.get("villager"), "down", "static");
-        NPC npc2 = new NPC("merchant", 500, 500, dialogues.get("merchant"), "down", "static");
-
-        npcs.add(npc1);
-        npcs.add(npc2);
     }
 
     @Override
@@ -94,11 +81,12 @@ public class Main implements GameLoop {
                 currentInteractingNPC = null;
             }
         } else {
-            for (NPC npc : npcs) {
+            for (NPC npc : CharacterManager.npcs) {
                 if (npc.isVisible) {
                     if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys[KeyboardEvent.VK_E]) {
                         interactingWithNPC = true;
                         currentInteractingNPC = npc;
+                        System.out.println("NPC interacted");
                         break;
                     }
                 }

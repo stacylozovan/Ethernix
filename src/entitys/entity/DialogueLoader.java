@@ -1,6 +1,8 @@
 package entity;
 
 import nl.saxion.app.CsvReader;
+import nl.saxion.app.SaxionApp;
+
 import java.util.*;
 
 public class DialogueLoader {

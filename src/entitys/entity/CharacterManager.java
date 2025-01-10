@@ -1,6 +1,8 @@
 package entity;
 
 import nl.saxion.app.CsvReader;
+import nl.saxion.app.SaxionApp;
+
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ public class CharacterManager {
 
     private final Player player;
     private final Madara madara;
-    private final List<NPC> npcs;
+    public static List<NPC> npcs;
 
 
     public CharacterManager() {
@@ -24,6 +26,8 @@ public class CharacterManager {
         this.npcs = new ArrayList<>();
         npcs.add(new NPC("mark", 700, 700, npcDialogues.get("mark"), "down", "static"));
         npcs.add(new NPC("lucy", 1150, 600, npcDialogues.get("lucy"), "up", "static"));
+//        npcs.add(new NPC("villager", 300, 300, npcDialogues.get("villager"), "down", "static"));
+//        npcs.add(new NPC("merchant", 500, 500, npcDialogues.get("merchant"), "down", "static"));
     }
 
     public void update(boolean[] keys) {
