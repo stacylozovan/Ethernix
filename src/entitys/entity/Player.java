@@ -2,26 +2,39 @@ package entity;
 
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.SaxionApp;
+import tile.Map;
+
+import java.awt.*;
 
 public class Player extends Entity {
     private final String[] downImages = new String[9];
     private final String[] upImages = new String[9];
     private final String[] leftImages = new String[9];
     private final String[] rightImages = new String[9];
+    public static final int PLAYER_SIZE = 64;
     private final String design;
 
+    main.CollisionChecker cChecker;
 
-    public Player(String design){
+    public Player(String design, main.CollisionChecker cChecker){
         this.design = design;
         setDefaultValues();
         getPlayerImage();
+        this.cChecker = cChecker;
     }
 
     public void setDefaultValues() {
         x = 500;
         y = 500;
-        speed = 8;
+        speed = 6;
         direction = "down";
+        width = PLAYER_SIZE;
+        height = PLAYER_SIZE;
+        solidArea = new Rectangle();
+        solidArea.x = 16;
+        solidArea.y = 30;
+        solidArea.width = 32;
+        solidArea.height = 34;
     }
 
     private String getImagePath(String direction, int frame) {
@@ -43,28 +56,36 @@ public class Player extends Entity {
         }
     }
 
-    public void update(boolean[] keys) {
+    public void update(boolean[] keys, tile.Map gameMap) {
         boolean keyPressed = false;
 
         if (keys[KeyboardEvent.VK_UP] || keys[KeyboardEvent.VK_W]) {
             direction = "up";
-            this.y -= speed;
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_DOWN] || keys[KeyboardEvent.VK_S]) {
             direction = "down";
-            this.y += speed;
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_LEFT] || keys[KeyboardEvent.VK_A]) {
             direction = "left";
-            this.x -= speed;
             keyPressed = true;
         }
         if (keys[KeyboardEvent.VK_RIGHT] || keys[KeyboardEvent.VK_D]) {
             direction = "right";
-            this.x += speed;
             keyPressed = true;
+        }
+
+//        CHECK TILE COLLISION
+        collisionOn = this.cChecker.checkTile(this);
+//        IF COLLISION IS FALSE PLAYER CAN MOVE
+        if(keyPressed && !collisionOn){
+            switch(direction){
+                case "up": this.y -= speed; break;
+                case "down": this.y += speed; break;
+                case "left": this.x -= speed; break;
+                case "right": this.x += speed; break;
+            }
         }
 
         if (keyPressed) {
@@ -128,5 +149,6 @@ public class Player extends Entity {
         }
         return "Invalid sprite number";
     }
+
 }
 

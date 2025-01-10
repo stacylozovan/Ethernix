@@ -1,13 +1,16 @@
 package tile;
 
 import nl.saxion.app.SaxionApp;
+
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
 
 public class Map {
-    private tile.Tile[][] tile;
+    public static tile.Tile[][] tile;
+    public static final int TILE_SIZE = 50;
     private final String[] tileImages = {
             "/object/tiles/grass.png",
             "/object/tiles/wall.png",
@@ -41,8 +44,9 @@ public class Map {
                             getClass().getResource(tileImages[tileType]),
                             "Image not found: " + tileImages[tileType]
                     ).getPath();
-                    tile[row][col].x = col * 50;
-                    tile[row][col].y = row * 50;
+                    tile[row][col].x = col * TILE_SIZE;
+                    tile[row][col].y = row * TILE_SIZE;
+                    tile[row][col].collision = (tileType == 1 || tileType == 4);
                 }
                 row++;
             }
@@ -52,11 +56,11 @@ public class Map {
     }
 
     public void draw(int cameraX, int cameraY) {
-        int startCol = Math.max(0, cameraX / 50);
-        int endCol = Math.min(tile[0].length, (cameraX + 1000) / 50 + 1);
+        int startCol = Math.max(0, cameraX / TILE_SIZE);
+        int endCol = Math.min(tile[0].length, (cameraX + 1000) / TILE_SIZE + 1);
 
-        int startRow = Math.max(0, cameraY / 50);
-        int endRow = Math.min(tile.length, (cameraY + 1000) / 50 + 1);
+        int startRow = Math.max(0, cameraY / TILE_SIZE);
+        int endRow = Math.min(tile.length, (cameraY + 1000) / TILE_SIZE + 1);
 
         for (int row = startRow; row < endRow; row++) {
             for (int col = startCol; col < endCol; col++) {
@@ -64,7 +68,7 @@ public class Map {
                     int drawX = tile[row][col].x - cameraX;
                     int drawY = tile[row][col].y - cameraY;
 
-                    SaxionApp.drawImage(tile[row][col].image, drawX, drawY, 50, 50);
+                    SaxionApp.drawImage(tile[row][col].image, drawX, drawY, TILE_SIZE, TILE_SIZE);
                 }
             }
         }
@@ -77,4 +81,5 @@ public class Map {
     public int getHeight() {
         return tile.length;
     }
+
 }

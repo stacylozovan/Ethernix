@@ -1,5 +1,6 @@
 import entity.AudioHelper;
 import entity.CharacterManager;
+import main.CollisionChecker;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
@@ -25,9 +26,10 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
-        characterManager = new CharacterManager();
-
         gameMap = new tile.Map();
+        CollisionChecker collisionChecker = new CollisionChecker(gameMap);
+
+        characterManager = new CharacterManager(collisionChecker);
     }
 
     @Override
@@ -59,11 +61,12 @@ public class Main implements GameLoop {
 
             gameMap.draw(cameraX, cameraY);
 
-            characterManager.update(keys);
+            characterManager.update(keys, gameMap);
             int playerScreenX = characterManager.getPlayer().getX() - cameraX;
             int playerScreenY = characterManager.getPlayer().getY() - cameraY;
             characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
-            characterManager.handleCharacterInteractions();
+//            characterManager.handleCharacterInteractions();
+//            characterManager.getPlayer().drawCollisionBox(cameraX, cameraY);
 //            characterManager.displayHealthStatus();
         }
     }
