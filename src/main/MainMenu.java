@@ -1,3 +1,4 @@
+import entity.AudioHelper;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.MouseEvent;
 import java.awt.Color;
@@ -7,15 +8,23 @@ public class MainMenu {
     private boolean inMenu = true; // Tracks if we are in the menu
     private boolean gameStarted = false; // tracks if the game has started or not
     private boolean inSettings = false; // tracks the settings menu
+    private AudioHelper audioHelper;
 
 
     public void drawMainMenu() {
+            if (!AudioHelper.isPlaying() || !AudioHelper.getFilename().equals("src/res/audio/main_menu.wav")) {
+            AudioHelper.newSong("src/res/audio/main_menu.wav", false);
+            }
+
             SaxionApp.clear();
             SaxionApp.setFill(Color.BLACK);
             SaxionApp.drawImage("src/res/menu/ethernix.png",300,190,343,155);
             SaxionApp.drawImage("src/res/menu/play.png", 365, 335, 241, 133);
             SaxionApp.drawImage("src/res/menu/settings.png", 340, 465, 296, 122);
             SaxionApp.drawImage("src/res/menu/quit.png", 370, 595, 246, 138);
+
+        // Play main menu music
+
     }
 
     public boolean isMouseOver(int mouseX, int mouseY, int x, int y, int width, int height) {

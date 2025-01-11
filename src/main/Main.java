@@ -1,5 +1,7 @@
+import entity.AudioHelper;
 import entity.CharacterManager;
 import entity.CombatSystemLogic;
+import main.CollisionChecker;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
@@ -14,6 +16,7 @@ public class Main implements GameLoop {
     private MainMenu mainMenu = new MainMenu();
     private boolean inMenu = true;
     private boolean gameStarted = false;
+    private AudioHelper audioHelper;
 
     private int cameraX = 0;
     private int cameraY = 0;
@@ -29,8 +32,10 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
-        characterManager = new CharacterManager();
         gameMap = new tile.Map();
+        CollisionChecker collisionChecker = new CollisionChecker(gameMap);
+
+        characterManager = new CharacterManager(collisionChecker);
     }
 
     @Override
@@ -42,6 +47,7 @@ public class Main implements GameLoop {
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (gameStarted) {
+
             if (!inBattle) {
                 updateCamera();
                 checkForBattleTransition();
@@ -56,6 +62,35 @@ public class Main implements GameLoop {
                     endBattle();
                 }
             }
+
+
+            String[] songs = {
+                    "src/res/audio/first_map_audio_1.wav",
+                    "src/res/audio/first_map_audio_2.wav",
+                    "src/res/audio/first_map_audio_3.wav"
+            }; // 3 songs randomized
+
+
+
+            if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
+                // Select a random song from the list and play it
+                int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
+                String selectedSong = songs[randomIndex];
+                AudioHelper.newSong(selectedSong, false); // Play the selected song
+            }
+
+            updateCamera();
+
+            gameMap.draw(cameraX, cameraY);
+
+            characterManager.update(keys, gameMap);
+            int playerScreenX = characterManager.getPlayer().getX() - cameraX;
+            int playerScreenY = characterManager.getPlayer().getY() - cameraY;
+            characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
+//            characterManager.handleCharacterInteractions();
+//            characterManager.getPlayer().drawCollisionBox(cameraX, cameraY);
+//            characterManager.displayHealthStatus();
+
         }
     }
 
@@ -166,6 +201,7 @@ public class Main implements GameLoop {
             } else if (mainMenu.isInSettings()) {
                 inMenu = false;
             }
+
         }
     }
 }

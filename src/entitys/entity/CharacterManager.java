@@ -2,6 +2,7 @@ package entity;
 
 import nl.saxion.app.CsvReader;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,8 @@ public class CharacterManager {
     private Player activePlayer;
     private final Madara madara;
     private final List<NPC> npcs;
-
-    public CharacterManager() {
+    private final main.CollisionChecker cChecker;
+    public CharacterManager(main.CollisionChecker cChecker) {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
         Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
@@ -25,13 +26,19 @@ public class CharacterManager {
 
         this.activePlayer = naruto;
 
+        this.cChecker = cChecker;
+        this.player = new Player("naruto", cChecker);
+
+        this.player.setDefaultValues();
+        this.madara.setDefaultValues();
+
         this.npcs = new ArrayList<>();
         npcs.add(new NPC("mark", 700, 700, npcDialogues.get("mark"), "down", "static"));
         npcs.add(new NPC("lucy", 1150, 600, npcDialogues.get("lucy"), "up", "static"));
     }
 
-    public void update(boolean[] keys) {
-        activePlayer.update(keys);
+    public void update(boolean[] keys,tile.Map gamemap) {
+        activePlayer.update(keys,gamemap);
         madara.setPosition(madara.getX(), madara.getY());
     }
 
@@ -58,7 +65,9 @@ public class CharacterManager {
         drawCharacter(madara, cameraX, cameraY);
 
         for (NPC npc : npcs) {
-            drawCharacter(npc, cameraX, cameraY);
+            int npcScreenX = npc.getX() - cameraX;
+            int npcScreenY = npc.getY() - cameraY;
+            npc.draw(npcScreenX, npcScreenY);
         }
     }
 
@@ -134,4 +143,24 @@ public class CharacterManager {
             }
         }
     }
+
+
+    public Madara getMadara() {
+        return madara;
+    }
+
+    //     this method exist just to test the dialogues imports
+    public void printNPCDialogues() {
+        for (NPC npc : npcs) {
+            System.out.println("NPC: " + npc.name);
+            if (npc.dialogue != null) {
+                for (int i = 0; i < npc.dialogue.length; i++) {
+                    System.out.println("  Dialogue " + (i + 1) + ": " + npc.dialogue[i]);
+                }
+            } else {
+                System.out.println("  No dialogues loaded!");
+            }
+        }
+    }
 }
+
