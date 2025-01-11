@@ -11,7 +11,7 @@ public class CharacterManager {
 
     private final Player player;
     private final Madara madara;
-    private static List<NPC> npcs;
+    public static List<NPC> npcs;
     private final main.CollisionChecker cChecker;
 
     public CharacterManager(main.CollisionChecker cChecker) {

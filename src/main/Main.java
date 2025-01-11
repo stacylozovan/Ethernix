@@ -31,9 +31,10 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
-        characterManager = new CharacterManager();
         gameMap = new tile.Map();
         CollisionChecker collisionChecker = new CollisionChecker(gameMap);
+        characterManager = new CharacterManager(collisionChecker);
+
 
         characterManager = new CharacterManager(collisionChecker);
     }
@@ -92,7 +93,6 @@ public class Main implements GameLoop {
                     if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys[KeyboardEvent.VK_E]) {
                         interactingWithNPC = true;
                         currentInteractingNPC = npc;
-                        System.out.println("NPC interacted");
                         break;
                     }
                 }
