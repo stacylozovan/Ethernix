@@ -12,18 +12,17 @@ public class MainMenu {
 
 
     public void drawMainMenu() {
-            if (!AudioHelper.isPlaying() || !AudioHelper.getFilename().equals("src/res/audio/main_menu.wav")) {
-            AudioHelper.newSong("src/res/audio/main_menu.wav", false);
+            if (!AudioHelper.isPlaying() || !AudioHelper.getFilename().equals("src/res/audio/background_music.wav")) {
+            AudioHelper.newSong("src/res/audio/background_music.wav", false);
             }
 
             SaxionApp.clear();
+        SaxionApp.drawImage("src/res/menu/background_image2.jpg",0,0,1000,1000);
             SaxionApp.setFill(Color.BLACK);
-            SaxionApp.drawImage("src/res/menu/ethernix.png",300,190,343,155);
-            SaxionApp.drawImage("src/res/menu/play.png", 365, 335, 241, 133);
-            SaxionApp.drawImage("src/res/menu/settings.png", 340, 465, 296, 122);
-            SaxionApp.drawImage("src/res/menu/quit.png", 370, 595, 246, 138);
-
-        // Play main menu music
+            SaxionApp.drawImage("src/res/menu/ethernixxx.png",405,250,250,45);
+            SaxionApp.drawImage("src/res/menu/play.png", 405, 335, 241, 133);
+            SaxionApp.drawImage("src/res/menu/settings.png", 380, 465, 296, 122);
+            SaxionApp.drawImage("src/res/menu/quit.png", 410, 595, 246, 138);
 
     }
 
@@ -39,14 +38,14 @@ public class MainMenu {
             int mouseY = mouseEvent.getY();
 
             if (inMenu) {
-                if (isMouseOver(mouseX, mouseY, 400, 367, 157, 65)) {
+                if (isMouseOver(mouseX, mouseY, 440, 367, 157, 65)) {
                     return true;
                 }
-                else if (isMouseOver(mouseX, mouseY, 376, 491, 207, 65)) {
+                else if (isMouseOver(mouseX, mouseY, 416, 491, 207, 65)) {
                     inSettings = true;
                     return false;
                 }
-                else if (isMouseOver(mouseX, mouseY, 401, 630, 155, 65)) {
+                else if (isMouseOver(mouseX, mouseY, 441, 630, 155, 65)) {
                     SaxionApp.quit();
                 }
             }
@@ -63,14 +62,12 @@ public class MainMenu {
     }
 
     public boolean handlingKeyboardEscapeButton(KeyboardEvent keyboardEvent) {
-        // If ESC key is pressed, return to the main menu from settings or game
+        // If mr patrick clicks the ESC key, he returns to the main menu from settings or game
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             if (isInSettings()) {
-                // Exit settings and go back to the main menu
                 exitSettings();
                 return true;
             } else if (!gameStarted) {
-                // Go back to the main menu from the Play menu
                 inMenu = true;
                 return true;
             }

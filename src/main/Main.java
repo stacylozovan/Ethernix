@@ -1,6 +1,8 @@
 import entity.AudioHelper;
 import entity.CharacterManager;
 import entity.CombatSystemLogic;
+import entity.DialogueLoader;
+import entity.NPC;
 import main.CollisionChecker;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
@@ -17,14 +19,18 @@ public class Main implements GameLoop {
     private boolean inMenu = true;
     private boolean gameStarted = false;
     private AudioHelper audioHelper;
+    private int frameCount = 0;
 
     private int cameraX = 0;
     private int cameraY = 0;
 
     private boolean inBattle = false;
     private boolean attackKeyPressed = false;
-
     private String battleMapImage = "src/res/object/battlemap1.png";
+  
+    // NPC-related variables
+    private boolean interactingWithNPC = false;
+    private NPC currentInteractingNPC;
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
@@ -34,6 +40,8 @@ public class Main implements GameLoop {
     public void init() {
         gameMap = new tile.Map();
         CollisionChecker collisionChecker = new CollisionChecker(gameMap);
+        characterManager = new CharacterManager(collisionChecker);
+
 
         characterManager = new CharacterManager(collisionChecker);
     }
@@ -68,15 +76,12 @@ public class Main implements GameLoop {
                     "src/res/audio/first_map_audio_1.wav",
                     "src/res/audio/first_map_audio_2.wav",
                     "src/res/audio/first_map_audio_3.wav"
-            }; // 3 songs randomized
-
-
+            };
 
             if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
-                // Select a random song from the list and play it
                 int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
                 String selectedSong = songs[randomIndex];
-                AudioHelper.newSong(selectedSong, false); // Play the selected song
+                AudioHelper.newSong(selectedSong, false);
             }
 
             updateCamera();
@@ -87,6 +92,35 @@ public class Main implements GameLoop {
             int playerScreenX = characterManager.getPlayer().getX() - cameraX;
             int playerScreenY = characterManager.getPlayer().getY() - cameraY;
             characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
+            handleNPCInteractions(playerScreenX, playerScreenY);
+        }
+    }
+
+    private void handleNPCInteractions(int playerScreenX, int playerScreenY) {
+        if (interactingWithNPC && currentInteractingNPC != null) {
+            if (!currentInteractingNPC.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY())) {
+                interactingWithNPC = false;
+                currentInteractingNPC = null;
+                return;
+            }
+
+            boolean isKeyPressed = keys[KeyboardEvent.VK_E] || keys[KeyboardEvent.VK_SPACE];
+            currentInteractingNPC.interact(isKeyPressed);
+
+            if (keys[KeyboardEvent.VK_SPACE] && currentInteractingNPC.dialogue.length == currentInteractingNPC.currentDialogueIndex) {
+                interactingWithNPC = false;
+                currentInteractingNPC = null;
+            }
+        } else {
+            for (NPC npc : CharacterManager.npcs) {
+                if (npc.isVisible) {
+                    if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys[KeyboardEvent.VK_E]) {
+                        interactingWithNPC = true;
+                        currentInteractingNPC = npc;
+                        break;
+                    }
+                }
+            }
 //            characterManager.handleCharacterInteractions();
 //            characterManager.getPlayer().drawCollisionBox(cameraX, cameraY);
 //            characterManager.displayHealthStatus();
@@ -201,7 +235,6 @@ public class Main implements GameLoop {
             } else if (mainMenu.isInSettings()) {
                 inMenu = false;
             }
-
         }
     }
 }
