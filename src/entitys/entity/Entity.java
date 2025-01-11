@@ -1,6 +1,7 @@
 package entity;
 import nl.saxion.app.SaxionApp;
-import java.awt.Color;
+
+import java.awt.*;
 
 public class Entity {
     public int x, y;

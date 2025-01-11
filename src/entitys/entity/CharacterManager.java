@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class CharacterManager {
     private final Player naruto;
-    private Player gojo;
+    private final Player gojo;
     private Player activePlayer;
     private final Madara madara;
     public static List<NPC> npcs;
@@ -18,19 +18,17 @@ public class CharacterManager {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
         Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
-        this.naruto = new Player("naruto");
+        this.cChecker = cChecker;
+        this.naruto = new Player("naruto", cChecker);
+        this.gojo = new Player("gojo", cChecker);
+
         this.madara = new Madara();
 
         this.naruto.setDefaultValues();
+        this.gojo.setDefaultValues();
         this.madara.setDefaultValues();
 
         this.activePlayer = naruto;
-
-        this.cChecker = cChecker;
-        this.player = new Player("naruto", cChecker);
-
-        this.player.setDefaultValues();
-        this.madara.setDefaultValues();
 
         this.npcs = new ArrayList<>();
         npcs.add(new NPC("mark", 550, 1450, npcDialogues.get("mark"), "down", "static"));
@@ -86,10 +84,6 @@ public class CharacterManager {
     }
 
     public Player getGojo() {
-        if (gojo == null) {
-            gojo = new Player("gojo");
-            gojo.setDefaultValues();
-        }
         return gojo;
     }
 
@@ -107,16 +101,15 @@ public class CharacterManager {
             activePlayer = naruto;
             System.out.println("Switched to Naruto. Position: " + naruto.getX() + ", " + naruto.getY());
         } else if (playerNumber == 2 && (gojo == null || activePlayer != gojo)) {
-            if (gojo == null) {
-                gojo = new Player("gojo");
-                gojo.setDefaultValues();
-            }
+//            if (gojo == null) {
+//                gojo = new Player("gojo");
+//                gojo.setDefaultValues();
+//            }
             gojo.setPosition(activePlayer.getX(), activePlayer.getY());
             activePlayer = gojo;
             System.out.println("Switched to Gojo. Position: " + gojo.getX() + ", " + gojo.getY());
         }
     }
-
 
     public boolean isPlayerNearMadara() {
         return isNear(activePlayer);
@@ -133,24 +126,22 @@ public class CharacterManager {
         character.draw(screenX, screenY);
     }
 
-    public void printNPCDialogues() {
-        for (NPC npc : npcs) {
-            System.out.println("NPC: " + npc.name);
-            if (npc.dialogue != null) {
-                for (int i = 0; i < npc.dialogue.length; i++) {
-                    System.out.println("  Dialogue " + (i + 1) + ": " + npc.dialogue[i]);
-                }
-            } else {
-                System.out.println("  No dialogues loaded!");
-            }
-        }
-    }
+//    public void printNPCDialogues() {
+//        for (NPC npc : npcs) {
+//            System.out.println("NPC: " + npc.name);
+//            if (npc.dialogue != null) {
+//                for (int i = 0; i < npc.dialogue.length; i++) {
+//                    System.out.println("  Dialogue " + (i + 1) + ": " + npc.dialogue[i]);
+//                }
+//            } else {
+//                System.out.println("  No dialogues loaded!");
+//            }
+//        }
+//    }
 
-
-    public Madara getMadara() {
-        return madara;
-    }
-
+//    public Madara getMadara() {
+//        return madara;
+//    }
 
     public void printNPCDialogues() {
         for (NPC npc : npcs) {

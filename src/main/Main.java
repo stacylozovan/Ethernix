@@ -60,7 +60,7 @@ public class Main implements GameLoop {
                 updateCamera();
                 checkForBattleTransition();
                 gameMap.draw(cameraX, cameraY);
-                characterManager.update(keys);
+                characterManager.update(keys, gameMap);
                 drawMapAndCharacters();
                 characterManager.handleCharacterInteractions();
                 characterManager.displayHealthStatus();
@@ -70,7 +70,6 @@ public class Main implements GameLoop {
                     endBattle();
                 }
             }
-
 
             String[] songs = {
                     "src/res/audio/first_map_audio_1.wav",
@@ -89,16 +88,16 @@ public class Main implements GameLoop {
             gameMap.draw(cameraX, cameraY);
 
             characterManager.update(keys, gameMap);
-            int playerScreenX = characterManager.getPlayer().getX() - cameraX;
-            int playerScreenY = characterManager.getPlayer().getY() - cameraY;
-            characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
+            int playerScreenX = characterManager.getActivePlayer().getX() - cameraX;
+            int playerScreenY = characterManager.getActivePlayer().getY() - cameraY;
+            characterManager.draw(cameraX, cameraY);
             handleNPCInteractions(playerScreenX, playerScreenY);
         }
     }
 
     private void handleNPCInteractions(int playerScreenX, int playerScreenY) {
         if (interactingWithNPC && currentInteractingNPC != null) {
-            if (!currentInteractingNPC.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY())) {
+            if (!currentInteractingNPC.isPlayerNear(characterManager.getActivePlayer().getX(), characterManager.getActivePlayer().getY())) {
                 interactingWithNPC = false;
                 currentInteractingNPC = null;
                 return;
@@ -114,7 +113,7 @@ public class Main implements GameLoop {
         } else {
             for (NPC npc : CharacterManager.npcs) {
                 if (npc.isVisible) {
-                    if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys[KeyboardEvent.VK_E]) {
+                    if (npc.isPlayerNear(characterManager.getActivePlayer().getX(), characterManager.getActivePlayer().getY()) && keys[KeyboardEvent.VK_E]) {
                         interactingWithNPC = true;
                         currentInteractingNPC = npc;
                         break;
@@ -167,7 +166,6 @@ public class Main implements GameLoop {
         SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
 
         combatSystem.drawHealthBars();
-
         combatSystem.drawBattleField();
 
         if (attackKeyPressed) {

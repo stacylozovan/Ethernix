@@ -13,6 +13,7 @@ public class Player extends Entity {
     private final String[] rightImages = new String[9];
 
     private final String design;
+    main.CollisionChecker cChecker;
 
     private double exactX, exactY;
     private int shield = 0;
@@ -27,49 +28,41 @@ public class Player extends Entity {
         getPlayerImage();
     }
 
-        public void setDefaultValues() {
-            x = 500;
-            y = 500;
+    public void setDefaultValues() {
+        x = 500;
+        y = 500;
+        exactX = x;
+        exactY = y;
+        speed = 6;
+        health = 200;
+        direction = "down";
+        width = PLAYER_SIZE;
+        height = PLAYER_SIZE;
+        solidArea = new Rectangle();
+        solidArea.x = 16;
+        solidArea.y = 30;
+        solidArea.width = 32;
+        solidArea.height = 34;
+    }
 
-            exactX = x;
-            exactY = y;
-            speed = 8;
-            direction = "down";
-            health = 200;
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.exactX = x;
+        this.exactY = y;
+    }
+
+    private String getImagePath(String direction, int frame) {
+        String basePath;
+        if (design.equals("naruto")) {
+            basePath = "src/res/player/naruto";
+        } else if (design.equals("gojo")) {
+            basePath = "src/res/player.gojo";
+        } else {
+            return ""; // Invalid design
         }
-
-
-        public void setPosition(int x, int y) {
-            this.x = x;
-            this.y = y;
-            this.exactX = x;
-            this.exactY = y;
-        }
-
-        private String getImagePath(String direction, int frame) {
-            String basePath;
-            if (design.equals("naruto")) {
-                basePath = "src/res/player/naruto";
-            } else if (design.equals("gojo")) {
-                basePath = "src/res/player.gojo";
-            } else {
-                return ""; // Invalid design
-            }
-            return String.format("%s/%s/%s_%s%d.png", basePath, direction, design, direction, frame);
-
-            speed = 6;
-            direction = "down";
-            width = PLAYER_SIZE;
-            height = PLAYER_SIZE;
-            solidArea = new Rectangle();
-            solidArea.x = 16;
-            solidArea.y = 30;
-            solidArea.width = 32;
-            solidArea.height = 34;
-        }
-
-
-
+        return String.format("%s/%s/%s_%s%d.png", basePath, direction, design, direction, frame);
+    }
 
     public void getPlayerImage() {
         for (int i = 0; i <= 8; i++) {
@@ -155,19 +148,20 @@ public class Player extends Entity {
             health = 0;
         }
     }
+
     public void setShield(int shield) {
         this.shield = shield;
         System.out.println(getName() + " gains a shield of " + shield + " HP!");
     }
+
     public void removeShield() {
         this.shield = 0; // Set shield value to 0
         System.out.println(getName() + "'s shield has been removed!");
     }
 
-
     public int getHealth() {
-        return health;
-    }
+    return health;
+}
 
     private String setImageDown(int spriteNum) {
         if (spriteNum >= 1 && spriteNum <= 9) {
