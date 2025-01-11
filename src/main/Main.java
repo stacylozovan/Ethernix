@@ -1,12 +1,12 @@
 import entity.AudioHelper;
 import entity.CharacterManager;
+import entity.DialogueLoader;
+import entity.NPC;
 import main.CollisionChecker;
 import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
-
-import java.util.Map;
 
 public class Main implements GameLoop {
     private tile.Map gameMap;
@@ -16,9 +16,14 @@ public class Main implements GameLoop {
     private boolean inMenu = true;
     private boolean gameStarted = false;
     private AudioHelper audioHelper;
+    private int frameCount = 0;
 
     private int cameraX = 0;
     private int cameraY = 0;
+
+    // NPC-related variables
+    private boolean interactingWithNPC = false;
+    private NPC currentInteractingNPC;
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
@@ -26,6 +31,7 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
+        characterManager = new CharacterManager();
         gameMap = new tile.Map();
         CollisionChecker collisionChecker = new CollisionChecker(gameMap);
 
@@ -37,24 +43,20 @@ public class Main implements GameLoop {
         SaxionApp.clear();
 
         if (mainMenu.isInSettings()) {
-            SaxionApp.drawText("Settings", 150,150,50); // if I click the settings button, this will be changed into a settings method later
+            SaxionApp.drawText("Settings", 150, 150, 50);
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (gameStarted) {
-
             String[] songs = {
                     "src/res/audio/first_map_audio_1.wav",
                     "src/res/audio/first_map_audio_2.wav",
                     "src/res/audio/first_map_audio_3.wav"
-            }; // 3 songs randomized
-
-
+            };
 
             if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
-                // Select a random song from the list and play it
                 int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
                 String selectedSong = songs[randomIndex];
-                AudioHelper.newSong(selectedSong, false); // Play the selected song
+                AudioHelper.newSong(selectedSong, false);
             }
 
             updateCamera();
@@ -65,6 +67,36 @@ public class Main implements GameLoop {
             int playerScreenX = characterManager.getPlayer().getX() - cameraX;
             int playerScreenY = characterManager.getPlayer().getY() - cameraY;
             characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
+            handleNPCInteractions(playerScreenX, playerScreenY);
+        }
+    }
+
+    private void handleNPCInteractions(int playerScreenX, int playerScreenY) {
+        if (interactingWithNPC && currentInteractingNPC != null) {
+            if (!currentInteractingNPC.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY())) {
+                interactingWithNPC = false;
+                currentInteractingNPC = null;
+                return;
+            }
+
+            boolean isKeyPressed = keys[KeyboardEvent.VK_E] || keys[KeyboardEvent.VK_SPACE];
+            currentInteractingNPC.interact(isKeyPressed);
+
+            if (keys[KeyboardEvent.VK_SPACE] && currentInteractingNPC.dialogue.length == currentInteractingNPC.currentDialogueIndex) {
+                interactingWithNPC = false;
+                currentInteractingNPC = null;
+            }
+        } else {
+            for (NPC npc : CharacterManager.npcs) {
+                if (npc.isVisible) {
+                    if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys[KeyboardEvent.VK_E]) {
+                        interactingWithNPC = true;
+                        currentInteractingNPC = npc;
+                        System.out.println("NPC interacted");
+                        break;
+                    }
+                }
+            }
 //            characterManager.handleCharacterInteractions();
 //            characterManager.getPlayer().drawCollisionBox(cameraX, cameraY);
 //            characterManager.displayHealthStatus();
@@ -94,25 +126,19 @@ public class Main implements GameLoop {
         }
 
         if (mainMenu.handlingKeyboardEscapeButton(keyboardEvent)) {
-            inMenu = true; // if we click ESC, the main menu appears
+            inMenu = true;
         }
     }
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
-
         if (inMenu) {
-            // If the mouse event returns true, start the game
             if (mainMenu.mouseEvent(mouseEvent)) {
                 inMenu = false;
                 gameStarted = true;
-            }
-
-            else if (mainMenu.isInSettings()) {
-                // Show settings screen
+            } else if (mainMenu.isInSettings()) {
                 inMenu = false;
             }
-
         }
     }
 }

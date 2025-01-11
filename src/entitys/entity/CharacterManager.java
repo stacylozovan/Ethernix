@@ -1,6 +1,8 @@
 package entity;
 
 import nl.saxion.app.CsvReader;
+import nl.saxion.app.SaxionApp;
+
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -9,9 +11,8 @@ public class CharacterManager {
 
     private final Player player;
     private final Madara madara;
-    private final List<NPC> npcs;
+    private static List<NPC> npcs;
     private final main.CollisionChecker cChecker;
-
 
     public CharacterManager(main.CollisionChecker cChecker) {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
@@ -25,8 +26,10 @@ public class CharacterManager {
         this.madara.setDefaultValues();
 
         this.npcs = new ArrayList<>();
-        npcs.add(new NPC("mark", 700, 700, npcDialogues.get("mark"), "down", "static"));
-        npcs.add(new NPC("lucy", 1150, 600, npcDialogues.get("lucy"), "up", "static"));
+        npcs.add(new NPC("mark", 550, 1450, npcDialogues.get("mark"), "down", "static"));
+        npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
+//        npcs.add(new NPC("villager", 300, 300, npcDialogues.get("villager"), "down", "static"));
+//        npcs.add(new NPC("merchant", 500, 500, npcDialogues.get("merchant"), "down", "static"));
     }
 
     public void update(boolean[] keys, tile.Map gamemap) {
@@ -75,7 +78,6 @@ public class CharacterManager {
         return madara;
     }
 
-//     this method exist just to test the dialogues imports
     public void printNPCDialogues() {
         for (NPC npc : npcs) {
             System.out.println("NPC: " + npc.name);
