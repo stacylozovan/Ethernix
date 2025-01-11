@@ -7,10 +7,6 @@ import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 public class Main implements GameLoop {
     private tile.Map gameMap;
     private CharacterManager characterManager;
@@ -74,9 +70,16 @@ public class Main implements GameLoop {
 
     private void handleNPCInteractions(int playerScreenX, int playerScreenY) {
         if (interactingWithNPC && currentInteractingNPC != null) {
-            currentInteractingNPC.interact();
+            if (!currentInteractingNPC.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY())) {
+                interactingWithNPC = false;
+                currentInteractingNPC = null;
+                return;
+            }
 
-            if (keys[KeyboardEvent.VK_SPACE]) {
+            boolean isKeyPressed = keys[KeyboardEvent.VK_E] || keys[KeyboardEvent.VK_SPACE];
+            currentInteractingNPC.interact(isKeyPressed);
+
+            if (keys[KeyboardEvent.VK_SPACE] && currentInteractingNPC.dialogue.length == currentInteractingNPC.currentDialogueIndex) {
                 interactingWithNPC = false;
                 currentInteractingNPC = null;
             }

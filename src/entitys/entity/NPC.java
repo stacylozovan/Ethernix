@@ -1,6 +1,7 @@
 package entity;
 
 import nl.saxion.app.SaxionApp;
+import java.awt.Color;
 
 public class NPC extends Entity {
     public String name;
@@ -8,7 +9,8 @@ public class NPC extends Entity {
     public String[] dialogue;
     public String movementPattern;
 
-    private int currentDialogueIndex = 0;
+    public int currentDialogueIndex = 0;
+    private boolean awaitingKeyPress = false;
 
     public NPC(String name, int x, int y, String[] dialogue, String direction, String movementPattern) {
         this.name = name;
@@ -27,12 +29,29 @@ public class NPC extends Entity {
         }
     }
 
-    public void interact() {
+    public void interact(boolean isKeyPressed) {
         if (dialogue != null && currentDialogueIndex < dialogue.length) {
-            SaxionApp.drawText(name + ": " + dialogue[currentDialogueIndex], 50, 50, 20);
-            currentDialogueIndex++;
+            int boxWidth = 600;
+            int boxHeight = 150;
+            int boxX = 100;
+            int boxY = 600;
+            int textPadding = 20;
+
+            SaxionApp.setFill(Color.WHITE);
+            SaxionApp.drawRectangle(boxX, boxY, boxWidth, boxHeight);
+
+            SaxionApp.setBorderColor(Color.BLACK);
+            SaxionApp.drawRectangle(boxX, boxY, boxWidth, boxHeight);
+
+            SaxionApp.setFill(Color.BLACK); // Black text
+            SaxionApp.drawText(name + ":", boxX + textPadding, boxY + textPadding + 20, 20); // Name with smaller font
+            SaxionApp.drawText(dialogue[currentDialogueIndex], boxX + textPadding, boxY + textPadding + 60, 24); // Dialogue text
+
+            if (isKeyPressed) {
+                currentDialogueIndex++;
+            }
         } else {
-            currentDialogueIndex = 0; // Reset dialogue
+            currentDialogueIndex = 0;
         }
     }
 
