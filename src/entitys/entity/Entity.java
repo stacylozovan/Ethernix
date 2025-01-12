@@ -30,6 +30,7 @@ public class Entity {
     public String up0, up1, up2, up3, up4, up5, up6, up7, up8;
     public Rectangle solidArea;
     public boolean collisionOn = false;
+    public boolean isInteractable = false;
 
     public Entity() {}
 

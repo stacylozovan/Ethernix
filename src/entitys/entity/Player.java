@@ -23,7 +23,7 @@ public class Player extends Entity {
 
     public Player(String design, main.CollisionChecker cChecker) {
         this.design = design;
-        this.cChecker = cChecker; // Initialize cChecker
+        this.cChecker = cChecker;
         setDefaultValues();
         getPlayerImage();
     }
@@ -59,7 +59,7 @@ public class Player extends Entity {
         } else if (design.equals("gojo")) {
             basePath = "src/res/player.gojo";
         } else {
-            return ""; // Invalid design
+            return "";
         }
         return String.format("%s/%s/%s_%s%d.png", basePath, direction, design, direction, frame);
     }

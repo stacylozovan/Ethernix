@@ -3,8 +3,6 @@ package main;
 import entity.Entity;
 import tile.Map;
 
-import javax.swing.*;
-
 public class CollisionChecker {
     private final Map map;
 
@@ -18,7 +16,6 @@ public class CollisionChecker {
         int entityTopY = entity.y + entity.solidArea.y;
         int entityBottomY = entity.y + entity.solidArea.y + entity.solidArea.height;
 
-
         int entityLeftCol, entityRightCol, entityTopRow, entityBottomRow;
 
         switch (entity.direction) {
@@ -29,7 +26,7 @@ public class CollisionChecker {
 
                 if (isTileCollision(entityLeftCol, entityTopRow) ||
                         isTileCollision(entityRightCol, entityTopRow)) {
-                    return true;
+                    return !entity.isInteractable; // Ignore collision for interactable entities
                 }
             }
             case "down" -> {
@@ -39,7 +36,7 @@ public class CollisionChecker {
 
                 if (isTileCollision(entityLeftCol, entityBottomRow) ||
                         isTileCollision(entityRightCol, entityBottomRow)) {
-                    return true;
+                    return !entity.isInteractable; // Ignore collision for interactable entities
                 }
             }
             case "left" -> {
@@ -49,7 +46,7 @@ public class CollisionChecker {
 
                 if (isTileCollision(entityLeftCol, entityTopRow) ||
                         isTileCollision(entityLeftCol, entityBottomRow)) {
-                    return true;
+                    return !entity.isInteractable; // Ignore collision for interactable entities
                 }
             }
             case "right" -> {
@@ -59,17 +56,22 @@ public class CollisionChecker {
 
                 if (isTileCollision(entityRightCol, entityTopRow) ||
                         isTileCollision(entityRightCol, entityBottomRow)) {
-                    return true;
+                    return !entity.isInteractable; // Ignore collision for interactable entities
                 }
             }
         }
         return false;
     }
+
     private boolean isTileCollision(int col, int row) {
         if (col < 0 || col >= map.getWidth() || row < 0 || row >= map.getHeight()) {
             return true;
         }
-
         return Map.tile[row][col] != null && Map.tile[row][col].collision;
+    }
+
+    public boolean checkProximity(Entity entity1, Entity entity2, int range) {
+        return Math.abs(entity1.x - entity2.x) < range &&
+                Math.abs(entity1.y - entity2.y) < range;
     }
 }

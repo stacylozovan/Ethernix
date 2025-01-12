@@ -44,7 +44,7 @@ public class CharacterManager {
 
     public void handleCharacterInteractions() {
         if (isNear(activePlayer)) {
-            activePlayer.takeDamage(10);
+            activePlayer.takeDamage(0);
         }
 
         if (naruto.getHealth() <= 0 && (gojo == null || gojo.getHealth() <= 0)) {
@@ -116,8 +116,8 @@ public class CharacterManager {
     }
 
     private boolean isNear(Player player) {
-        return Math.abs(player.getX() - madara.getX()) < 50 &&
-                Math.abs(player.getY() - madara.getY()) < 50;
+        return Math.abs(player.getX() - madara.getX()) < 200 &&
+                Math.abs(player.getY() - madara.getY()) < 200;
     }
 
     private void drawCharacter(Entity character, int cameraX, int cameraY) {
@@ -125,23 +125,6 @@ public class CharacterManager {
         int screenY = character.getY() - cameraY;
         character.draw(screenX, screenY);
     }
-
-//    public void printNPCDialogues() {
-//        for (NPC npc : npcs) {
-//            System.out.println("NPC: " + npc.name);
-//            if (npc.dialogue != null) {
-//                for (int i = 0; i < npc.dialogue.length; i++) {
-//                    System.out.println("  Dialogue " + (i + 1) + ": " + npc.dialogue[i]);
-//                }
-//            } else {
-//                System.out.println("  No dialogues loaded!");
-//            }
-//        }
-//    }
-
-//    public Madara getMadara() {
-//        return madara;
-//    }
 
     public void printNPCDialogues() {
         for (NPC npc : npcs) {

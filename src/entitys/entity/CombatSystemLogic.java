@@ -64,11 +64,23 @@ public class CombatSystemLogic {
         System.out.println("Battle mode ended.");
     }
 
-    public void teleportToBattlePositions() {
-        naruto.setPosition(300, 600);
-        gojo.setPosition(300, 600);
-        madara.setPosition(600, 600);
+    private void teleportToBattlePositions() {
+        System.out.println("Teleporting players to battle positions...");
+
+        // Set predefined positions for battle
+        naruto.setPosition(200, 500); // Example position
+        if (gojo != null) {
+            gojo.setPosition(300, 500); // Example position
+        }
+        madara.setPosition(500, 200); // Example position
+
+        System.out.println("Naruto's Position: " + naruto.getX() + ", " + naruto.getY());
+        if (gojo != null) {
+            System.out.println("Gojo's Position: " + gojo.getX() + ", " + gojo.getY());
+        }
+        System.out.println("Madara's Position: " + madara.getX() + ", " + madara.getY());
     }
+
 
     public void drawHealthBars() {
         SaxionApp.setFill(Color.RED);
@@ -129,57 +141,67 @@ public class CombatSystemLogic {
 
     public void handleCombat() {
         if (playerTurn) {
+            System.out.println("Player's turn: " + activePlayer.getName());
+
             if (activePlayer == naruto) {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - narutoLastAttackTime < narutoAttackCooldown) {
-                    System.out.println("Naruto is on cooldown!");
+                    System.out.println("Naruto is on cooldown! Please wait.");
                     return;
                 }
                 narutoLastAttackTime = currentTime;
             }
 
-            int playerDamage = 15;
+            int playerDamage = 15; // Fixed damage for now
             madara.takeDamage(playerDamage);
             startNarutoAttackAnimation("normal");
 
             System.out.println(activePlayer.getName() + " attacks Madara for " + playerDamage + " damage!");
+            System.out.println("Madara's Health: " + madara.getHealth());
 
             if (madara.getHealth() <= 0) {
-                System.out.println("Madara is defeated! Battle is over.");
-                return;
+                System.out.println("Madara is defeated! Ending battle...");
+                return; // Exit combat without switching turns
             }
 
+            // End player's turn
             playerTurn = false;
         } else {
+            System.out.println("Madara's turn.");
+
             if (madara.getHealth() > 0) {
                 int madaraDamage = 20;
                 activePlayer.takeDamage(madaraDamage);
 
                 System.out.println("Madara attacks " + activePlayer.getName() + " for " + madaraDamage + " damage!");
+                System.out.println(activePlayer.getName() + "'s Health: " + activePlayer.getHealth());
 
                 if (activePlayer.getHealth() <= 0) {
                     System.out.println(activePlayer.getName() + " has been defeated!");
 
+                    // Switch to Gojo if Naruto is defeated
                     if (activePlayer == naruto && gojo != null) {
                         switchPlayer(2);
                         System.out.println("Switching to Gojo!");
                     } else if (activePlayer == gojo) {
                         System.out.println("Game Over! All players defeated.");
-                        return;
+                        return; // Exit combat without switching turns
                     }
                 }
             }
 
+            // End Madara's turn
             playerTurn = true;
         }
 
-
+        // Display health at the end of the turn
         System.out.println("Naruto Health: " + naruto.getHealth());
         if (gojo != null) {
             System.out.println("Gojo Health: " + gojo.getHealth());
         }
         System.out.println("Madara Health: " + madara.getHealth());
     }
+
 
     private void applyStunEffect(Madara madara, int duration) {
         madara.setStunned(true);
@@ -401,8 +423,11 @@ public class CombatSystemLogic {
         } else if (playerNumber == 2 && gojo != null) {
             activePlayer = gojo;
             System.out.println("Switched to Gojo.");
+        } else {
+            System.out.println("Invalid player switch request or Gojo is unavailable.");
         }
     }
+
 
     public boolean isBattleOver() {
         boolean allPlayersDefeated = naruto.getHealth() <= 0 && (gojo == null || gojo.getHealth() <= 0);
