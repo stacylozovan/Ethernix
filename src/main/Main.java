@@ -1,5 +1,6 @@
 import entity.AudioHelper;
 import entity.CharacterManager;
+import entity.CombatSystemLogic;
 import entity.DialogueLoader;
 import entity.NPC;
 import main.CollisionChecker;
@@ -11,17 +12,21 @@ import nl.saxion.app.interaction.MouseEvent;
 public class Main implements GameLoop {
     private tile.Map gameMap;
     private CharacterManager characterManager;
+    private CombatSystemLogic combatSystem;
+
     private boolean[] keys = new boolean[256];
     private MainMenu mainMenu = new MainMenu();
     private boolean inMenu = true;
     private boolean gameStarted = false;
     private AudioHelper audioHelper;
-    private int frameCount = 0;
 
     private int cameraX = 0;
     private int cameraY = 0;
 
-    // NPC-related variables
+    private boolean inBattle = false;
+    private boolean attackKeyPressed = false;
+    private String battleMapImage = "src/res/object/battlemap1.png";
+
     private boolean interactingWithNPC = false;
     private NPC currentInteractingNPC;
 
@@ -34,9 +39,6 @@ public class Main implements GameLoop {
         gameMap = new tile.Map();
         CollisionChecker collisionChecker = new CollisionChecker(gameMap);
         characterManager = new CharacterManager(collisionChecker);
-
-
-        characterManager = new CharacterManager(collisionChecker);
     }
 
     @Override
@@ -48,33 +50,61 @@ public class Main implements GameLoop {
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (gameStarted) {
-            String[] songs = {
-                    "src/res/audio/first_map_audio_1.wav",
-                    "src/res/audio/first_map_audio_2.wav",
-                    "src/res/audio/first_map_audio_3.wav"
-            };
-
-            if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
-                int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
-                String selectedSong = songs[randomIndex];
-                AudioHelper.newSong(selectedSong, false);
+            if (!inBattle) {
+                updateOverworld();
+            } else {
+                updateBattle();
             }
+        }
+    }
 
-            updateCamera();
+    private void updateOverworld() {
+        updateCamera();
+        checkForBattleTransition();
 
-            gameMap.draw(cameraX, cameraY);
+        // Draw the map and characters
+        gameMap.draw(cameraX, cameraY);
+        characterManager.update(keys, gameMap);
+        characterManager.draw(cameraX, cameraY);
 
-            characterManager.update(keys, gameMap);
-            int playerScreenX = characterManager.getPlayer().getX() - cameraX;
-            int playerScreenY = characterManager.getPlayer().getY() - cameraY;
-            characterManager.draw(playerScreenX, playerScreenY, cameraX, cameraY);
-            handleNPCInteractions(playerScreenX, playerScreenY);
+        // Handle NPC interactions
+        int playerScreenX = characterManager.getActivePlayer().getX() - cameraX;
+        int playerScreenY = characterManager.getActivePlayer().getY() - cameraY;
+        handleNPCInteractions(playerScreenX, playerScreenY);
+
+        // Handle character-specific logic
+        characterManager.handleCharacterInteractions();
+        characterManager.displayHealthStatus();
+
+        // Play background music
+        playBackgroundMusic();
+    }
+
+    private void updateBattle() {
+        drawBattleScene();
+
+        if (combatSystem.isBattleOver()) {
+            endBattle();
+        }
+    }
+
+    private void playBackgroundMusic() {
+        String[] songs = {
+                "src/res/audio/first_map_audio_1.wav",
+                "src/res/audio/first_map_audio_2.wav",
+                "src/res/audio/first_map_audio_3.wav"
+        };
+
+        if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
+            int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
+            String selectedSong = songs[randomIndex];
+            AudioHelper.newSong(selectedSong, false);
         }
     }
 
     private void handleNPCInteractions(int playerScreenX, int playerScreenY) {
         if (interactingWithNPC && currentInteractingNPC != null) {
-            if (!currentInteractingNPC.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY())) {
+            if (!currentInteractingNPC.isPlayerNear(characterManager.getActivePlayer().getX(), characterManager.getActivePlayer().getY())) {
                 interactingWithNPC = false;
                 currentInteractingNPC = null;
                 return;
@@ -90,16 +120,13 @@ public class Main implements GameLoop {
         } else {
             for (NPC npc : CharacterManager.npcs) {
                 if (npc.isVisible) {
-                    if (npc.isPlayerNear(characterManager.getPlayer().getX(), characterManager.getPlayer().getY()) && keys[KeyboardEvent.VK_E]) {
+                    if (npc.isPlayerNear(characterManager.getActivePlayer().getX(), characterManager.getActivePlayer().getY()) && keys[KeyboardEvent.VK_E]) {
                         interactingWithNPC = true;
                         currentInteractingNPC = npc;
                         break;
                     }
                 }
             }
-//            characterManager.handleCharacterInteractions();
-//            characterManager.getPlayer().drawCollisionBox(cameraX, cameraY);
-//            characterManager.displayHealthStatus();
         }
     }
 
@@ -108,8 +135,8 @@ public class Main implements GameLoop {
         int screenHeight = 1000;
         int tileSize = 50;
 
-        cameraX = characterManager.getPlayer().getX() - screenWidth / 2;
-        cameraY = characterManager.getPlayer().getY() - screenHeight / 2;
+        cameraX = characterManager.getNaruto().getX() - screenWidth / 2;
+        cameraY = characterManager.getNaruto().getY() - screenHeight / 2;
 
         int maxCameraX = gameMap.getWidth() * tileSize - screenWidth;
         int maxCameraY = gameMap.getHeight() * tileSize - screenHeight;
@@ -118,9 +145,82 @@ public class Main implements GameLoop {
         cameraY = Math.max(0, Math.min(cameraY, maxCameraY));
     }
 
+    private void checkForBattleTransition() {
+        System.out.println("Checking for battle transition...");
+        System.out.println("Player Position: (" + characterManager.getActivePlayer().getX() + ", " + characterManager.getActivePlayer().getY() + ")");
+        System.out.println("Madara Position: (" + characterManager.getMadara().getX() + ", " + characterManager.getMadara().getY() + ")");
+        System.out.println("Proximity Check: " + characterManager.isPlayerNearMadara());
+
+        if (characterManager.isPlayerNearMadara()) {
+            System.out.println("Player is near Madara! Transitioning to battle...");
+            switchToBattleMap();
+        }
+    }
+
+    private void switchToBattleMap() {
+        if (characterManager.getNaruto() == null || characterManager.getGojo() == null || characterManager.getMadara() == null) {
+            System.out.println("Error: One or more characters are null!");
+            return;
+        }
+
+        inBattle = true;
+
+        combatSystem = new CombatSystemLogic(
+                characterManager.getNaruto(),
+                characterManager.getGojo(),
+                characterManager.getMadara()
+        );
+
+        combatSystem.startBattle();
+        System.out.println("Transitioned to battle map. Combat starts!");
+    }
+
+    private void drawBattleScene() {
+        System.out.println("Drawing battle scene...");
+        SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
+
+        combatSystem.drawHealthBars();
+        combatSystem.drawBattleField();
+
+        if (attackKeyPressed) {
+            System.out.println("Processing player attack...");
+            combatSystem.handleCombat();
+            attackKeyPressed = false;
+        }
+    }
+
+    private void endBattle() {
+        inBattle = false;
+
+        combatSystem.endBattle();
+        System.out.println("Battle ended. Returning to the regular map...");
+
+        characterManager.getNaruto().setPosition(1180, 600);
+        characterManager.getMadara().setPosition(1180, 300);
+    }
+
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
         int keyCode = keyboardEvent.getKeyCode();
+
+        if (inBattle) {
+            if (keyboardEvent.isKeyPressed()) {
+                System.out.println("Key pressed during battle: " + keyCode);
+
+                if (keyCode == KeyboardEvent.VK_A) {
+                    attackKeyPressed = true;
+                }
+
+                if (keyCode == KeyboardEvent.VK_1) {
+                    combatSystem.switchPlayer(1);
+                }
+
+                if (keyCode == KeyboardEvent.VK_2) {
+                    combatSystem.switchPlayer(2);
+                }
+            }
+        }
+
         if (keyCode >= 0 && keyCode < keys.length) {
             keys[keyCode] = keyboardEvent.isKeyPressed();
         }
@@ -132,6 +232,10 @@ public class Main implements GameLoop {
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
+        if (inBattle && mouseEvent.isMouseDown() && mouseEvent.isLeftMouseButton()) {
+            attackKeyPressed = true;
+        }
+
         if (inMenu) {
             if (mainMenu.mouseEvent(mouseEvent)) {
                 inMenu = false;

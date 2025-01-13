@@ -11,22 +11,30 @@ public class Player extends Entity {
     private final String[] upImages = new String[9];
     private final String[] leftImages = new String[9];
     private final String[] rightImages = new String[9];
-    public static final int PLAYER_SIZE = 64;
-    private final String design;
 
+    private final String design;
     main.CollisionChecker cChecker;
 
-    public Player(String design, main.CollisionChecker cChecker){
+    private double exactX, exactY;
+    private int shield = 0;
+    private double attackMultiplier = 1.0;
+    private boolean isBuffed = false;
+    public static final int PLAYER_SIZE = 64;
+
+    public Player(String design, main.CollisionChecker cChecker) {
         this.design = design;
+        this.cChecker = cChecker;
         setDefaultValues();
         getPlayerImage();
-        this.cChecker = cChecker;
     }
 
     public void setDefaultValues() {
         x = 500;
         y = 500;
+        exactX = x;
+        exactY = y;
         speed = 6;
+        health = 200;
         direction = "down";
         width = PLAYER_SIZE;
         height = PLAYER_SIZE;
@@ -37,14 +45,23 @@ public class Player extends Entity {
         solidArea.height = 34;
     }
 
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.exactX = x;
+        this.exactY = y;
+    }
+
     private String getImagePath(String direction, int frame) {
+        String basePath;
         if (design.equals("naruto")) {
-            return String.format("src/res/player/naruto/%s/naruto_%s%d.png",direction, direction, frame);
+            basePath = "src/res/player/naruto";
         } else if (design.equals("gojo")) {
-            return String.format("src/res/player.%s/%s/%s_%s%d.png", design, direction, design, direction, frame);
+            basePath = "src/res/player.gojo";
         } else {
             return "";
         }
+        return String.format("%s/%s/%s_%s%d.png", basePath, direction, design, direction, frame);
     }
 
     public void getPlayerImage() {
@@ -108,20 +125,44 @@ public class Player extends Entity {
             case "right" -> setImageRight(spriteNum);
             default -> image;
         };
+
         if (design.equals("gojo")) {
             SaxionApp.drawImage(image, screenX, screenY, 75, 75);
         } else {
             SaxionApp.drawImage(image, screenX, screenY, 64, 64);
         }
     }
+
+    @Override
     public void takeDamage(int damage) {
-        health -= damage;
-        if (health < 0) health = 0;
+        if (shield > 0) {
+            int remainingDamage = damage - shield;
+            shield = Math.max(0, shield - damage);
+            if (remainingDamage > 0) {
+                health -= remainingDamage;
+            }
+        } else {
+            health -= damage;
+        }
+        if (health < 0) {
+            health = 0;
+        }
+    }
+
+    public void setShield(int shield) {
+        this.shield = shield;
+        System.out.println(getName() + " gains a shield of " + shield + " HP!");
+    }
+
+    public void removeShield() {
+        this.shield = 0; // Set shield value to 0
+        System.out.println(getName() + "'s shield has been removed!");
     }
 
     public int getHealth() {
-        return health;
-    }
+    return health;
+}
+
     private String setImageDown(int spriteNum) {
         if (spriteNum >= 1 && spriteNum <= 9) {
             return downImages[spriteNum - 1];
@@ -151,4 +192,3 @@ public class Player extends Entity {
     }
 
 }
-
