@@ -4,27 +4,51 @@ import nl.saxion.app.SaxionApp;
 
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+//import java.util.Map;
 import java.util.Objects;
 
 public class Map {
     public static tile.Tile[][] tile;
     public static final int TILE_SIZE = 50;
-    private final String[] tileImages = {
-            "/object/tiles/grass.png",
-            "/object/tiles/wall.png",
-            "/object/tiles/water.png",
-            "/object/tiles/earth.png",
-            "/object/tiles/tree.png",
-            "/object/tiles/sand.png"
-    };
+    private final java.util.Map<Integer, String> tileImages = new java.util.HashMap<>();
 
     public Map() {
-        String mapPath = Objects.requireNonNull(getClass().getResource("/object/simple_map.txt"),
+        loadTileImages("/object/tiles");
+        String mapPath = Objects.requireNonNull(getClass().getResource("/object/map_output_new.txt"),
                 "Map file not found!").getPath();
         System.out.println("Map file path: " + mapPath);
         loadMapFromFile(mapPath);
+    }
+
+    private void loadTileImages(String tileFolderPath) {
+        try {
+            File tileFolder = new File(Objects.requireNonNull(getClass().getResource(tileFolderPath)).getPath());
+            File[] files = tileFolder.listFiles();
+
+            if (files == null) {
+                throw new IOException("Tile folder is empty or not found!");
+            }
+
+            for (File file : files) {
+                String fileName = file.getName();
+                if (fileName.startsWith("GK_JC_Free_") && fileName.endsWith(".png")) {
+                    // Extrair o ID do nome do arquivo
+                    String idStr = fileName.replace("GK_JC_Free_", "").replace(".png", "");
+                    try {
+                        int id = Integer.parseInt(idStr);
+                        tileImages.put(id, file.getPath());
+                    } catch (NumberFormatException e) {
+                        System.err.println("Invalid tile ID in file name: " + fileName);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadMapFromFile(String filePath) {
@@ -39,14 +63,15 @@ public class Map {
                 String[] values = line.split(" ");
                 for (int col = 0; col < values.length && col < cols; col++) {
                     int tileType = Integer.parseInt(values[col]);
-                    tile[row][col] = new tile.Tile();
-                    tile[row][col].image = Objects.requireNonNull(
-                            getClass().getResource(tileImages[tileType]),
-                            "Image not found: " + tileImages[tileType]
-                    ).getPath();
-                    tile[row][col].x = col * TILE_SIZE;
-                    tile[row][col].y = row * TILE_SIZE;
-                    tile[row][col].collision = (tileType == 1 || tileType == 4);
+                    if (tileImages.containsKey(tileType)) {
+                        tile[row][col] = new tile.Tile();
+                        tile[row][col].image = tileImages.get(tileType);
+                        tile[row][col].x = col * TILE_SIZE;
+                        tile[row][col].y = row * TILE_SIZE;
+                        tile[row][col].collision = (tileType == 1 || tileType == 4); // Exemplo: ajustar com base nos IDs
+                    } else {
+                        System.err.println("Tile ID not found: " + tileType);
+                    }
                 }
                 row++;
             }
@@ -81,5 +106,4 @@ public class Map {
     public int getHeight() {
         return tile.length;
     }
-
 }
