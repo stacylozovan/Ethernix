@@ -72,11 +72,11 @@ public class CharacterManager {
     }
 
     public void displayHealthStatus() {
-        System.out.println("Naruto Health: " + naruto.getHealth());
+//        System.out.println("Naruto Health: " + naruto.getHealth());
         if (gojo != null) {
-            System.out.println("Gojo Health: " + gojo.getHealth());
+//            System.out.println("Gojo Health: " + gojo.getHealth());
         }
-        System.out.println("Madara Health: " + madara.getHealth());
+//        System.out.println("Madara Health: " + madara.getHealth());
     }
 
     public Player getNaruto() {
@@ -99,7 +99,7 @@ public class CharacterManager {
         if (playerNumber == 1 && activePlayer != naruto) {
             naruto.setPosition(activePlayer.getX(), activePlayer.getY());
             activePlayer = naruto;
-            System.out.println("Switched to Naruto. Position: " + naruto.getX() + ", " + naruto.getY());
+//            System.out.println("Switched to Naruto. Position: " + naruto.getX() + ", " + naruto.getY());
         } else if (playerNumber == 2 && (gojo == null || activePlayer != gojo)) {
 //            if (gojo == null) {
 //                gojo = new Player("gojo");
@@ -107,7 +107,7 @@ public class CharacterManager {
 //            }
             gojo.setPosition(activePlayer.getX(), activePlayer.getY());
             activePlayer = gojo;
-            System.out.println("Switched to Gojo. Position: " + gojo.getX() + ", " + gojo.getY());
+//            System.out.println("Switched to Gojo. Position: " + gojo.getX() + ", " + gojo.getY());
         }
     }
 

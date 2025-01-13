@@ -146,20 +146,20 @@ public class Main implements GameLoop {
     }
 
     private void checkForBattleTransition() {
-        System.out.println("Checking for battle transition...");
-        System.out.println("Player Position: (" + characterManager.getActivePlayer().getX() + ", " + characterManager.getActivePlayer().getY() + ")");
-        System.out.println("Madara Position: (" + characterManager.getMadara().getX() + ", " + characterManager.getMadara().getY() + ")");
-        System.out.println("Proximity Check: " + characterManager.isPlayerNearMadara());
+//        System.out.println("Checking for battle transition...");
+//        System.out.println("Player Position: (" + characterManager.getActivePlayer().getX() + ", " + characterManager.getActivePlayer().getY() + ")");
+//        System.out.println("Madara Position: (" + characterManager.getMadara().getX() + ", " + characterManager.getMadara().getY() + ")");
+//        System.out.println("Proximity Check: " + characterManager.isPlayerNearMadara());
 
         if (characterManager.isPlayerNearMadara()) {
-            System.out.println("Player is near Madara! Transitioning to battle...");
+//            System.out.println("Player is near Madara! Transitioning to battle...");
             switchToBattleMap();
         }
     }
 
     private void switchToBattleMap() {
         if (characterManager.getNaruto() == null || characterManager.getGojo() == null || characterManager.getMadara() == null) {
-            System.out.println("Error: One or more characters are null!");
+//            System.out.println("Error: One or more characters are null!");
             return;
         }
 
@@ -172,7 +172,7 @@ public class Main implements GameLoop {
         );
 
         combatSystem.startBattle();
-        System.out.println("Transitioned to battle map. Combat starts!");
+//        System.out.println("Transitioned to battle map. Combat starts!");
     }
 
     private void drawBattleScene() {
@@ -193,7 +193,7 @@ public class Main implements GameLoop {
         inBattle = false;
 
         combatSystem.endBattle();
-        System.out.println("Battle ended. Returning to the regular map...");
+//        System.out.println("Battle ended. Returning to the regular map...");
 
         characterManager.getNaruto().setPosition(1180, 600);
         characterManager.getMadara().setPosition(1180, 300);
@@ -205,7 +205,7 @@ public class Main implements GameLoop {
 
         if (inBattle) {
             if (keyboardEvent.isKeyPressed()) {
-                System.out.println("Key pressed during battle: " + keyCode);
+//                System.out.println("Key pressed during battle: " + keyCode);
 
                 if (keyCode == KeyboardEvent.VK_A) {
                     attackKeyPressed = true;
