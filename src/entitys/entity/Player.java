@@ -29,8 +29,8 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 1050;
-        y = 300;
+        x = 900;
+        y = 1100;
         exactX = x;
         exactY = y;
         speed = 10;

@@ -32,7 +32,7 @@ public class CharacterManager {
 
         this.npcs = new ArrayList<>();
         if (scene.equals("intro_scene")){
-            npcs.add( new NPC("kakashi", 500, 500, npcDialogues.get("kakashi"), "down", "dynamic"));
+            npcs.add( new NPC("kakashi", 500, 1300, npcDialogues.get("kakashi"), "down", "dynamic"));
         } else {
             npcs.add(new NPC("mark", 850, 1100, npcDialogues.get("mark"), "down", "static"));
             npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
@@ -69,9 +69,11 @@ public class CharacterManager {
         drawCharacter(madara, cameraX, cameraY);
 
         for (NPC npc : npcs) {
-            int npcScreenX = npc.getX() - cameraX;
-            int npcScreenY = npc.getY() - cameraY;
-            npc.draw(npcScreenX, npcScreenY);
+            if (npc.isVisible){
+                int npcScreenX = npc.getX() - cameraX;
+                int npcScreenY = npc.getY() - cameraY;
+                npc.draw(npcScreenX, npcScreenY);
+            }
         }
     }
 

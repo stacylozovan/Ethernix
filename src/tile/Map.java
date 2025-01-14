@@ -68,7 +68,7 @@ public class Map {
                         tile[row][col].image = tileImages.get(tileType);
                         tile[row][col].x = col * TILE_SIZE;
                         tile[row][col].y = row * TILE_SIZE;
-                        tile[row][col].collision = (tileType == 1 || tileType == 4); // Exemplo: ajustar com base nos IDs
+                        tile[row][col].collision = (tileType == 1 || tileType == 4 || tileType == 177 || tileType == 94);
                     } else {
                         System.err.println("Tile ID not found: " + tileType);
                     }
