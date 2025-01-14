@@ -31,9 +31,9 @@ public class NPC extends Entity {
 
     public void interact(boolean isKeyPressed) {
         if (dialogue != null && currentDialogueIndex < dialogue.length) {
-            int boxWidth = 600;
+            int boxWidth = 900;
             int boxHeight = 150;
-            int boxX = 100;
+            int boxX = 50;
             int boxY = 600;
             int textPadding = 20;
 
@@ -67,5 +67,9 @@ public class NPC extends Entity {
     public void draw(int screenX, int screenY) {
         String imagePath = String.format("src/res/npcs/%s/%s_1.png", this.name, this.name);
         SaxionApp.drawImage(imagePath, screenX, screenY, this.width, this.height);
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -14,7 +14,7 @@ public class CharacterManager {
     public static List<NPC> npcs;
     private final main.CollisionChecker cChecker;
 
-    public CharacterManager(main.CollisionChecker cChecker) {
+    public CharacterManager(main.CollisionChecker cChecker, String scene) {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
         Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
 
@@ -31,8 +31,12 @@ public class CharacterManager {
         this.activePlayer = naruto;
 
         this.npcs = new ArrayList<>();
-        npcs.add(new NPC("mark", 850, 1100, npcDialogues.get("mark"), "down", "static"));
-        npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
+        if (scene.equals("intro_scene")){
+            npcs.add( new NPC("kakashi", 500, 1300, npcDialogues.get("kakashi"), "down", "dynamic"));
+        } else {
+            npcs.add(new NPC("mark", 850, 1100, npcDialogues.get("mark"), "down", "static"));
+            npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
+        }
 //        npcs.add(new NPC("villager", 300, 300, npcDialogues.get("villager"), "down", "static"));
 //        npcs.add(new NPC("merchant", 500, 500, npcDialogues.get("merchant"), "down", "static"));
     }
@@ -57,18 +61,20 @@ public class CharacterManager {
     }
 
     public void draw(int cameraX, int cameraY) {
+        for (NPC npc : npcs) {
+            if (npc.isVisible){
+                int npcScreenX = npc.getX() - cameraX;
+                int npcScreenY = npc.getY() - cameraY;
+                npc.draw(npcScreenX, npcScreenY);
+            }
+        }
+
         if (activePlayer == naruto) {
             drawCharacter(naruto, cameraX, cameraY);
         } else if (activePlayer == gojo) {
             drawCharacter(gojo, cameraX, cameraY);
         }
         drawCharacter(madara, cameraX, cameraY);
-
-        for (NPC npc : npcs) {
-            int npcScreenX = npc.getX() - cameraX;
-            int npcScreenY = npc.getY() - cameraY;
-            npc.draw(npcScreenX, npcScreenY);
-        }
     }
 
     public void displayHealthStatus() {
@@ -137,6 +143,15 @@ public class CharacterManager {
                 System.out.println("  No dialogues loaded!");
             }
         }
+    }
+
+    public NPC getNPCByName(String name) {
+        for (NPC npc : npcs) {
+            if (npc.getName().equals(name)) {
+                return npc;
+            }
+        }
+        return null;
     }
 }
 
