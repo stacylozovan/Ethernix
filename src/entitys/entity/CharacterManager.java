@@ -61,13 +61,6 @@ public class CharacterManager {
     }
 
     public void draw(int cameraX, int cameraY) {
-        if (activePlayer == naruto) {
-            drawCharacter(naruto, cameraX, cameraY);
-        } else if (activePlayer == gojo) {
-            drawCharacter(gojo, cameraX, cameraY);
-        }
-        drawCharacter(madara, cameraX, cameraY);
-
         for (NPC npc : npcs) {
             if (npc.isVisible){
                 int npcScreenX = npc.getX() - cameraX;
@@ -75,6 +68,13 @@ public class CharacterManager {
                 npc.draw(npcScreenX, npcScreenY);
             }
         }
+
+        if (activePlayer == naruto) {
+            drawCharacter(naruto, cameraX, cameraY);
+        } else if (activePlayer == gojo) {
+            drawCharacter(gojo, cameraX, cameraY);
+        }
+        drawCharacter(madara, cameraX, cameraY);
     }
 
     public void displayHealthStatus() {
