@@ -1,7 +1,8 @@
 package entity;
 
 import nl.saxion.app.SaxionApp;
-import java.awt.Color;
+
+import java.awt.*;
 
 public class NPC extends Entity {
     public String name;
@@ -21,6 +22,11 @@ public class NPC extends Entity {
         this.y = y;
         this.width = 64;
         this.height = 64;
+        solidArea = new Rectangle();
+        solidArea.x = 20;
+        solidArea.y = 10;
+        solidArea.width = 24;
+        solidArea.height = 54;
 
         if (movementPattern.equals("static")) {
             this.direction = "down";
