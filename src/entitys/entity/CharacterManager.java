@@ -31,12 +31,13 @@ public class CharacterManager {
         this.activePlayer = naruto;
 
         this.npcs = new ArrayList<>();
-        if (scene.equals("intro_scene")){
-            npcs.add( new NPC("kakashi", 500, 1300, npcDialogues.get("kakashi"), "down", "dynamic"));
-        } else {
-            npcs.add(new NPC("mark", 850, 1100, npcDialogues.get("mark"), "down", "static"));
-            npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
-        }
+        loadNPCs(scene, npcDialogues);
+//        if (scene.equals("intro_scene")){
+//            npcs.add( new NPC("kakashi", 500, 1300, npcDialogues.get("kakashi"), "down", "dynamic"));
+//        } else {
+//            npcs.add(new NPC("mark", 850, 1100, npcDialogues.get("mark"), "down", "static"));
+//            npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
+//        }
 //        npcs.add(new NPC("villager", 300, 300, npcDialogues.get("villager"), "down", "static"));
 //        npcs.add(new NPC("merchant", 500, 500, npcDialogues.get("merchant"), "down", "static"));
     }
@@ -44,6 +45,25 @@ public class CharacterManager {
     public void update(boolean[] keys,tile.Map gamemap) {
         activePlayer.update(keys,gamemap);
         madara.setPosition(madara.getX(), madara.getY());
+    }
+
+    private void loadNPCs(String scene, Map<String, String[]> npcDialogues) {
+        npcs.clear();
+
+        if (scene.equals("intro_scene")) {
+            npcs.add(new NPC("kakashi", 500, 1300, npcDialogues.get("kakashi"), "down", "dynamic"));
+        } else if (scene.equals("multiverse")) {
+            npcs.add(new NPC("mark", 850, 1100, npcDialogues.get("mark"), "down", "static"));
+            npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
+        }
+    }
+
+    public void changeScene(String newScene) {
+        CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
+        Map<String, String[]> npcDialogues = DialogueLoader.loadDialogues(csvReader);
+
+        loadNPCs(newScene, npcDialogues);
+        System.out.println("Scene changed to: " + newScene);
     }
 
     public void handleCharacterInteractions() {
