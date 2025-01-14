@@ -8,21 +8,41 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-//import java.util.Map;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Map {
     public static tile.Tile[][] tile;
     public static final int TILE_SIZE = 50;
-    private final java.util.Map<Integer, String> tileImages = new java.util.HashMap<>();
+    private final java.util.Map<Integer, String> tileImages = new HashMap<>();
+    private final Set<Integer> collisionTileTypes = new HashSet<>();
 
     public Map(String path) {
+        initializeCollisionTileTypes();
         loadTileImages("/object/tiles");
         String mapPath = Objects.requireNonNull(getClass().getResource(path),
                 "Map file not found!").getPath();
         System.out.println("Map file path: " + mapPath);
         loadMapFromFile(mapPath);
     }
+
+    private void initializeCollisionTileTypes() {
+        int[] collisionTiles = {
+                0, 1, 2, 3, 4, 15, 16, 17, 20, 21, 22, 23, 24, 37,
+                40, 41, 42, 43, 54, 60, 61, 62, 63, 80, 81, 82, 83, 86, 87, 94,
+                100, 101, 102, 103, 104, 108, 109, 110, 111, 112, 113, 114, 115, 117, 120,
+                121, 122, 123, 124, 128, 129, 130, 131, 134, 136, 140, 141, 142, 143, 144,
+                146, 147, 148, 149, 150, 151, 152, 169, 170, 171, 172, 177, 180, 181, 182,
+                183, 184, 200, 201, 202, 203, 204, 205, 209, 210, 211, 212, 220, 221, 222,
+                223, 224, 225, 229, 230, 231, 232, 249, 250
+        };
+
+        for (int tileId : collisionTiles) {
+            collisionTileTypes.add(tileId);
+        }
+    }
+
 
     private void loadTileImages(String tileFolderPath) {
         try {
@@ -36,7 +56,6 @@ public class Map {
             for (File file : files) {
                 String fileName = file.getName();
                 if (fileName.startsWith("GK_JC_Free_") && fileName.endsWith(".png")) {
-                    // Extrair o ID do nome do arquivo
                     String idStr = fileName.replace("GK_JC_Free_", "").replace(".png", "");
                     try {
                         int id = Integer.parseInt(idStr);
@@ -68,7 +87,8 @@ public class Map {
                         tile[row][col].image = tileImages.get(tileType);
                         tile[row][col].x = col * TILE_SIZE;
                         tile[row][col].y = row * TILE_SIZE;
-                        tile[row][col].collision = (tileType == 1 || tileType == 4 || tileType == 177 || tileType == 94);
+
+                        tile[row][col].collision = collisionTileTypes.contains(tileType);
                     } else {
                         System.err.println("Tile ID not found: " + tileType);
                     }
@@ -105,5 +125,13 @@ public class Map {
 
     public int getHeight() {
         return tile.length;
+    }
+
+    public void addCollisionTileType(int tileType) {
+        collisionTileTypes.add(tileType);
+    }
+
+    public void removeCollisionTileType(int tileType) {
+        collisionTileTypes.remove(tileType);
     }
 }
