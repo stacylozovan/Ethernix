@@ -38,9 +38,9 @@ public class Main implements GameLoop {
     @Override
     public void init() {
         introMap = new tile.Map("/object/intro_map.txt");
-        gameMap = new tile.Map("/object/map_output_new.txt");
-        CollisionChecker collisionChecker = new CollisionChecker(gameMap);
-        characterManager = new CharacterManager(collisionChecker);
+//        gameMap = new tile.Map("/object/map_output_new.txt");
+        CollisionChecker collisionChecker = new CollisionChecker(introMap);
+        characterManager = new CharacterManager(collisionChecker, "intro_scene");
     }
 
     @Override
@@ -51,6 +51,8 @@ public class Main implements GameLoop {
             SaxionApp.drawText("Settings", 150, 150, 50);
         } else if (inMenu) {
             mainMenu.drawMainMenu();
+        } else if (isIntroScene) {
+            updateIntroScene();
         } else if (gameStarted) {
             if (!inBattle) {
                 updateOverworld();
@@ -60,8 +62,43 @@ public class Main implements GameLoop {
         }
     }
 
+    private void updateIntroScene() {
+        NPC kakashi = characterManager.getNPCByName("kakashi");
+        if (kakashi != null) {
+            kakashi.interact(keys[KeyboardEvent.VK_SPACE]);
+        }
+
+        updateCamera(introMap);
+
+        introMap.draw(cameraX, cameraY);
+        characterManager.getNaruto().update(keys, introMap);
+        characterManager.getNaruto().draw(cameraX, cameraY);
+
+        int playerScreenX = characterManager.getNaruto().getX() - cameraX;
+        int playerScreenY = characterManager.getNaruto().getY() - cameraY;
+
+        if (!interactingWithNPC) {
+            if (kakashi.isPlayerNear(characterManager.getNaruto().getX(), characterManager.getNaruto().getY()) && keys[KeyboardEvent.VK_E]) {
+                interactingWithNPC = true;
+                currentInteractingNPC = kakashi;
+            }
+        } else {
+            kakashi.interact(keys[KeyboardEvent.VK_SPACE]);
+
+            if (kakashi.dialogue.length == kakashi.currentDialogueIndex) {
+                interactingWithNPC = false;
+                currentInteractingNPC = null;
+                isIntroScene = false;
+                gameStarted = true;
+                gameMap.loadMapFromFile("src/res/maps/main_map.txt");
+            }
+        }
+
+        kakashi.draw(kakashi.getX() - cameraX, kakashi.getY() - cameraY);
+    }
+
     private void updateOverworld() {
-        updateCamera();
+        updateCamera(gameMap);
         checkForBattleTransition();
 
         gameMap.draw(cameraX, cameraY);
@@ -128,7 +165,7 @@ public class Main implements GameLoop {
         }
     }
 
-    private void updateCamera() {
+    private void updateCamera(tile.Map map) {
         int screenWidth = 1000;
         int screenHeight = 1000;
         int tileSize = 50;
@@ -136,8 +173,8 @@ public class Main implements GameLoop {
         cameraX = characterManager.getNaruto().getX() - screenWidth / 2;
         cameraY = characterManager.getNaruto().getY() - screenHeight / 2;
 
-        int maxCameraX = gameMap.getWidth() * tileSize - screenWidth;
-        int maxCameraY = gameMap.getHeight() * tileSize - screenHeight;
+        int maxCameraX = map.getWidth() * tileSize - screenWidth;
+        int maxCameraY = map.getHeight() * tileSize - screenHeight;
 
         cameraX = Math.max(0, Math.min(cameraX, maxCameraX));
         cameraY = Math.max(0, Math.min(cameraY, maxCameraY));
@@ -234,4 +271,5 @@ public class Main implements GameLoop {
             }
         }
     }
+
 }
