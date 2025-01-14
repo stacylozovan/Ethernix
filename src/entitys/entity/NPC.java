@@ -10,7 +10,7 @@ public class NPC extends Entity {
     public String movementPattern;
 
     public int currentDialogueIndex = 0;
-    private boolean awaitingKeyPress = false;
+    private boolean isKeyHeld = false;
 
     public NPC(String name, int x, int y, String[] dialogue, String direction, String movementPattern) {
         this.name = name;
@@ -43,16 +43,21 @@ public class NPC extends Entity {
             SaxionApp.setBorderColor(Color.BLACK);
             SaxionApp.drawRectangle(boxX, boxY, boxWidth, boxHeight);
 
-            SaxionApp.setFill(Color.BLACK); // Black text
-            SaxionApp.drawText(name + ":", boxX + textPadding, boxY + textPadding + 20, 20); // Name with smaller font
-            SaxionApp.drawText(dialogue[currentDialogueIndex], boxX + textPadding, boxY + textPadding + 60, 24); // Dialogue text
+            SaxionApp.setFill(Color.BLACK);
+            SaxionApp.drawText(name + ":", boxX + textPadding, boxY + textPadding + 20, 20);
+            SaxionApp.drawText(dialogue[currentDialogueIndex], boxX + textPadding, boxY + textPadding + 60, 24);
 
-            if (isKeyPressed) {
+            if (isKeyPressed && !isKeyHeld) {
                 currentDialogueIndex++;
+                isKeyHeld = true;
             }
         } else {
             currentDialogueIndex = 0;
         }
+    }
+
+    public void releaseKey() {
+        isKeyHeld = false;
     }
 
     public boolean isPlayerNear(int playerX, int playerY) {
