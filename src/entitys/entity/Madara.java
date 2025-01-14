@@ -16,7 +16,7 @@ public class Madara extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 1180;
+        x = 1980;
         y = 300;
         exactX = x;
         exactY = y;

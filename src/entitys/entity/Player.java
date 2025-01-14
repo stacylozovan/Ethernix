@@ -29,11 +29,11 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 500;
-        y = 500;
+        x = 1050;
+        y = 300;
         exactX = x;
         exactY = y;
-        speed = 6;
+        speed = 10;
         health = 200;
         direction = "down";
         width = PLAYER_SIZE;
