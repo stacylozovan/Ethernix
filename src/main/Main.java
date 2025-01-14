@@ -9,6 +9,7 @@ import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
 public class Main implements GameLoop {
+    private tile.Map introMap;
     private tile.Map gameMap;
     private CharacterManager characterManager;
     private CombatSystemLogic combatSystem;
@@ -22,6 +23,7 @@ public class Main implements GameLoop {
     private int cameraX = 0;
     private int cameraY = 0;
 
+    private boolean isIntroScene = true;
     private boolean inBattle = false;
     private boolean attackKeyPressed = false;
     private String battleMapImage = "src/res/object/battlemap1.png";
@@ -35,7 +37,8 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
-        gameMap = new tile.Map();
+        introMap = new tile.Map("/object/intro_map.txt");
+        gameMap = new tile.Map("/object/map_output_new.txt");
         CollisionChecker collisionChecker = new CollisionChecker(gameMap);
         characterManager = new CharacterManager(collisionChecker);
     }

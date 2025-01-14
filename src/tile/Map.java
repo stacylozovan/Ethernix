@@ -16,9 +16,9 @@ public class Map {
     public static final int TILE_SIZE = 50;
     private final java.util.Map<Integer, String> tileImages = new java.util.HashMap<>();
 
-    public Map() {
+    public Map(String path) {
         loadTileImages("/object/tiles");
-        String mapPath = Objects.requireNonNull(getClass().getResource("/object/map_output_new.txt"),
+        String mapPath = Objects.requireNonNull(getClass().getResource(path),
                 "Map file not found!").getPath();
         System.out.println("Map file path: " + mapPath);
         loadMapFromFile(mapPath);
