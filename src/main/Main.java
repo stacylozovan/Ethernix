@@ -179,12 +179,23 @@ public class Main implements GameLoop {
     }
 
     private void updateBattle() {
-        drawBattleScene();
+        SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
 
+        combatSystem.drawHealthBars();
+        combatSystem.drawBattleField();
+
+        // Display action menu when it's the player's turn
+        if (combatSystem.isPlayerTurn()) {
+            combatSystem.displayActionMenu();
+        }
+
+        // Check if the battle is over
         if (combatSystem.isBattleOver()) {
             endBattle();
         }
     }
+
+
 
 //    private void playBackgroundMusic() {
 //        String[] songs = {
@@ -328,14 +339,25 @@ private void updateCamera(tile.Map currentMap) {
 
         if (inBattle) {
             if (keyboardEvent.isKeyPressed()) {
+                // Handle 'A' key for normal attack
                 if (keyCode == KeyboardEvent.VK_A) {
-                    attackKeyPressed = true;
+                    combatSystem.handlePlayerAction(null, keyboardEvent); // Trigger normal attack
                 }
 
+                // Handle 'E' key for special attack
+                if (keyCode == KeyboardEvent.VK_E) {
+                    combatSystem.handlePlayerAction(null, keyboardEvent); // Trigger special attack
+                }
+
+                // Handle 'Q' key for ultimate attack
+                if (keyCode == KeyboardEvent.VK_Q) {
+                    combatSystem.handlePlayerAction(null, keyboardEvent); // Trigger ultimate attack
+                }
+
+                // Handle player switching
                 if (keyCode == KeyboardEvent.VK_1) {
                     combatSystem.switchPlayer(1);
                 }
-
                 if (keyCode == KeyboardEvent.VK_2) {
                     combatSystem.switchPlayer(2);
                 }
@@ -355,10 +377,11 @@ private void updateCamera(tile.Map currentMap) {
         }
     }
 
+
     @Override
-    public void mouseEvent(MouseEvent mouseEvent) {
+    public void mouseEvent(nl.saxion.app.interaction.MouseEvent mouseEvent) {
         if (inBattle && mouseEvent.isMouseDown() && mouseEvent.isLeftMouseButton()) {
-            attackKeyPressed = true;
+            combatSystem.handlePlayerAction(mouseEvent, null); // Trigger normal attack
         }
 
         if (inMenu) {
@@ -370,5 +393,4 @@ private void updateCamera(tile.Map currentMap) {
             }
         }
     }
-
 }

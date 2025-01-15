@@ -1,7 +1,10 @@
 package entity;
 
 import nl.saxion.app.SaxionApp;
+import nl.saxion.app.interaction.KeyboardEvent;
+
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -200,6 +203,69 @@ public class CombatSystemLogic {
             System.out.println("Gojo Health: " + gojo.getHealth());
         }
         System.out.println("Madara Health: " + madara.getHealth());
+    }
+    public void displayActionMenu() {
+        // Draw the menu background
+        SaxionApp.setFill(Color.LIGHT_GRAY);
+        SaxionApp.drawRectangle(150, 600, 500, 300);
+
+        // Display text options for actions
+        SaxionApp.setFill(Color.BLACK);
+        SaxionApp.drawText("1. Normal Attack (Click)", 200, 650, 20);
+        SaxionApp.drawText("2. Special Attack (Press 'E')", 200, 700, 20);
+        SaxionApp.drawText("3. Ultimate Attack (Press 'Q')", 200, 750, 20);
+    }
+
+    public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
+        if (playerTurn) {
+            // Handle normal attack via left mouse button
+            if (mouseEvent != null && mouseEvent.isLeftMouseButton() && mouseEvent.isMouseDown()) {
+                startNarutoAttackAnimation("normal");
+                madara.takeDamage(15); // Normal attack damage
+                System.out.println("Player performed a normal attack. Madara takes 15 damage.");
+                playerTurn = false; // End player's turn
+                return; // Exit after handling
+            }
+
+            // Handle special attack via 'E' key
+            if (keyboardEvent != null && keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
+                if (narutoSpecialReady || gojoUltimateCooldown) {
+                    triggerSpecialAttack(); // Execute special attack
+                } else {
+                    System.out.println("Special attack is not ready.");
+                }
+                return; // Exit after handling
+            }
+
+            // Handle ultimate attack via 'Q' key
+            if (keyboardEvent != null && keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
+                if (narutoUltimateReady) {
+                    triggerUltimateAttack(); // Execute ultimate attack
+                } else {
+                    System.out.println("Ultimate attack is not ready.");
+                }
+                return; // Exit after handling
+            }
+        } else {
+            System.out.println("It's not the player's turn.");
+        }
+    }
+
+    public boolean isPlayerTurn() {
+        return playerTurn;
+    }
+
+
+
+    private void handleNormalAttack() {
+        if (playerTurn) {
+            startNarutoAttackAnimation("normal");
+            madara.takeDamage(15); // Normal attack deals fixed damage
+            System.out.println("Normal attack dealt 15 damage to Madara.");
+            playerTurn = false; // End player's turn
+        } else {
+            System.out.println("It's not the player's turn!");
+        }
     }
 
 
