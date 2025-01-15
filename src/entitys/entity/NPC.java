@@ -71,7 +71,7 @@ public class NPC extends Entity {
     }
 
     public void draw(int screenX, int screenY) {
-        String imagePath = String.format("src/res/npcs/%s/%s_1.png", this.name, this.name);
+        String imagePath = String.format("src/res/npcs/%s/%s.png", this.name, this.name);
         SaxionApp.drawImage(imagePath, screenX, screenY, this.width, this.height);
     }
 
