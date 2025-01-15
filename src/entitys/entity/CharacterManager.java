@@ -53,8 +53,12 @@ public class CharacterManager {
         if (scene.equals("intro_scene")) {
             npcs.add(new NPC("kakashi", 500, 1300, npcDialogues.get("kakashi"), "down", "dynamic"));
         } else if (scene.equals("multiverse")) {
-            npcs.add(new NPC("mark", 850, 1100, npcDialogues.get("mark"), "down", "static"));
-            npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
+            npcs.add(new NPC("eren", 850, 1100, npcDialogues.get("eren"), "down", "static"));
+            npcs.add(new NPC("rengoku", 1200, 860, npcDialogues.get("rengoku"), "down", "static"));
+            npcs.add(new NPC("guts", 1300, 860, npcDialogues.get("guts"), "down", "static"));
+            npcs.add(new NPC("robin", 1400, 860, npcDialogues.get("robin"), "down", "static"));
+            npcs.add(new NPC("roshi", 1500, 860, npcDialogues.get("roshi"), "down", "static"));
+            npcs.add(new NPC("luffy", 1600, 860, npcDialogues.get("luffy"), "down", "static"));
         }
     }
 
