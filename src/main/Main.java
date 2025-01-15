@@ -87,7 +87,6 @@ public class Main implements GameLoop {
                 transitionStep = 0;
                 transitionStartTime = System.currentTimeMillis();
                 kakashi.isVisible = false;
-                System.out.println("Kakashi is not visible anymore");
             }
         }
         if (transitioningToNextScene) {
@@ -154,6 +153,7 @@ public class Main implements GameLoop {
                 naruto.x = 1050;
                 naruto.y = 290;
                 naruto.direction = "down";
+                characterManager.changeScene("multiverse");
                 gameMap = new tile.Map("/object/map_output_new.txt");
                 break;
         }

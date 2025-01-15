@@ -95,8 +95,12 @@ public class Player extends Entity {
 
 //        CHECK TILE COLLISION
         collisionOn = this.cChecker.checkTile(this);
+
+        // CHECK NPC COLLISION
+        boolean npcCollision = this.cChecker.checkNPCCollision(this, CharacterManager.npcs);
+
 //        IF COLLISION IS FALSE PLAYER CAN MOVE
-        if(keyPressed && !collisionOn){
+        if(keyPressed && !collisionOn && !npcCollision) {
             switch(direction){
                 case "up": this.y -= speed; break;
                 case "down": this.y += speed; break;

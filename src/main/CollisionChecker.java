@@ -2,6 +2,9 @@ package main;
 
 import entity.Entity;
 import tile.Map;
+import entity.NPC;
+
+import java.util.List;
 
 public class CollisionChecker {
     private final Map map;
@@ -62,6 +65,33 @@ public class CollisionChecker {
         }
         return false;
     }
+
+    public boolean checkNPCCollision(Entity player, List<NPC> npcs) {
+        for (NPC npc : npcs) {
+            if (npc.isVisible) {
+                // Predict the player's next position based on their direction
+                int nextX = player.x;
+                int nextY = player.y;
+
+                switch (player.direction) {
+                    case "up" -> nextY -= player.speed;
+                    case "down" -> nextY += player.speed;
+                    case "left" -> nextX -= player.speed;
+                    case "right" -> nextX += player.speed;
+                }
+
+                // Check if the next position overlaps with the NPC's position
+                if (nextX + player.solidArea.x < npc.x + npc.solidArea.x + npc.solidArea.width &&
+                        nextX + player.solidArea.x + player.solidArea.width > npc.x + npc.solidArea.x &&
+                        nextY + player.solidArea.y < npc.y + npc.solidArea.y + npc.solidArea.height &&
+                        nextY + player.solidArea.y + player.solidArea.height > npc.y + npc.solidArea.y) {
+                    return true; // Collision detected
+                }
+            }
+        }
+        return false; // No collision
+    }
+
 
     private boolean isTileCollision(int col, int row) {
         if (col < 0 || col >= map.getWidth() || row < 0 || row >= map.getHeight()) {
