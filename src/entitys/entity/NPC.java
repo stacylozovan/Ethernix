@@ -81,8 +81,6 @@ public class NPC extends Entity {
     }
 
     public void moveRight(int tiles) {
-        System.out.println("NPC current position = " + this.x );
         this.x += tiles * Map.TILE_SIZE;
-        System.out.println("NPC moved to right, x = " + this.x );
     }
 }
