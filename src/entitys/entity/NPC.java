@@ -1,6 +1,7 @@
 package entity;
 
 import nl.saxion.app.SaxionApp;
+import tile.Map;
 
 import java.awt.*;
 
@@ -77,5 +78,9 @@ public class NPC extends Entity {
 
     public String getName() {
         return name;
+    }
+
+    public void moveRight(int tiles) {
+        this.x += tiles * Map.TILE_SIZE;
     }
 }
