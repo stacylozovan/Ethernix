@@ -27,7 +27,7 @@ public class Main implements GameLoop {
 
     private boolean inBattle = false;
     private boolean attackKeyPressed = false;
-    private String battleMapImage = "src/res/object/battlemap1.png";
+    private String battleMapImage = "src/res/object/battlemap.png";
 
     private boolean interactingWithNPC = false;
     private NPC currentInteractingNPC;
