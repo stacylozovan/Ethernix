@@ -187,20 +187,6 @@ public class Main implements GameLoop {
         }
     }
 
-//    private void playBackgroundMusic() {
-//        String[] songs = {
-//                "src/res/audio/first_map_audio_1.wav",
-//                "src/res/audio/first_map_audio_2.wav",
-//                "src/res/audio/first_map_audio_3.wav"
-//        };
-//
-//        if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
-//            int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
-//            String selectedSong = songs[randomIndex];
-//            AudioHelper.newSong(selectedSong, false);
-//        }
-//    }
-
     private void playBackgroundMusic() {
         String[] introSongs = {
                 "src/res/audio/main_menu.wav"
@@ -236,7 +222,6 @@ public class Main implements GameLoop {
         }
     }
 
-
     private void handleNPCInteractions(int playerScreenX, int playerScreenY) {
         if (interactingWithNPC && currentInteractingNPC != null) {
             if (!currentInteractingNPC.isPlayerNear(characterManager.getActivePlayer().getX(), characterManager.getActivePlayer().getY())) {
@@ -249,6 +234,9 @@ public class Main implements GameLoop {
             currentInteractingNPC.interact(isKeyPressed);
 
             if (keys[KeyboardEvent.VK_SPACE] && currentInteractingNPC.dialogue.length == currentInteractingNPC.currentDialogueIndex) {
+                if ("patrick".equals(currentInteractingNPC.getName())) {
+                    currentInteractingNPC.moveRight(1);
+                }
                 interactingWithNPC = false;
                 currentInteractingNPC = null;
             }
