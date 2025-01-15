@@ -4,6 +4,7 @@ import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
+import tile.Map;
 
 public class Main implements GameLoop {
     private tile.Map introMap;
@@ -150,11 +151,11 @@ public class Main implements GameLoop {
                 isIntroScene = false;
                 transitioningToNextScene = false;
                 Player naruto = characterManager.getNaruto();
-                naruto.x = 1050;
-                naruto.y = 290;
+                naruto.x = 10 * Map.TILE_SIZE;
+                naruto.y = 10 * Map.TILE_SIZE;
                 naruto.direction = "down";
                 characterManager.changeScene("multiverse");
-                gameMap = new tile.Map("/object/map_output_new.txt");
+                gameMap = new tile.Map("/object/outworld_map.txt");
                 break;
         }
     }
