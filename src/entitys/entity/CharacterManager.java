@@ -59,6 +59,8 @@ public class CharacterManager {
             npcs.add(new NPC("robin", 1400, 860, npcDialogues.get("robin"), "down", "static"));
             npcs.add(new NPC("roshi", 1500, 860, npcDialogues.get("roshi"), "down", "static"));
             npcs.add(new NPC("luffy", 1600, 860, npcDialogues.get("luffy"), "down", "static"));
+            npcs.add(new NPC("patrick", (30 * tile.Map.TILE_SIZE), (25 * tile.Map.TILE_SIZE), npcDialogues.get("patrick"), "down", "static"));
+            npcs.add(new NPC("gojo", (37 * tile.Map.TILE_SIZE), (44 * tile.Map.TILE_SIZE), npcDialogues.get("gojo"), "down", "static"));
         }
     }
 
