@@ -4,6 +4,7 @@ import nl.saxion.app.SaxionApp;
 import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
+import tile.Map;
 
 public class Main implements GameLoop {
     private tile.Map introMap;
@@ -25,6 +26,7 @@ public class Main implements GameLoop {
     private int transitionStep = 0;
     private long transitionStartTime = 0;
 
+    private boolean inLabyrinth = false;
     private boolean inBattle = false;
     private boolean attackKeyPressed = false;
     private String battleMapImage = "src/res/object/battlemap1.png";
@@ -62,11 +64,27 @@ public class Main implements GameLoop {
         } else if (gameStarted) {
             if (!inBattle) {
                 updateOverworld();
+                if (inLabyrinth) {
+                    drawCaveEffect();
+                }
             } else {
                 updateBattle();
             }
         }
     }
+
+    private void drawCaveEffect() {
+        int playerScreenX = characterManager.getActivePlayer().getX() - cameraX;
+        int playerScreenY = characterManager.getActivePlayer().getY() - cameraY;
+
+        int maskWidth = 1050;
+        int maskHeight = 1050;
+        int maskX = playerScreenX - maskWidth / 2;
+        int maskY = playerScreenY - maskHeight / 2;
+
+        SaxionApp.drawImage("src/res/labyrinth/labyrinth_background.png", maskX, maskY, maskWidth, maskHeight);
+    }
+
 
     private void updateIntroScene() {
         updateCamera(introMap);
@@ -150,11 +168,11 @@ public class Main implements GameLoop {
                 isIntroScene = false;
                 transitioningToNextScene = false;
                 Player naruto = characterManager.getNaruto();
-                naruto.x = 1050;
-                naruto.y = 290;
+                naruto.x = 30 * Map.TILE_SIZE;
+                naruto.y = 10 * Map.TILE_SIZE;
                 naruto.direction = "down";
                 characterManager.changeScene("multiverse");
-                gameMap = new tile.Map("/object/map_output_new.txt");
+                gameMap = new tile.Map("/object/outworld_map_2.txt");
                 break;
         }
     }
@@ -186,20 +204,6 @@ public class Main implements GameLoop {
         }
     }
 
-//    private void playBackgroundMusic() {
-//        String[] songs = {
-//                "src/res/audio/first_map_audio_1.wav",
-//                "src/res/audio/first_map_audio_2.wav",
-//                "src/res/audio/first_map_audio_3.wav"
-//        };
-//
-//        if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), songs)) {
-//            int randomIndex = SaxionApp.getRandomValueBetween(0, 3);
-//            String selectedSong = songs[randomIndex];
-//            AudioHelper.newSong(selectedSong, false);
-//        }
-//    }
-
     private void playBackgroundMusic() {
         String[] introSongs = {
                 "src/res/audio/main_menu.wav"
@@ -224,6 +228,8 @@ public class Main implements GameLoop {
             selectedSongs = introSongs;
         } else if (inBattle) {
             selectedSongs = battleSongs;
+        } else if (inLabyrinth) {
+            selectedSongs = introSongs;
         } else {
             selectedSongs = overworldSongs;
         }
@@ -234,7 +240,6 @@ public class Main implements GameLoop {
             AudioHelper.newSong(currentSong, false);
         }
     }
-
 
     private void handleNPCInteractions(int playerScreenX, int playerScreenY) {
         if (interactingWithNPC && currentInteractingNPC != null) {
@@ -248,6 +253,12 @@ public class Main implements GameLoop {
             currentInteractingNPC.interact(isKeyPressed);
 
             if (keys[KeyboardEvent.VK_SPACE] && currentInteractingNPC.dialogue.length == currentInteractingNPC.currentDialogueIndex) {
+                if ("patrick".equals(currentInteractingNPC.getName())) {
+                    currentInteractingNPC.moveRight(1);
+                    inLabyrinth = true;
+                } else if ("gojo".equals(currentInteractingNPC.getName())) {
+                    currentInteractingNPC.isVisible = false;
+                }
                 interactingWithNPC = false;
                 currentInteractingNPC = null;
             }
@@ -257,6 +268,9 @@ public class Main implements GameLoop {
                     if (npc.isPlayerNear(characterManager.getActivePlayer().getX(), characterManager.getActivePlayer().getY()) && keys[KeyboardEvent.VK_E]) {
                         interactingWithNPC = true;
                         currentInteractingNPC = npc;
+                        if ("gojo".equals(currentInteractingNPC.getName())) {
+                            inLabyrinth = false;
+                        }
                         break;
                     }
                 }
