@@ -157,10 +157,6 @@ public class CombatSystemLogic {
         }
     }
 
-
-
-
-
     public void handleCombat() {
         if (playerTurn) {
             System.out.println("Player's turn: " + activePlayer.getName());
@@ -187,8 +183,6 @@ public class CombatSystemLogic {
         System.out.println("Madara Health: " + madara.getHealth());
     }
 
-
-
     public void displayActionMenu() {
         if (playerTurn) {
             // Draw the menu background
@@ -208,7 +202,6 @@ public class CombatSystemLogic {
         actionMessage = message;
         messageDisplayTime = System.currentTimeMillis(); // Record the start time
     }
-
 
     public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
         if (playerTurn) {
@@ -257,12 +250,10 @@ public class CombatSystemLogic {
         }
     }
 
-
     public boolean isPlayerTurn() {
 
         return playerTurn;
     }
-
 
     private void handleNormalAttack() {
         if (playerTurn) {
@@ -285,7 +276,6 @@ public class CombatSystemLogic {
             }
         }, 1000); // Delay of 1 second (adjust as needed)
     }
-
 
     private void applyStunEffect(Madara madara, int duration) {
         madara.setStunned(true);
@@ -431,7 +421,6 @@ public class CombatSystemLogic {
         playerTurn = true;
     }
 
-
     private void applyStatusEffect(Player player, String effect) {
         if (effect.equals("stun")) {
             player.setStunned(true); // Assuming Player has a setStunned method
@@ -525,7 +514,6 @@ public class CombatSystemLogic {
             System.out.println("Invalid player switch request or Gojo is unavailable.");
         }
     }
-
 
     public boolean isBattleOver() {
         boolean allPlayersDefeated = naruto.getHealth() <= 0 && (gojo == null || gojo.getHealth() <= 0);
