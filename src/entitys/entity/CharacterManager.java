@@ -13,6 +13,10 @@ public class CharacterManager {
     private final Madara madara;
     public static List<NPC> npcs;
     private final main.CollisionChecker cChecker;
+    private long gameOverStartTime = 0;
+    private static final long GAME_OVER_DISPLAY_DURATION = 6000;
+    private String gameOverImagePath = "src/res/scene/gameover.png";
+
 
     public CharacterManager(main.CollisionChecker cChecker, String scene) {
         CsvReader csvReader = new CsvReader("src/res/npcs/npc_dialogues.csv");
@@ -64,6 +68,37 @@ public class CharacterManager {
         System.out.println("Scene changed to: " + newScene);
     }
 
+    public void resetGame() {
+        naruto.setDefaultValues();
+        naruto.setPosition(1500, 500);
+        if (gojo != null) {
+            gojo.setDefaultValues();
+        }
+
+        madara.setDefaultValues();
+
+        activePlayer = naruto;
+
+        System.out.println("Game has been reset!");
+    }
+
+    private void showGameOverScene() {
+        SaxionApp.clear();
+
+        SaxionApp.drawImage(gameOverImagePath, 0, 0, 1000, 1000);
+
+        if (gameOverStartTime == 0) {
+            gameOverStartTime = System.currentTimeMillis();
+        }
+
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - gameOverStartTime >= GAME_OVER_DISPLAY_DURATION) {
+            resetGame();
+            gameOverStartTime = 0;
+        }
+    }
+
+
     public void handleCharacterInteractions() {
         if (isNear(activePlayer)) {
             activePlayer.takeDamage(0);
@@ -71,12 +106,14 @@ public class CharacterManager {
 
         if (naruto.getHealth() <= 0 && (gojo == null || gojo.getHealth() <= 0)) {
             System.out.println("Both Naruto and Gojo are dead!");
+            showGameOverScene();
         }
 
         if (madara.getHealth() <= 0) {
             System.out.println("Madara is defeated!");
         }
     }
+
 
     public void draw(int cameraX, int cameraY) {
         for (NPC npc : npcs) {
