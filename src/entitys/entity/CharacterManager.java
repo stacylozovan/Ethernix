@@ -72,6 +72,21 @@ public class CharacterManager {
         System.out.println("Scene changed to: " + newScene);
     }
 
+    public void resetGame() {
+        naruto.setDefaultValues();
+        naruto.setPosition(1500, 300);
+        if (gojo != null) {
+            gojo.setDefaultValues();
+        }
+
+        madara.setDefaultValues();
+
+        activePlayer = naruto;
+
+        System.out.println("Game has been reset!");
+    }
+
+
     public void handleCharacterInteractions() {
         if (isNear(activePlayer)) {
             activePlayer.takeDamage(0);
@@ -79,12 +94,14 @@ public class CharacterManager {
 
         if (naruto.getHealth() <= 0 && (gojo == null || gojo.getHealth() <= 0)) {
             System.out.println("Both Naruto and Gojo are dead!");
+            resetGame();
         }
 
         if (madara.getHealth() <= 0) {
             System.out.println("Madara is defeated!");
         }
     }
+
 
     public void draw(int cameraX, int cameraY) {
         for (NPC npc : npcs) {
