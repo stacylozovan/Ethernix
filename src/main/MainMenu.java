@@ -13,17 +13,16 @@ public class MainMenu {
 
     public void drawMainMenu() {
             if (!AudioHelper.isPlaying() || !AudioHelper.getFilename().equals("src/res/audio/background_music.wav")) {
-            AudioHelper.newSong("src/res/audio/background_music.wav", false);
-            }
+                AudioHelper.newSong("src/res/audio/background_music.wav", false);
+                }
 
             SaxionApp.clear();
-        SaxionApp.drawImage("src/res/menu/background_image2.jpg",0,0,1000,1000);
+            SaxionApp.drawImage("src/res/menu/background_5.jpg",0,0,1000,1000);
             SaxionApp.setFill(Color.BLACK);
-            SaxionApp.drawImage("src/res/menu/ethernixxx.png",405,250,250,45);
+            SaxionApp.drawImage("src/res/menu/ethernix9.png",375,235,300,60);
             SaxionApp.drawImage("src/res/menu/play.png", 405, 335, 241, 133);
-            SaxionApp.drawImage("src/res/menu/settings.png", 380, 465, 296, 122);
+            SaxionApp.drawImage("src/res/menu/tipsFinal.png", 443, 495, 160, 65);
             SaxionApp.drawImage("src/res/menu/quit.png", 410, 595, 246, 138);
-
     }
 
     public boolean isMouseOver(int mouseX, int mouseY, int x, int y, int width, int height) {
@@ -41,7 +40,7 @@ public class MainMenu {
                 if (isMouseOver(mouseX, mouseY, 440, 367, 157, 65)) {
                     return true;
                 }
-                else if (isMouseOver(mouseX, mouseY, 416, 491, 207, 65)) {
+                else if (isMouseOver(mouseX, mouseY, 440, 491, 160, 65)) {
                     inSettings = true;
                     return false;
                 }

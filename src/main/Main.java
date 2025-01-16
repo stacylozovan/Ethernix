@@ -6,6 +6,8 @@ import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 import tile.Map;
 
+import java.awt.*;
+
 public class Main implements GameLoop {
     private tile.Map introMap;
     private tile.Map gameMap;
@@ -60,7 +62,13 @@ public class Main implements GameLoop {
         SaxionApp.clear();
 
         if (mainMenu.isInSettings()) {
-            SaxionApp.drawText("Settings", 150, 150, 50);
+            SaxionApp.drawImage("src/res/menu/rickroll.jpg",0,0,1000,1000);
+            SaxionApp.setTextDrawingColor(Color.black);
+            SaxionApp.drawText("TIPS", 450, 35, 50);
+            SaxionApp.drawText("Press " + "E" + " to interact with NPCs", 285, 250, 35);
+            if (!AudioHelper.isPlaying() || !AudioHelper.getFilename().equals("src/res/audio/rickroll.wav")) {
+                AudioHelper.newSong("src/res/audio/rickroll.wav", false);
+            }
         } else if (inMenu) {
             mainMenu.drawMainMenu();
         } else if (isIntroScene) {
@@ -221,9 +229,7 @@ public class Main implements GameLoop {
         };
 
         String[] overworldSongs = {
-                "src/res/audio/first_map_audio_1.wav",
-                "src/res/audio/first_map_audio_2.wav",
-                "src/res/audio/first_map_audio_3.wav"
+                "src/res/audio/gameMusicFinal.wav",
         };
 
         String[] battleSongs = {
@@ -245,10 +251,10 @@ public class Main implements GameLoop {
             selectedSongs = overworldSongs;
         }
 
-        if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(currentSong, selectedSongs)) {
+        if (!AudioHelper.isPlaying() || !AudioHelper.isSongInArray(AudioHelper.getFilename(), selectedSongs)) {
             int randomIndex = SaxionApp.getRandomValueBetween(0, selectedSongs.length);
-            currentSong = selectedSongs[randomIndex];
-            AudioHelper.newSong(currentSong, false);
+            String selectedSong = selectedSongs[randomIndex];
+            AudioHelper.newSong(selectedSong, false); // Play the selected song
         }
     }
 
