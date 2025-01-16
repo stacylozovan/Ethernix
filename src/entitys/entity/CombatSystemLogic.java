@@ -48,6 +48,10 @@ public class CombatSystemLogic {
     private String actionMessage = null; // The message to display
     private long messageDisplayTime = 0; // The time when the message started
     private final long messageDuration = 2000; // Display duration in milliseconds
+    private boolean isTutorialPhase = true; // Starts in the tutorial phase
+    private final String tutorialImage = "src/res/battle/tutorial.png"; // Path to the tutorial image
+    private boolean isBattleCompleted = false; // Tracks whether the battle has ended
+
 
 
     public CombatSystemLogic(Player naruto, Player gojo, Madara madara) {
@@ -61,14 +65,34 @@ public class CombatSystemLogic {
         startMadaraAttackCycle();
     }
     public void startBattle() {
-        inBattleMode = true;
-        System.out.println("Battle mode started.");
+        if (isBattleCompleted) {
+            System.out.println("Battle has already ended. Tutorial phase will not restart.");
+            return; // Do not start the tutorial phase if the battle is already over
+        }
+
+        System.out.println("Starting tutorial phase...");
+
+        // Schedule transition to battle mode after 7 seconds
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!isBattleCompleted) { // Ensure the battle hasn't been completed during the delay
+                    isTutorialPhase = false; // End tutorial phase
+                    inBattleMode = true; // Begin battle mode
+                    System.out.println("Transitioned to battle mode!");
+                }
+            }
+        }, 7000);
     }
 
     public void endBattle() {
-        inBattleMode = false;
-        System.out.println("Battle mode ended.");
+        if (!isBattleCompleted) {
+            inBattleMode = false;
+            isBattleCompleted = true; // Mark the battle as completed
+            System.out.println("Battle mode ended. Tutorial phase will not restart.");
+        }
     }
+
     private void teleportToBattlePositions() {
         System.out.println("Teleporting players to battle positions...");
 
@@ -113,8 +137,15 @@ public class CombatSystemLogic {
 
 
     public void drawBattleField() {
+        if (isTutorialPhase) {
+            // Draw the tutorial image during the tutorial phase
+            SaxionApp.drawImage(tutorialImage, 0, 0, 1000, 1000);
+            System.out.println("Displaying tutorial image...");
+            return; // Skip drawing the battlefield
+        }
+
         if (inBattleMode) {
-            // Draw the character choice image
+            // Draw the battlefield during battle mode
             SaxionApp.drawImage(charactersChoiceImage, 150, 730, 300, 250);
 
             // Draw the active player's battle sprite
@@ -146,7 +177,7 @@ public class CombatSystemLogic {
             long elapsedTime = System.currentTimeMillis() - messageDisplayTime;
             if (elapsedTime < messageDuration) {
                 // Draw message background
-                SaxionApp.setFill(Color.lightGray);
+                SaxionApp.setFill(Color.LIGHT_GRAY);
                 SaxionApp.drawRectangle(300, 20, 450, 40);
 
                 // Draw the message text
@@ -158,8 +189,9 @@ public class CombatSystemLogic {
         }
     }
 
+
     public void handleCombat() {
-        if (playerTurn) {
+        if (inBattleMode && playerTurn) {
             System.out.println("Player's turn: " + activePlayer.getName());
 
             // Show the action menu only during the player's turn
@@ -188,7 +220,7 @@ public class CombatSystemLogic {
     }
 
     public void displayActionMenu() {
-        if (playerTurn) {
+        if (inBattleMode && !isTutorialPhase && playerTurn) {
             // Draw the menu background
             SaxionApp.setFill(Color.LIGHT_GRAY);
             SaxionApp.drawRectangle(550, 600, 400, 270);
