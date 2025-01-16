@@ -37,8 +37,7 @@ public class Main implements GameLoop {
     private int originalPlayerX = 0;
     private int originalPlayerY = 0;
     private int blinkCount = 0;
-    private boolean inCutscene = false; // New flag to track if a cutscene is playing
-    private boolean tutorialComplete = false; // To ensure the tutorial runs only once
+
 
     private String currentSong = null;
 
@@ -180,46 +179,35 @@ public class Main implements GameLoop {
     }
 
     private void updateOverworld() {
-        if (combatSystem != null) {
-            // Handle cutscene
-            if (combatSystem.isCutsceneActive()) {
-                combatSystem.drawCutscene();
-                return; // Skip overworld updates during cutscene
-            }
-
-            // Handle tutorial
-            if (combatSystem.isTutorialActive()) {
-                combatSystem.drawTutorial();
-                return; // Skip overworld updates during tutorial
-            }
-
-            // Transition to battle after tutorial
-            if (!combatSystem.isCutsceneActive() && !combatSystem.isTutorialActive() && !inBattle) {
-                inBattle = true;
-                combatSystem.startBattle();
-                System.out.println("Transitioned to battle mode!");
-            }
+        // Check for battle transition
+        if (combatSystem != null && !inBattle) {
+            inBattle = true; // Enter battle mode
+            combatSystem.startBattle();
+            System.out.println("Transitioned to battle mode!");
+            return; // Skip further overworld updates during battle
         }
 
         // Regular overworld updates
-        updateCamera(gameMap);
-        checkForBattleTransition();
+        updateCamera(gameMap); // Update camera position based on the map
+        checkForBattleTransition(); // Check if the player is near a battle trigger
 
-        gameMap.draw(cameraX, cameraY);
-        characterManager.update(keys, gameMap);
-        characterManager.draw(cameraX, cameraY);
+        gameMap.draw(cameraX, cameraY); // Draw the current map
 
+        characterManager.update(keys, gameMap); // Update player and NPC positions
+        characterManager.draw(cameraX, cameraY); // Draw players and NPCs
+
+        // Get player screen position for interaction checks
         int playerScreenX = characterManager.getActivePlayer().getX() - cameraX;
         int playerScreenY = characterManager.getActivePlayer().getY() - cameraY;
-        handleNPCInteractions(playerScreenX, playerScreenY);
+        handleNPCInteractions(playerScreenX, playerScreenY); // Handle NPC interactions
 
+        // Handle additional character logic
         characterManager.handleCharacterInteractions();
         characterManager.displayHealthStatus();
 
+        // Play background music
         playBackgroundMusic();
     }
-
-
 
     private void updateBattle() {
         if (combatSystem == null) {
@@ -228,20 +216,21 @@ public class Main implements GameLoop {
         }
 
         if (combatSystem.isBattleOver()) {
+            System.out.println("Battle is over!");
             endBattle();
             return;
         }
 
+        System.out.println("Drawing battlefield...");
         SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
-
         combatSystem.drawHealthBars();
         combatSystem.drawBattleField();
 
-        // Display action menu when it's the player's turn
         if (combatSystem.isPlayerTurn()) {
             combatSystem.displayActionMenu();
         }
     }
+
 
 
     private void playBackgroundMusic() {
@@ -335,45 +324,30 @@ private void updateCamera(tile.Map currentMap) {
 
     private void checkForBattleTransition() {
         if (characterManager.isPlayerNearMadara() && !inBattle) {
-            triggerPreBattleSequence();
-        }
-    }
-    private void triggerPreBattleSequence() {
-        if (!inCutscene && combatSystem == null) {
-            inCutscene = true;
-
-            combatSystem = new CombatSystemLogic(
-                    characterManager.getNaruto(),
-                    characterManager.getGojo(),
-                    characterManager.getMadara()
-            );
-
-            // Debug entity initialization
-            System.out.println("Naruto initialized: " + (characterManager.getNaruto() != null));
-            System.out.println("Gojo initialized: " + (characterManager.getGojo() != null));
-            System.out.println("Madara initialized: " + (characterManager.getMadara() != null));
-
-            combatSystem.startBattleCutscene();
-            SaxionApp.clear(); // Clear the screen to prepare for cutscene display
+            System.out.println("Player is near Madara. Transitioning to battle...");
+            switchToBattleMap();
         }
     }
 
 
     private void switchToBattleMap() {
-        if (characterManager.getNaruto() == null || characterManager.getGojo() == null || characterManager.getMadara() == null) {
+        Player naruto = characterManager.getNaruto();
+        Player gojo = characterManager.getGojo();
+        Madara madara = characterManager.getMadara();
+
+        if (naruto == null || gojo == null || madara == null) {
+            System.out.println("Cannot start battle: Missing player or Madara.");
             return;
         }
 
         inBattle = true;
 
-        combatSystem = new CombatSystemLogic(
-                characterManager.getNaruto(),
-                characterManager.getGojo(),
-                characterManager.getMadara()
-        );
-
+        combatSystem = new CombatSystemLogic(naruto, gojo, madara);
         combatSystem.startBattle();
+
+        System.out.println("Switched to battle mode.");
     }
+
 
     private void drawBattleScene() {
         SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
