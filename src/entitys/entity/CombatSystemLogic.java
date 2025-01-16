@@ -76,23 +76,24 @@ public class CombatSystemLogic {
         inBattleMode = false;
         System.out.println("Battle mode ended.");
     }
-
     private void teleportToBattlePositions() {
         System.out.println("Teleporting players to battle positions...");
 
-        // Set predefined positions for battle
         naruto.setPosition(200, 500); // Example position
         if (gojo != null) {
             gojo.setPosition(300, 500); // Example position
         }
         madara.setPosition(500, 200); // Example position
 
+        activePlayer = naruto; // Ensure activePlayer is initialized
+        System.out.println("Active player set to Naruto.");
         System.out.println("Naruto's Position: " + naruto.getX() + ", " + naruto.getY());
         if (gojo != null) {
             System.out.println("Gojo's Position: " + gojo.getX() + ", " + gojo.getY());
         }
         System.out.println("Madara's Position: " + madara.getX() + ", " + madara.getY());
     }
+
 
 
     public void drawHealthBars() {
@@ -119,9 +120,12 @@ public class CombatSystemLogic {
     public void startBattleCutscene() {
         cutsceneStep = 0;
         cutsceneActive = true;
+        tutorialActive = false; // Ensure tutorial isn't active
+        inBattleMode = false;   // Ensure battle isn't active
         cutsceneStartTime = System.currentTimeMillis();
         showNextCutsceneDialogue();
     }
+
     private void showNextCutsceneDialogue() {
         String[][] cutsceneDialogues = {
                 {"madara", "So, you've finally arrived, Naruto."},
@@ -138,10 +142,26 @@ public class CombatSystemLogic {
             cutsceneStartTime = System.currentTimeMillis();
             cutsceneStep++;
         } else {
-            cutsceneActive = false;
-            startTutorial(); // Start the tutorial after the cutscene ends
+            cutsceneActive = false; // End cutscene
+            startTutorial();       // Start tutorial after cutscene ends
         }
     }
+    public void startTutorial() {
+        tutorialStep = 0;
+        tutorialActive = true;
+        cutsceneActive = false;  // Ensure cutscene is deactivated
+        inBattleMode = false;    // Ensure battle isn't active
+        System.out.println("Tutorial started.");
+    }
+
+
+    public void endTutorialAndStartBattle() {
+        tutorialActive = false;  // End tutorial
+        inBattleMode = true;     // Transition to battle mode
+        System.out.println("Tutorial ended. Battle started!");
+    }
+
+
     public void drawCutscene() {
         if (cutsceneActive) {
             SaxionApp.setFill(Color.BLACK);
@@ -156,15 +176,10 @@ public class CombatSystemLogic {
         }
     }
 
-    public void startTutorial() {
-        tutorialStep = 0;
-        tutorialActive = true;
-    }
     public void drawTutorial() {
         if (!tutorialActive) return;
 
         String[] tutorialSteps = {
-                "Use arrow keys to move and position yourself.",
                 "Click the left mouse button to perform a Normal Attack.",
                 "Press 'E' to perform a Special Attack. Build points by using Normal Attacks.",
                 "Press 'Q' to perform an Ultimate Attack. Make sure it’s ready before using!",
@@ -181,19 +196,27 @@ public class CombatSystemLogic {
                 tutorialStep++;
             }
         } else {
-            tutorialActive = false; // End the tutorial
+            endTutorialAndStartBattle(); // Transition to battle after tutorial
         }
     }
+
     private boolean playerActionCompleted(int step) {
         // Simulate player actions (replace with real logic)
         return true; // For now, simulate success
     }
+//    private void endTutorialAndStartBattle() {
+//        tutorialActive = false;
+//        inBattleMode = true; // Starts battle in CombatSystemLogic
+//    }
+
 
     public boolean isCutsceneActive() {
+
         return cutsceneActive;
     }
 
     public boolean isTutorialActive() {
+
         return tutorialActive;
     }
 
@@ -551,6 +574,11 @@ public class CombatSystemLogic {
 
     private void madaraRegularAttack() {
         if (madara.getHealth() > 0) {
+            if (activePlayer == null) {
+                System.out.println("Error: Active player is null!");
+                return;
+            }
+
             int madaraDamage = 20; // Fixed damage for Madara
             activePlayer.takeDamage(madaraDamage);
 
@@ -577,6 +605,7 @@ public class CombatSystemLogic {
         // End Madara's turn and switch back to the player
         playerTurn = true;
     }
+
 
     private void applyStatusEffect(Player player, String effect) {
         if (effect.equals("stun")) {

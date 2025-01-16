@@ -179,18 +179,29 @@ public class Main implements GameLoop {
         }
     }
 
-
     private void updateOverworld() {
-        if (combatSystem != null && (combatSystem.isCutsceneActive() || combatSystem.isTutorialActive())) {
-            // Draw cutscene or tutorial if active
+        if (combatSystem != null) {
+            // Handle cutscene
             if (combatSystem.isCutsceneActive()) {
                 combatSystem.drawCutscene();
-            } else if (combatSystem.isTutorialActive()) {
-                combatSystem.drawTutorial();
+                return; // Skip overworld updates during cutscene
             }
-            return; // Skip overworld updates during cutscene/tutorial
+
+            // Handle tutorial
+            if (combatSystem.isTutorialActive()) {
+                combatSystem.drawTutorial();
+                return; // Skip overworld updates during tutorial
+            }
+
+            // Transition to battle after tutorial
+            if (!combatSystem.isCutsceneActive() && !combatSystem.isTutorialActive() && !inBattle) {
+                inBattle = true;
+                combatSystem.startBattle();
+                System.out.println("Transitioned to battle mode!");
+            }
         }
 
+        // Regular overworld updates
         updateCamera(gameMap);
         checkForBattleTransition();
 
@@ -208,7 +219,19 @@ public class Main implements GameLoop {
         playBackgroundMusic();
     }
 
+
+
     private void updateBattle() {
+        if (combatSystem == null) {
+            System.out.println("Combat system not initialized!");
+            return;
+        }
+
+        if (combatSystem.isBattleOver()) {
+            endBattle();
+            return;
+        }
+
         SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
 
         combatSystem.drawHealthBars();
@@ -217,11 +240,6 @@ public class Main implements GameLoop {
         // Display action menu when it's the player's turn
         if (combatSystem.isPlayerTurn()) {
             combatSystem.displayActionMenu();
-        }
-
-        // Check if the battle is over
-        if (combatSystem.isBattleOver()) {
-            endBattle();
         }
     }
 
@@ -330,9 +348,16 @@ private void updateCamera(tile.Map currentMap) {
                     characterManager.getMadara()
             );
 
+            // Debug entity initialization
+            System.out.println("Naruto initialized: " + (characterManager.getNaruto() != null));
+            System.out.println("Gojo initialized: " + (characterManager.getGojo() != null));
+            System.out.println("Madara initialized: " + (characterManager.getMadara() != null));
+
             combatSystem.startBattleCutscene();
+            SaxionApp.clear(); // Clear the screen to prepare for cutscene display
         }
     }
+
 
     private void switchToBattleMap() {
         if (characterManager.getNaruto() == null || characterManager.getGojo() == null || characterManager.getMadara() == null) {
