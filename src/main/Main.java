@@ -40,6 +40,9 @@ public class Main implements GameLoop {
 
     private String currentSong = null;
 
+    private TriviaSystem triviaSystem;
+    private boolean inTrivia = false;
+
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
     }
@@ -49,6 +52,7 @@ public class Main implements GameLoop {
         introMap = new tile.Map("/object/intro_map.txt");
         CollisionChecker collisionChecker = new CollisionChecker(introMap);
         characterManager = new CharacterManager(collisionChecker, "intro_scene");
+        triviaSystem = new TriviaSystem();
     }
 
     @Override
@@ -194,6 +198,13 @@ public class Main implements GameLoop {
         characterManager.displayHealthStatus();
 
         playBackgroundMusic();
+
+        if (inTrivia) {
+            triviaSystem.drawTriviaScreen();
+            if (!triviaSystem.isTriviaActive() && !triviaSystem.isShowingMessage()) {
+                inTrivia = false; // draw the trivia screen and close the screen after the answer
+            }
+        }
     }
 
     private void updateBattle() {
@@ -203,7 +214,7 @@ public class Main implements GameLoop {
             endBattle();
         }
     }
-
+  
     private void playBackgroundMusic() {
         String[] introSongs = {
                 "src/res/audio/main_menu.wav"
@@ -252,7 +263,12 @@ public class Main implements GameLoop {
             boolean isKeyPressed = keys[KeyboardEvent.VK_E] || keys[KeyboardEvent.VK_SPACE];
             currentInteractingNPC.interact(isKeyPressed);
 
+
+
             if (keys[KeyboardEvent.VK_SPACE] && currentInteractingNPC.dialogue.length == currentInteractingNPC.currentDialogueIndex) {
+
+                String lastDialogue = currentInteractingNPC.dialogue[currentInteractingNPC.currentDialogueIndex - 1];
+                
                 if ("patrick".equals(currentInteractingNPC.getName())) {
                     currentInteractingNPC.moveRight(1);
                     inLabyrinth = true;
@@ -261,6 +277,20 @@ public class Main implements GameLoop {
                 }
                 interactingWithNPC = false;
                 currentInteractingNPC = null;
+
+                if (lastDialogue.contains("trivia_")) {
+                    try {
+                        String triviaIndexStr = lastDialogue.split("trivia_")[1].split(" ")[0];
+                        int triviaIndex = Integer.parseInt(triviaIndexStr);
+
+                        inTrivia = true;
+                        triviaSystem.startTrivia(triviaIndex);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error parsing trivia index: " + e.getMessage());
+                    }
+                    //basically, find the text in the npc conversation and find the index of which is it talking about.
+                }
+
             }
         } else {
             for (NPC npc : CharacterManager.npcs) {
@@ -366,6 +396,14 @@ private void updateCamera(tile.Map currentMap) {
 
         if (mainMenu.handlingKeyboardEscapeButton(keyboardEvent)) {
             inMenu = true;
+        }
+
+        if (inTrivia && keyboardEvent.isKeyPressed()) {
+            keyCode = keyboardEvent.getKeyCode();
+            if (keyCode == KeyboardEvent.VK_1 || keyCode == KeyboardEvent.VK_2 || keyCode == KeyboardEvent.VK_3) {
+                int playerChoice = keyCode - KeyboardEvent.VK_1 + 1;
+                triviaSystem.handleAnswer(playerChoice);
+            }
         }
     }
 
