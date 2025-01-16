@@ -145,12 +145,12 @@ public class CombatSystemLogic {
             long elapsedTime = System.currentTimeMillis() - messageDisplayTime;
             if (elapsedTime < messageDuration) {
                 // Draw message background
-                SaxionApp.setFill(Color.YELLOW);
-                SaxionApp.drawRectangle(300, 20, 500, 50);
+                SaxionApp.setFill(Color.lightGray);
+                SaxionApp.drawRectangle(300, 20, 450, 40);
 
                 // Draw the message text
                 SaxionApp.setFill(Color.BLACK);
-                SaxionApp.drawText(actionMessage, 320, 50, 20);
+                SaxionApp.drawText(actionMessage, 320, 30, 20);
             } else {
                 actionMessage = null; // Hide the message after the duration
             }
@@ -198,7 +198,7 @@ public class CombatSystemLogic {
 
             // Determine and draw Normal Attack
             if (System.currentTimeMillis() - narutoLastAttackTime >= narutoAttackCooldown) {
-                SaxionApp.setFill(Color.YELLOW); // Highlight background for available attack
+                SaxionApp.setFill(Color.getHSBColor(0.16f, 0.3f, 1.0f)); // Highlight background for available attack
                 SaxionApp.drawRectangle(575, 698, 250, 30); // Rectangle around the text
                 SaxionApp.setFill(Color.BLACK); // Text color
             } else {
@@ -208,7 +208,7 @@ public class CombatSystemLogic {
 
             // Determine and draw Special Attack
             if (narutoSpecialReady) {
-                SaxionApp.setFill(Color.YELLOW); // Highlight background for available special attack
+                SaxionApp.setFill(Color.getHSBColor(0.16f, 0.3f, 1.0f)); // Highlight background for available special attack
                 SaxionApp.drawRectangle(575, 748, 300, 30); // Rectangle around the text
                 SaxionApp.setFill(Color.BLACK); // Text color
             } else {
@@ -218,7 +218,7 @@ public class CombatSystemLogic {
 
             // Determine and draw Ultimate Attack
             if (narutoUltimateReady) {
-                SaxionApp.setFill(Color.YELLOW); // Highlight background for available ultimate attack
+                SaxionApp.setFill(Color.getHSBColor(0.16f, 0.3f, 1.0f)); // Highlight background for available ultimate attack
                 SaxionApp.drawRectangle(575, 798, 300, 30); // Rectangle around the text
                 SaxionApp.setFill(Color.BLACK); // Text color
             } else {
