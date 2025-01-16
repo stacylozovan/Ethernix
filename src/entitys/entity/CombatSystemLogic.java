@@ -48,7 +48,14 @@ public class CombatSystemLogic {
     private String actionMessage = null; // The message to display
     private long messageDisplayTime = 0; // The time when the message started
     private final long messageDuration = 2000; // Display duration in milliseconds
+    private int cutsceneStep = 0; // Tracks the step of the cutscene
+    private long cutsceneStartTime = 0; // Tracks the start time of each dialogue
+    private String currentSpeaker = ""; // Speaker for current dialogue
+    private String currentDialogue = ""; // Current dialogue text
+    private boolean cutsceneActive = false; // Whether the cutscene is active
 
+    private int tutorialStep = 0; // Tracks the step of the tutorial
+    private boolean tutorialActive = false; // Whether the tutorial is active
 
     public CombatSystemLogic(Player naruto, Player gojo, Madara madara) {
         this.naruto = naruto;
@@ -109,6 +116,156 @@ public class CombatSystemLogic {
             );
         }
     }
+    public void startBattleCutscene() {
+        cutsceneStep = 0;
+        cutsceneActive = true;
+        cutsceneStartTime = System.currentTimeMillis();
+        showNextCutsceneDialogue();
+    }
+    private void showNextCutsceneDialogue() {
+        String[][] cutsceneDialogues = {
+                {"madara", "So, you've finally arrived, Naruto."},
+                {"madara", "This multiverse bends to my will. You're just a fragment of chaos."},
+                {"naruto", "Madara! We’re here to stop you and free everyone!"},
+                {"madara", "Fools. Do you truly believe you can defeat me?"},
+                {"gojo", "Defeat you? Oh, we’re way past that. It’s your turn to fear us, old man!"},
+                {"madara", "Then face me, and witness true despair!"}
+        };
+
+        if (cutsceneStep < cutsceneDialogues.length) {
+            currentSpeaker = cutsceneDialogues[cutsceneStep][0];
+            currentDialogue = cutsceneDialogues[cutsceneStep][1];
+            cutsceneStartTime = System.currentTimeMillis();
+            cutsceneStep++;
+        } else {
+            cutsceneActive = false;
+            startTutorial(); // Start the tutorial after the cutscene ends
+        }
+    }
+    public void drawCutscene() {
+        if (cutsceneActive) {
+            SaxionApp.setFill(Color.BLACK);
+            SaxionApp.drawRectangle(50, 700, 900, 150);
+            SaxionApp.setFill(Color.WHITE);
+            SaxionApp.drawText(currentSpeaker + ": " + currentDialogue, 70, 750, 20);
+
+            // Progress to the next dialogue after 2 seconds
+            if (System.currentTimeMillis() - cutsceneStartTime > 2000) {
+                showNextCutsceneDialogue();
+            }
+        }
+    }
+
+    public void startTutorial() {
+        tutorialStep = 0;
+        tutorialActive = true;
+    }
+    public void drawTutorial() {
+        if (!tutorialActive) return;
+
+        String[] tutorialSteps = {
+                "Use arrow keys to move and position yourself.",
+                "Click the left mouse button to perform a Normal Attack.",
+                "Press 'E' to perform a Special Attack. Build points by using Normal Attacks.",
+                "Press 'Q' to perform an Ultimate Attack. Make sure it’s ready before using!",
+                "Well done! You’re ready for the real battle!"
+        };
+
+        if (tutorialStep < tutorialSteps.length) {
+            SaxionApp.setFill(Color.LIGHT_GRAY);
+            SaxionApp.drawRectangle(50, 700, 900, 150);
+            SaxionApp.setFill(Color.BLACK);
+            SaxionApp.drawText(tutorialSteps[tutorialStep], 70, 750, 20);
+
+            if (playerActionCompleted(tutorialStep)) {
+                tutorialStep++;
+            }
+        } else {
+            tutorialActive = false; // End the tutorial
+        }
+    }
+    private boolean playerActionCompleted(int step) {
+        // Simulate player actions (replace with real logic)
+        return true; // For now, simulate success
+    }
+
+    public boolean isCutsceneActive() {
+        return cutsceneActive;
+    }
+
+    public boolean isTutorialActive() {
+        return tutorialActive;
+    }
+
+    private void displayDialogue(String speaker, String dialogue) {
+        // Draws dialogue box and speaker's text
+        SaxionApp.setFill(Color.BLACK);
+        SaxionApp.drawRectangle(50, 700, 900, 150);
+        SaxionApp.setFill(Color.WHITE);
+        SaxionApp.drawText(speaker + ": " + dialogue, 70, 750, 20);
+    }
+
+    private void waitForNextDialogue() {
+        // Use Thread.sleep for a fixed delay or implement player interaction
+        try {
+            Thread.sleep(2000); // Wait for 2 seconds; adjust as needed
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private void displayTutorialStep(String message) {
+        // Display a tutorial message
+        SaxionApp.setFill(Color.LIGHT_GRAY);
+        SaxionApp.drawRectangle(50, 700, 900, 150); // Tutorial dialogue box
+        SaxionApp.setFill(Color.BLACK);
+        SaxionApp.drawText(message, 70, 750, 20);
+        try {
+            Thread.sleep(2000); // Pause for player to read
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void waitForPlayerMovement() {
+        // Replace this with actual logic to detect player movement
+        System.out.println("Waiting for player movement...");
+        while (!playerHasMoved()) {
+            try {
+                Thread.sleep(100); // Check every 100ms
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Player has moved!");
+    }
+
+    private void waitForPlayerAttack(String attackType) {
+        // Replace this with actual logic to detect the specified attack
+        System.out.println("Waiting for player to perform a " + attackType + " attack...");
+        while (!playerPerformedAttack(attackType)) {
+            try {
+                Thread.sleep(100); // Check every 100ms
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Player performed " + attackType + " attack!");
+    }
+
+    // Mock methods for movement and attack detection
+    private boolean playerHasMoved() {
+        // Simulate movement detection logic here
+        return true; // Placeholder
+    }
+
+    private boolean playerPerformedAttack(String attackType) {
+        // Simulate specific attack detection logic here
+        return true; // Placeholder
+    }
+
 
 
     public void drawBattleField() {

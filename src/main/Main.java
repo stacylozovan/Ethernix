@@ -37,6 +37,8 @@ public class Main implements GameLoop {
     private int originalPlayerX = 0;
     private int originalPlayerY = 0;
     private int blinkCount = 0;
+    private boolean inCutscene = false; // New flag to track if a cutscene is playing
+    private boolean tutorialComplete = false; // To ensure the tutorial runs only once
 
     private String currentSong = null;
 
@@ -179,6 +181,16 @@ public class Main implements GameLoop {
 
 
     private void updateOverworld() {
+        if (combatSystem != null && (combatSystem.isCutsceneActive() || combatSystem.isTutorialActive())) {
+            // Draw cutscene or tutorial if active
+            if (combatSystem.isCutsceneActive()) {
+                combatSystem.drawCutscene();
+            } else if (combatSystem.isTutorialActive()) {
+                combatSystem.drawTutorial();
+            }
+            return; // Skip overworld updates during cutscene/tutorial
+        }
+
         updateCamera(gameMap);
         checkForBattleTransition();
 
@@ -304,8 +316,21 @@ private void updateCamera(tile.Map currentMap) {
 }
 
     private void checkForBattleTransition() {
-        if (characterManager.isPlayerNearMadara()) {
-            switchToBattleMap();
+        if (characterManager.isPlayerNearMadara() && !inBattle) {
+            triggerPreBattleSequence();
+        }
+    }
+    private void triggerPreBattleSequence() {
+        if (!inCutscene && combatSystem == null) {
+            inCutscene = true;
+
+            combatSystem = new CombatSystemLogic(
+                    characterManager.getNaruto(),
+                    characterManager.getGojo(),
+                    characterManager.getMadara()
+            );
+
+            combatSystem.startBattleCutscene();
         }
     }
 
