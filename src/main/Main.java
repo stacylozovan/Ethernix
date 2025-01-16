@@ -115,6 +115,8 @@ public class Main implements GameLoop {
     }
 
     private void handleTransition() {
+        if (!transitioningToNextScene) return; // Skip logic if not transitioning
+
         long currentTime = System.currentTimeMillis();
 
         switch (transitionStep) {
@@ -167,7 +169,7 @@ public class Main implements GameLoop {
             case 3:
                 gameStarted = true;
                 isIntroScene = false;
-                transitioningToNextScene = false;
+                transitioningToNextScene = false; // Reset the flag to prevent repeated triggers
                 Player naruto = characterManager.getNaruto();
                 naruto.x = 30 * Map.TILE_SIZE;
                 naruto.y = 10 * Map.TILE_SIZE;
@@ -177,6 +179,7 @@ public class Main implements GameLoop {
                 break;
         }
     }
+
 
     private void updateOverworld() {
         // Check for battle transition
