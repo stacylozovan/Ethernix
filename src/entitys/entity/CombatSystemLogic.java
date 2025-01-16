@@ -102,11 +102,11 @@ public class CombatSystemLogic {
             int healthBarY = (activePlayer == naruto) ? 925 : 950;
 
             SaxionApp.setFill(Color.RED);
-            SaxionApp.drawRectangle(healthBarX, healthBarY, healthBarWidth, 10);
+            SaxionApp.drawRectangle(healthBarX, healthBarY, healthBarWidth, 15);
             SaxionApp.setFill(Color.orange);
             SaxionApp.drawText(
                     (activePlayer == naruto ? "Naruto" : "Gojo") + " Health: " + activePlayer.getHealth(),
-                    healthBarX, healthBarY - 15, 15
+                    healthBarX, healthBarY - 15, 20
             );
         }
     }
@@ -198,25 +198,31 @@ public class CombatSystemLogic {
 
             // Determine and draw Normal Attack
             if (System.currentTimeMillis() - narutoLastAttackTime >= narutoAttackCooldown) {
-                SaxionApp.setFill(Color.BLACK); // Available
+                SaxionApp.setFill(Color.YELLOW); // Highlight background for available attack
+                SaxionApp.drawRectangle(575, 698, 250, 30); // Rectangle around the text
+                SaxionApp.setFill(Color.BLACK); // Text color
             } else {
-                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable
+                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable attack
             }
             SaxionApp.drawText("1. Normal Attack (Click)", 575, 700, 20);
 
             // Determine and draw Special Attack
             if (narutoSpecialReady) {
-                SaxionApp.setFill(Color.BLACK); // Available
+                SaxionApp.setFill(Color.YELLOW); // Highlight background for available special attack
+                SaxionApp.drawRectangle(575, 748, 300, 30); // Rectangle around the text
+                SaxionApp.setFill(Color.BLACK); // Text color
             } else {
-                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable
+                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable attack
             }
             SaxionApp.drawText("2. Special Attack (Press 'E')", 575, 750, 20);
 
             // Determine and draw Ultimate Attack
             if (narutoUltimateReady) {
-                SaxionApp.setFill(Color.BLACK); // Available
+                SaxionApp.setFill(Color.YELLOW); // Highlight background for available ultimate attack
+                SaxionApp.drawRectangle(575, 798, 300, 30); // Rectangle around the text
+                SaxionApp.setFill(Color.BLACK); // Text color
             } else {
-                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable
+                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable attack
             }
             SaxionApp.drawText("3. Ultimate Attack (Press 'Q')", 575, 800, 20);
         }
