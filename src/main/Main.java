@@ -267,6 +267,8 @@ public class Main implements GameLoop {
 
             if (keys[KeyboardEvent.VK_SPACE] && currentInteractingNPC.dialogue.length == currentInteractingNPC.currentDialogueIndex) {
 
+                String lastDialogue = currentInteractingNPC.dialogue[currentInteractingNPC.currentDialogueIndex - 1];
+                
                 if ("patrick".equals(currentInteractingNPC.getName())) {
                     currentInteractingNPC.moveRight(1);
                     inLabyrinth = true;
