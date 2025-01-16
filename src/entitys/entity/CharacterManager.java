@@ -74,7 +74,7 @@ public class CharacterManager {
 
     public void resetGame() {
         naruto.setDefaultValues();
-        naruto.setPosition(1500, 300);
+        naruto.setPosition(1500, 500);
         if (gojo != null) {
             gojo.setDefaultValues();
         }
