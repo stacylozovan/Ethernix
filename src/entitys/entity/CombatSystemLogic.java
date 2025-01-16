@@ -103,13 +103,14 @@ public class CombatSystemLogic {
 
             SaxionApp.setFill(Color.RED);
             SaxionApp.drawRectangle(healthBarX, healthBarY, healthBarWidth, 15);
-            SaxionApp.setFill(Color.orange);
+            SaxionApp.setFill(Color.getHSBColor(0.16f, 0.3f, 1.0f)); // Light yellow for text
             SaxionApp.drawText(
                     (activePlayer == naruto ? "Naruto" : "Gojo") + " Health: " + activePlayer.getHealth(),
                     healthBarX, healthBarY - 15, 20
             );
         }
     }
+
 
     public void drawBattleField() {
         if (inBattleMode) {
