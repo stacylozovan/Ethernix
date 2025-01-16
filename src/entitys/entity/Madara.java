@@ -16,8 +16,8 @@ public class Madara extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 1980;
-        y = 300;
+        x = (76 * tile.Map.TILE_SIZE);
+        y = (32 * tile.Map.TILE_SIZE);
         exactX = x;
         exactY = y;
         speed = 3;

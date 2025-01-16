@@ -73,7 +73,7 @@ public class Map {
     public void loadMapFromFile(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             int rows = 64;
-            int cols = 64;
+            int cols = 120;
             tile = new tile.Tile[rows][cols];
 
             String line;
