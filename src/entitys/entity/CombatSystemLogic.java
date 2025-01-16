@@ -224,10 +224,17 @@ public class CombatSystemLogic {
 
 
 
-    private void displayActionMessage(String message) {
-        actionMessage = message;
-        messageDisplayTime = System.currentTimeMillis(); // Record the start time
+    private void displayActionMessage(String attacker, String attackType, String target, boolean isPlayer) {
+        if (isPlayer) {
+            // Player's turn
+            actionMessage = "You " + " used " + capitalize(attackType) + " Attack!";
+        } else {
+            // Madara's turn
+            actionMessage = "Madara used " + capitalize(attackType) + " Attack " + "!";
+        }
+        messageDisplayTime = System.currentTimeMillis();
     }
+
 
     public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
         if (playerTurn) {
@@ -238,7 +245,7 @@ public class CombatSystemLogic {
                 System.out.println("Player performed a normal attack. Madara takes 15 damage.");
 
                 // Display action message
-                displayActionMessage("You used Normal Attack!");
+                displayActionMessage(activePlayer.getName(), "normal", "Madara", true);
 
                 endPlayerTurn();
                 return;
@@ -250,7 +257,7 @@ public class CombatSystemLogic {
                     triggerSpecialAttack(); // Execute special attack
 
                     // Display action message
-                    displayActionMessage("You used Special Attack!");
+                    displayActionMessage(activePlayer.getName(), "special", "Madara", true);
                 } else {
                     System.out.println("Special attack is not ready.");
                 }
@@ -264,7 +271,7 @@ public class CombatSystemLogic {
                     triggerUltimateAttack(); // Execute ultimate attack
 
                     // Display action message
-                    displayActionMessage("You used Ultimate Attack!");
+                    displayActionMessage(activePlayer.getName(), "ultimate", "Madara", true);
                 } else {
                     System.out.println("Ultimate attack is not ready.");
                 }
@@ -275,6 +282,8 @@ public class CombatSystemLogic {
             System.out.println("It's not the player's turn.");
         }
     }
+
+
 
     public boolean isPlayerTurn() {
 
@@ -440,7 +449,8 @@ public class CombatSystemLogic {
     private void madaraRegularAttack() {
         if (madara.getHealth() > 0) {
             if (activePlayer == null) {
-                System.out.println("Error: Active player is null!");
+                System.out.println("No active players remaining! Game Over.");
+                playerTurn = true; // Prevent Madara from continuing.
                 return;
             }
 
@@ -448,18 +458,21 @@ public class CombatSystemLogic {
             int madaraDamage = calculateMadaraDamage(attackType); // Calculate damage based on attack type
 
             activePlayer.takeDamage(madaraDamage);
-            displayActionMessage("Madara used " + capitalize(attackType) + " Attack!");
 
-            System.out.println("Madara attacks " + activePlayer.getName() + " with " + attackType + " attack for " + madaraDamage + " damage!");
-            System.out.println(activePlayer.getName() + "'s Health: " + activePlayer.getHealth());
+            String targetName = activePlayer != null ? activePlayer.getName() : "Unknown";
+
+            // Display Madara's action message
+            displayActionMessage("Madara", attackType, targetName, false);
+
+            System.out.println("Madara attacks " + targetName + " with " + attackType + " attack for " + madaraDamage + " damage!");
 
             if (activePlayer.getHealth() <= 0) {
-                System.out.println(activePlayer.getName() + " has been defeated!");
+                System.out.println(targetName + " has been defeated!");
                 if (activePlayer == naruto && gojo != null) {
                     switchPlayer(2);
-                    System.out.println("Switching to Gojo!");
                 } else if (activePlayer == gojo) {
-                    System.out.println("Game Over! All players defeated.");
+                    System.out.println("All players defeated. Game Over!");
+                    activePlayer = null; // Mark as no active player.
                     return;
                 }
             }
@@ -467,6 +480,9 @@ public class CombatSystemLogic {
             playerTurn = true; // End Madara's turn
         }
     }
+
+
+
     private int calculateMadaraDamage(String attackType) {
         switch (attackType) {
             case "normal":
@@ -483,7 +499,6 @@ public class CombatSystemLogic {
     private String capitalize(String input) {
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
-
 
     private void applyStatusEffect(Player player, String effect) {
         if (effect.equals("stun")) {
@@ -568,16 +583,18 @@ public class CombatSystemLogic {
     }
 
     public void switchPlayer(int playerNumber) {
-        if (playerNumber == 1) {
+        if (playerNumber == 1 && naruto.getHealth() > 0) {
             activePlayer = naruto;
             System.out.println("Switched to Naruto.");
-        } else if (playerNumber == 2 && gojo != null) {
+        } else if (playerNumber == 2 && gojo != null && gojo.getHealth() > 0) {
             activePlayer = gojo;
             System.out.println("Switched to Gojo.");
         } else {
-            System.out.println("Invalid player switch request or Gojo is unavailable.");
+            System.out.println("No valid player to switch to!");
+            activePlayer = null; // This indicates no active players remaining.
         }
     }
+
 
     public boolean isBattleOver() {
         boolean allPlayersDefeated = naruto.getHealth() <= 0 && (gojo == null || gojo.getHealth() <= 0);
