@@ -92,9 +92,9 @@ public class CombatSystemLogic {
     public void drawHealthBars() {
         SaxionApp.setFill(Color.RED);
         int madaraHealthWidth = madara.getHealth() * 2;
-        SaxionApp.drawRectangle(275, 70, madaraHealthWidth, 20);
+        SaxionApp.drawRectangle(270, 78, madaraHealthWidth, 24);
         SaxionApp.setFill(Color.BLACK);
-        SaxionApp.drawText("Madara Health: " + madara.getHealth(), 275, 70, 20);
+        SaxionApp.drawText("Madara Health: " + madara.getHealth(), 270, 80, 20);
 
         if (activePlayer != null) {
             int healthBarWidth = activePlayer.getHealth() * 2;
@@ -189,14 +189,36 @@ public class CombatSystemLogic {
             SaxionApp.setFill(Color.LIGHT_GRAY);
             SaxionApp.drawRectangle(550, 600, 400, 270);
 
-            // Display text options for actions
+            // Display menu header
             SaxionApp.setFill(Color.BLACK);
             SaxionApp.drawText("What are you going to do?", 575, 650, 20);
+
+            // Highlight Normal Attack
+            if (System.currentTimeMillis() - narutoLastAttackTime >= narutoAttackCooldown) {
+                SaxionApp.setFill(Color.BLACK); // Normal Attack is available
+            } else {
+                SaxionApp.setFill(Color.LIGHT_GRAY); // Normal Attack is unavailable
+            }
             SaxionApp.drawText("1. Normal Attack (Click)", 575, 700, 20);
+
+            // Highlight Special Attack
+            if (narutoSpecialReady) {
+                SaxionApp.setFill(Color.BLACK); // Special Attack is available
+            } else {
+                SaxionApp.setFill(Color.LIGHT_GRAY); // Special Attack is unavailable
+            }
             SaxionApp.drawText("2. Special Attack (Press 'E')", 575, 750, 20);
+
+            // Highlight Ultimate Attack
+            if (narutoUltimateReady) {
+                SaxionApp.setFill(Color.BLACK); // Ultimate Attack is available
+            } else {
+                SaxionApp.setFill(Color.LIGHT_GRAY); // Ultimate Attack is unavailable
+            }
             SaxionApp.drawText("3. Ultimate Attack (Press 'Q')", 575, 800, 20);
         }
     }
+
 
     private void displayActionMessage(String message) {
         actionMessage = message;
