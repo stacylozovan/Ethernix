@@ -1,7 +1,10 @@
 package entity;
 
 import nl.saxion.app.SaxionApp;
+import nl.saxion.app.interaction.KeyboardEvent;
+
 import java.awt.Color;
+import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,17 +34,20 @@ public class CombatSystemLogic {
     private final String madaraBattleSprite = "src/res/battle/madara_battle.png";
     private final String charactersChoiceImage = "src/res/object/choice1.png";
     private final String attackChoiceImage = "src/res/object/attack_choice.png";
-    private final String madaraNormalBall = "src/res/object/balls/ball1.png";
-    private final String madaraSpecialBall = "src/res/object/balls/ball2.png";
-    private final String madaraUltimateBall = "src/res/object/balls/ball3.png";
+    private final String madaraNormalBall = "src/res/object/balls/ball.madara1.png";
+    private final String madaraSpecialBall = "src/res/object/balls/ball.madara2.png";
+    private final String madaraUltimateBall = "src/res/object/balls/ball.madara3.png";
 
-    private final String narutoNormalBall = "src/res/object/balls/ball4.png";
-    private final String narutoSpecialBall = "src/res/object/balls/ball5.png";
-    private final String narutoUltimateBall = "src/res/object/balls/ball6.png";
+    private final String narutoNormalBall = "src/res/object/balls/ball.player1.png";
+    private final String narutoSpecialBall = "src/res/object/balls/ball.player2.png";
+    private final String narutoUltimateBall = "src/res/object/balls/ball.player3.png";
     private long narutoLastAttackTime = 0;
     private final long narutoAttackCooldown = 1000;
     private boolean gojoUltimateCooldown = false;
     private boolean inBattleMode = false;
+    private String actionMessage = null; // The message to display
+    private long messageDisplayTime = 0; // The time when the message started
+    private final long messageDuration = 2000; // Display duration in milliseconds
 
 
     public CombatSystemLogic(Player naruto, Player gojo, Madara madara) {
@@ -63,17 +69,17 @@ public class CombatSystemLogic {
         inBattleMode = false;
         System.out.println("Battle mode ended.");
     }
-
     private void teleportToBattlePositions() {
         System.out.println("Teleporting players to battle positions...");
 
-        // Set predefined positions for battle
         naruto.setPosition(200, 500); // Example position
         if (gojo != null) {
             gojo.setPosition(300, 500); // Example position
         }
         madara.setPosition(500, 200); // Example position
 
+        activePlayer = naruto; // Ensure activePlayer is initialized
+        System.out.println("Active player set to Naruto.");
         System.out.println("Naruto's Position: " + naruto.getX() + ", " + naruto.getY());
         if (gojo != null) {
             System.out.println("Gojo's Position: " + gojo.getX() + ", " + gojo.getY());
@@ -82,24 +88,25 @@ public class CombatSystemLogic {
     }
 
 
+
     public void drawHealthBars() {
         SaxionApp.setFill(Color.RED);
         int madaraHealthWidth = madara.getHealth() * 2;
-        SaxionApp.drawRectangle(275, 70, madaraHealthWidth, 20);
+        SaxionApp.drawRectangle(270, 78, madaraHealthWidth, 24);
         SaxionApp.setFill(Color.BLACK);
-        SaxionApp.drawText("Madara Health: " + madara.getHealth(), 275, 70, 20);
+        SaxionApp.drawText("Madara Health: " + madara.getHealth(), 270, 80, 20);
 
         if (activePlayer != null) {
             int healthBarWidth = activePlayer.getHealth() * 2;
-            int healthBarX = 150;
-            int healthBarY = (activePlayer == naruto) ? 900 : 950;
+            int healthBarX = 160;
+            int healthBarY = (activePlayer == naruto) ? 925 : 950;
 
             SaxionApp.setFill(Color.RED);
-            SaxionApp.drawRectangle(healthBarX, healthBarY, healthBarWidth, 10);
-            SaxionApp.setFill(Color.BLACK);
+            SaxionApp.drawRectangle(healthBarX, healthBarY, healthBarWidth, 15);
+            SaxionApp.setFill(Color.getHSBColor(0.16f, 0.3f, 1.0f)); // Light yellow for text
             SaxionApp.drawText(
                     (activePlayer == naruto ? "Naruto" : "Gojo") + " Health: " + activePlayer.getHealth(),
-                    healthBarX, healthBarY - 10, 10
+                    healthBarX, healthBarY - 15, 20
             );
         }
     }
@@ -107,21 +114,20 @@ public class CombatSystemLogic {
 
     public void drawBattleField() {
         if (inBattleMode) {
+            // Draw the character choice image
+            SaxionApp.drawImage(charactersChoiceImage, 150, 730, 300, 250);
 
-            SaxionApp.drawImage(charactersChoiceImage, 150, 700, 350, 275);
-
-            SaxionApp.drawImage("src/res/object/attack_choice.png", 550, 700, 550, 400);
-
+            // Draw the active player's battle sprite
             if (activePlayer == naruto) {
-                SaxionApp.drawImage(narutoBattleSprite, 150, 450, 300, 300);
+                SaxionApp.drawImage(narutoBattleSprite, 150, 470, 300, 300);
             } else if (activePlayer == gojo) {
-                SaxionApp.drawImage(gojoBattleSprite, 150, 450, 300, 300);
+                SaxionApp.drawImage(gojoBattleSprite, 150, 470, 300, 300);
             }
 
-
-            SaxionApp.drawImage(madaraBattleSprite, 350, 200, 400, 400);
+            // Draw Madara's battle sprite
+            SaxionApp.drawImage(madaraBattleSprite, 350, 230, 420, 420);
         } else {
-
+            // Draw players and Madara in non-battle mode
             if (activePlayer == naruto) {
                 naruto.draw(400, 600);
             } else if (activePlayer == gojo) {
@@ -134,64 +140,43 @@ public class CombatSystemLogic {
         if (isAnimatingAttack) {
             drawAttackAnimation();
         }
+
+        // Draw the action message if it's set
+        if (actionMessage != null) {
+            long elapsedTime = System.currentTimeMillis() - messageDisplayTime;
+            if (elapsedTime < messageDuration) {
+                // Draw message background
+                SaxionApp.setFill(Color.lightGray);
+                SaxionApp.drawRectangle(300, 20, 450, 40);
+
+                // Draw the message text
+                SaxionApp.setFill(Color.BLACK);
+                SaxionApp.drawText(actionMessage, 320, 30, 20);
+            } else {
+                actionMessage = null; // Hide the message after the duration
+            }
+        }
     }
-
-
-
 
     public void handleCombat() {
         if (playerTurn) {
             System.out.println("Player's turn: " + activePlayer.getName());
 
-            if (activePlayer == naruto) {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - narutoLastAttackTime < narutoAttackCooldown) {
-                    System.out.println("Naruto is on cooldown! Please wait.");
-                    return;
-                }
-                narutoLastAttackTime = currentTime;
-            }
-
-            int playerDamage = 15; // Fixed damage for now
-            madara.takeDamage(playerDamage);
-            startNarutoAttackAnimation("normal");
-
-            System.out.println(activePlayer.getName() + " attacks Madara for " + playerDamage + " damage!");
-            System.out.println("Madara's Health: " + madara.getHealth());
-
-            if (madara.getHealth() <= 0) {
-                System.out.println("Madara is defeated! Ending battle...");
-                return; // Exit combat without switching turns
-            }
-
-            // End player's turn
-            playerTurn = false;
+            // Show the action menu only during the player's turn
+            displayActionMenu();
         } else {
             System.out.println("Madara's turn.");
 
-            if (madara.getHealth() > 0) {
-                int madaraDamage = 20;
-                activePlayer.takeDamage(madaraDamage);
-
-                System.out.println("Madara attacks " + activePlayer.getName() + " for " + madaraDamage + " damage!");
-                System.out.println(activePlayer.getName() + "'s Health: " + activePlayer.getHealth());
-
-                if (activePlayer.getHealth() <= 0) {
-                    System.out.println(activePlayer.getName() + " has been defeated!");
-
-                    // Switch to Gojo if Naruto is defeated
-                    if (activePlayer == naruto && gojo != null) {
-                        switchPlayer(2);
-                        System.out.println("Switching to Gojo!");
-                    } else if (activePlayer == gojo) {
-                        System.out.println("Game Over! All players defeated.");
-                        return; // Exit combat without switching turns
+            // Madara attacks only when it's his turn
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // Make Madara perform an attack (regular, special, or ultimate) here
+                    if (madara.getHealth() > 0) {
+                        startMadaraAttackAnimation("normal"); // Adjust this to decide the attack type
                     }
                 }
-            }
-
-            // End Madara's turn
-            playerTurn = true;
+            }, 1000); // Delay before Madara attacks (1 second)
         }
 
         // Display health at the end of the turn
@@ -202,6 +187,137 @@ public class CombatSystemLogic {
         System.out.println("Madara Health: " + madara.getHealth());
     }
 
+    public void displayActionMenu() {
+        if (playerTurn) {
+            // Draw the menu background
+            SaxionApp.setFill(Color.LIGHT_GRAY);
+            SaxionApp.drawRectangle(550, 600, 400, 270);
+
+            // Display menu header
+            SaxionApp.setFill(Color.BLACK);
+            SaxionApp.drawText("What are you going to do?", 575, 650, 20);
+
+            // Determine and draw Normal Attack
+            if (System.currentTimeMillis() - narutoLastAttackTime >= narutoAttackCooldown) {
+                SaxionApp.setFill(Color.getHSBColor(0.16f, 0.3f, 1.0f)); // Highlight background for available attack
+                SaxionApp.drawRectangle(575, 698, 250, 30); // Rectangle around the text
+                SaxionApp.setFill(Color.BLACK); // Text color
+            } else {
+                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable attack
+            }
+            SaxionApp.drawText("1. Normal Attack (Click)", 575, 700, 20);
+
+            // Determine and draw Special Attack
+            if (narutoSpecialReady) {
+                SaxionApp.setFill(Color.getHSBColor(0.16f, 0.3f, 1.0f)); // Highlight background for available special attack
+                SaxionApp.drawRectangle(575, 748, 300, 30); // Rectangle around the text
+                SaxionApp.setFill(Color.BLACK); // Text color
+            } else {
+                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable attack
+            }
+            SaxionApp.drawText("2. Special Attack (Press 'E')", 575, 750, 20);
+
+            // Determine and draw Ultimate Attack
+            if (narutoUltimateReady) {
+                SaxionApp.setFill(Color.getHSBColor(0.16f, 0.3f, 1.0f)); // Highlight background for available ultimate attack
+                SaxionApp.drawRectangle(575, 798, 300, 30); // Rectangle around the text
+                SaxionApp.setFill(Color.BLACK); // Text color
+            } else {
+                SaxionApp.setFill(Color.DARK_GRAY); // Unavailable attack
+            }
+            SaxionApp.drawText("3. Ultimate Attack (Press 'Q')", 575, 800, 20);
+        }
+    }
+
+
+
+    private void displayActionMessage(String attacker, String attackType, String target, boolean isPlayer) {
+        if (isPlayer) {
+            // Player's turn
+            actionMessage = "You " + " used " + capitalize(attackType) + " Attack!";
+        } else {
+            // Madara's turn
+            actionMessage = "Madara used " + capitalize(attackType) + " Attack " + "!";
+        }
+        messageDisplayTime = System.currentTimeMillis();
+    }
+
+
+    public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
+        if (playerTurn) {
+            // Handle normal attack via left mouse button
+            if (mouseEvent != null && mouseEvent.isLeftMouseButton() && mouseEvent.isMouseDown()) {
+                startNarutoAttackAnimation("normal");
+                madara.takeDamage(15); // Normal attack damage
+                System.out.println("Player performed a normal attack. Madara takes 15 damage.");
+
+                // Display action message
+                displayActionMessage(activePlayer.getName(), "normal", "Madara", true);
+
+                endPlayerTurn();
+                return;
+            }
+
+            // Handle special attack via 'E' key
+            if (keyboardEvent != null && keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
+                if (narutoSpecialReady || gojoUltimateCooldown) {
+                    triggerSpecialAttack(); // Execute special attack
+
+                    // Display action message
+                    displayActionMessage(activePlayer.getName(), "special", "Madara", true);
+                } else {
+                    System.out.println("Special attack is not ready.");
+                }
+                endPlayerTurn();
+                return;
+            }
+
+            // Handle ultimate attack via 'Q' key
+            if (keyboardEvent != null && keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
+                if (narutoUltimateReady) {
+                    triggerUltimateAttack(); // Execute ultimate attack
+
+                    // Display action message
+                    displayActionMessage(activePlayer.getName(), "ultimate", "Madara", true);
+                } else {
+                    System.out.println("Ultimate attack is not ready.");
+                }
+                endPlayerTurn();
+                return;
+            }
+        } else {
+            System.out.println("It's not the player's turn.");
+        }
+    }
+
+
+
+    public boolean isPlayerTurn() {
+
+        return playerTurn;
+    }
+
+    private void handleNormalAttack() {
+        if (playerTurn) {
+            startNarutoAttackAnimation("normal");
+            madara.takeDamage(15); // Normal attack deals fixed damage
+            System.out.println("Normal attack dealt 15 damage to Madara.");
+            playerTurn = false; // End player's turn
+        } else {
+            System.out.println("It's not the player's turn!");
+        }
+    }
+    private void endPlayerTurn() {
+        playerTurn = false;
+
+        // Introduce a delay before Madara's turn
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handleCombat(); // Trigger Madara's turn
+            }
+        }, 1000); // Delay of 1 second (adjust as needed)
+    }
 
     private void applyStunEffect(Madara madara, int duration) {
         madara.setStunned(true);
@@ -255,6 +371,7 @@ public class CombatSystemLogic {
         if (currentProjectileImage != null) {
             int startX, startY, endX, endY;
 
+            // Determine start and end points for the projectile
             if (currentProjectileImage.equals(madaraNormalBall) || currentProjectileImage.equals(madaraSpecialBall) || currentProjectileImage.equals(madaraUltimateBall)) {
                 startX = madara.getX();
                 startY = madara.getY();
@@ -262,16 +379,18 @@ public class CombatSystemLogic {
                 endY = activePlayer.getY();
             } else {
                 startX = naruto.getX();
-                startY = naruto.getY();
+                startY = naruto.getY() + 50; // Lower the starting Y position even more
                 endX = madara.getX();
-                endY = madara.getY();
+                endY = madara.getY() + 100; // Lower the ending Y position even more to aim further at Madara's lower body
             }
 
+            // Calculate the current position of the projectile based on progress
             double progress = attackStep / 20.0;
             int currentX = (int) (startX + progress * (endX - startX));
             int currentY = (int) (startY + progress * (endY - startY));
 
-            SaxionApp.drawImage(currentProjectileImage, currentX - 15, currentY - 15, 30, 30);
+            // Draw the projectile at the current position
+            SaxionApp.drawImage(currentProjectileImage, currentX - 15, currentY - 15, 60, 60);
         }
     }
 
@@ -280,17 +399,32 @@ public class CombatSystemLogic {
         attackTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (madara.getHealth() > 0) {
-                    startMadaraAttackAnimation("normal");
+                // Check if it's Madara's turn and if he's alive
+                if (!playerTurn && madara.getHealth() > 0) {
+                    String attackType = decideMadaraAttackType(); // Decide the attack type
+                    startMadaraAttackAnimation(attackType);      // Start the chosen attack animation
                 }
             }
-        }, 0, 20000);
+        }, 0, 20000); // Adjust the interval as per your game's needs (e.g., every 20 seconds)
+    }
+    private String decideMadaraAttackType() {
+        if (madara.getHealth() <= 75 && !ultimateUsedAt25) {
+            ultimateUsedAt25 = true;
+            return "ultimate"; // Use ultimate attack at 25% health if not used already
+        } else if (madara.getHealth() <= 150 && !ultimateUsedAt50) {
+            ultimateUsedAt50 = true;
+            return "ultimate"; // Use ultimate attack at 50% health if not used already
+        } else {
+            // Randomize between normal and special attacks
+            return Math.random() < 0.5 ? "normal" : "special";
+        }
     }
 
     private void startMadaraAttackAnimation(String attackType) {
         isAnimatingAttack = true;
         attackStep = 0;
 
+        // Set attack type to one of the Madara's attack types
         switch (attackType) {
             case "normal":
                 currentProjectileImage = madaraNormalBall;
@@ -303,6 +437,7 @@ public class CombatSystemLogic {
                 break;
         }
 
+        // Schedule the attack animation
         Timer animationTimer = new Timer();
         animationTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -310,27 +445,68 @@ public class CombatSystemLogic {
                 if (attackStep >= 20) {
                     isAnimatingAttack = false;
                     animationTimer.cancel();
-                    madaraRegularAttack();
+                    madaraRegularAttack(); // Execute Madara's attack once the animation is done
                 } else {
                     attackStep++;
                 }
             }
-        }, 0, 50);
+        }, 0, 50); // Adjust the speed of the animation as necessary
     }
 
     private void madaraRegularAttack() {
-        if (activePlayer != null && activePlayer.getHealth() > 0) {
-            int baseDamage = 20; // Normal attack damage
-            activePlayer.takeDamage(baseDamage);
-            System.out.println("Madara attacks " + (activePlayer == naruto ? "Naruto" : "Gojo") + " for " + baseDamage + " damage!");
-
-
-            if (Math.random() < 0.2) {
-                String effect = (Math.random() < 0.5) ? "stun" : "slow"; // 50% chance for either effect
-                applyStatusEffect(activePlayer, effect);
+        if (madara.getHealth() > 0) {
+            if (activePlayer == null) {
+                System.out.println("No active players remaining! Game Over.");
+                playerTurn = true; // Prevent Madara from continuing.
+                return;
             }
+
+            String attackType = decideMadaraAttackType(); // Decide the attack type
+            int madaraDamage = calculateMadaraDamage(attackType); // Calculate damage based on attack type
+
+            activePlayer.takeDamage(madaraDamage);
+
+            String targetName = activePlayer != null ? activePlayer.getName() : "Unknown";
+
+            // Display Madara's action message
+            displayActionMessage("Madara", attackType, targetName, false);
+
+            System.out.println("Madara attacks " + targetName + " with " + attackType + " attack for " + madaraDamage + " damage!");
+
+            if (activePlayer.getHealth() <= 0) {
+                System.out.println(targetName + " has been defeated!");
+                if (activePlayer == naruto && gojo != null) {
+                    switchPlayer(2);
+                } else if (activePlayer == gojo) {
+                    System.out.println("All players defeated. Game Over!");
+                    activePlayer = null; // Mark as no active player.
+                    return;
+                }
+            }
+
+            playerTurn = true; // End Madara's turn
         }
     }
+
+
+
+    private int calculateMadaraDamage(String attackType) {
+        switch (attackType) {
+            case "normal":
+                return 20; // Damage for normal attack
+            case "special":
+                return 35; // Damage for special attack
+            case "ultimate":
+                return 70; // Damage for ultimate attack
+            default:
+                return 0;  // Fallback
+        }
+    }
+
+    private String capitalize(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
     private void applyStatusEffect(Player player, String effect) {
         if (effect.equals("stun")) {
             player.setStunned(true); // Assuming Player has a setStunned method
@@ -394,9 +570,6 @@ public class CombatSystemLogic {
         }, 0, 15000);
     }
 
-
-
-
     public void triggerSpecialAttack() {
         if (narutoSpecialReady && activePlayer == naruto) {
             startNarutoAttackAnimation("special");
@@ -417,14 +590,15 @@ public class CombatSystemLogic {
     }
 
     public void switchPlayer(int playerNumber) {
-        if (playerNumber == 1) {
+        if (playerNumber == 1 && naruto.getHealth() > 0) {
             activePlayer = naruto;
             System.out.println("Switched to Naruto.");
-        } else if (playerNumber == 2 && gojo != null) {
+        } else if (playerNumber == 2 && gojo != null && gojo.getHealth() > 0) {
             activePlayer = gojo;
             System.out.println("Switched to Gojo.");
         } else {
-            System.out.println("Invalid player switch request or Gojo is unavailable.");
+            System.out.println("No valid player to switch to!");
+            activePlayer = null; // This indicates no active players remaining.
         }
     }
 

@@ -31,7 +31,7 @@ public class Main implements GameLoop {
     private boolean inLabyrinth = false;
     private boolean inBattle = false;
     private boolean attackKeyPressed = false;
-    private String battleMapImage = "src/res/object/battlemap1.png";
+    private String battleMapImage = "src/res/object/battlemap.png";
 
     private boolean interactingWithNPC = false;
     private NPC currentInteractingNPC;
@@ -39,6 +39,7 @@ public class Main implements GameLoop {
     private int originalPlayerX = 0;
     private int originalPlayerY = 0;
     private int blinkCount = 0;
+
 
     private String currentSong = null;
 
@@ -126,6 +127,8 @@ public class Main implements GameLoop {
     }
 
     private void handleTransition() {
+        if (!transitioningToNextScene) return; // Skip logic if not transitioning
+
         long currentTime = System.currentTimeMillis();
 
         switch (transitionStep) {
@@ -178,7 +181,7 @@ public class Main implements GameLoop {
             case 3:
                 gameStarted = true;
                 isIntroScene = false;
-                transitioningToNextScene = false;
+                transitioningToNextScene = false; // Reset the flag to prevent repeated triggers
                 Player naruto = characterManager.getNaruto();
                 naruto.x = 54 * Map.TILE_SIZE;
                 naruto.y = 13 * Map.TILE_SIZE;
@@ -191,20 +194,33 @@ public class Main implements GameLoop {
 
 
     private void updateOverworld() {
-        updateCamera(gameMap);
-        checkForBattleTransition();
+        // Check for battle transition
+        if (combatSystem != null && !inBattle) {
+            inBattle = true; // Enter battle mode
+            combatSystem.startBattle();
+            System.out.println("Transitioned to battle mode!");
+            return; // Skip further overworld updates during battle
+        }
 
-        gameMap.draw(cameraX, cameraY);
-        characterManager.update(keys, gameMap);
-        characterManager.draw(cameraX, cameraY);
+        // Regular overworld updates
+        updateCamera(gameMap); // Update camera position based on the map
+        checkForBattleTransition(); // Check if the player is near a battle trigger
 
+        gameMap.draw(cameraX, cameraY); // Draw the current map
+
+        characterManager.update(keys, gameMap); // Update player and NPC positions
+        characterManager.draw(cameraX, cameraY); // Draw players and NPCs
+
+        // Get player screen position for interaction checks
         int playerScreenX = characterManager.getActivePlayer().getX() - cameraX;
         int playerScreenY = characterManager.getActivePlayer().getY() - cameraY;
-        handleNPCInteractions(playerScreenX, playerScreenY);
+        handleNPCInteractions(playerScreenX, playerScreenY); // Handle NPC interactions
 
+        // Handle additional character logic
         characterManager.handleCharacterInteractions();
         characterManager.displayHealthStatus();
 
+        // Play background music
         playBackgroundMusic();
 
         if (inTrivia) {
@@ -216,13 +232,27 @@ public class Main implements GameLoop {
     }
 
     private void updateBattle() {
-        drawBattleScene();
+        if (combatSystem == null) {
+            System.out.println("Combat system not initialized!");
+            return;
+        }
 
         if (combatSystem.isBattleOver()) {
+            System.out.println("Battle is over!");
             endBattle();
+            return;
+        }
+
+        System.out.println("Drawing battlefield...");
+        SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
+        combatSystem.drawHealthBars();
+        combatSystem.drawBattleField();
+
+        if (combatSystem.isPlayerTurn()) {
+            combatSystem.displayActionMenu();
         }
     }
-  
+
     private void playBackgroundMusic() {
         String[] introSongs = {
                 "src/res/audio/main_menu.wav"
@@ -330,26 +360,31 @@ private void updateCamera(tile.Map currentMap) {
 }
 
     private void checkForBattleTransition() {
-        if (characterManager.isPlayerNearMadara()) {
+        if (characterManager.isPlayerNearMadara() && !inBattle) {
+            System.out.println("Player is near Madara. Transitioning to battle...");
             switchToBattleMap();
         }
     }
 
+
     private void switchToBattleMap() {
-        if (characterManager.getNaruto() == null || characterManager.getGojo() == null || characterManager.getMadara() == null) {
+        Player naruto = characterManager.getNaruto();
+        Player gojo = characterManager.getGojo();
+        Madara madara = characterManager.getMadara();
+
+        if (naruto == null || gojo == null || madara == null) {
+            System.out.println("Cannot start battle: Missing player or Madara.");
             return;
         }
 
         inBattle = true;
 
-        combatSystem = new CombatSystemLogic(
-                characterManager.getNaruto(),
-                characterManager.getGojo(),
-                characterManager.getMadara()
-        );
-
+        combatSystem = new CombatSystemLogic(naruto, gojo, madara);
         combatSystem.startBattle();
+
+        System.out.println("Switched to battle mode.");
     }
+
 
     private void drawBattleScene() {
         SaxionApp.drawImage(battleMapImage, 0, 0, 1000, 1000);
@@ -378,14 +413,25 @@ private void updateCamera(tile.Map currentMap) {
 
         if (inBattle) {
             if (keyboardEvent.isKeyPressed()) {
+                // Handle 'A' key for normal attack
                 if (keyCode == KeyboardEvent.VK_A) {
-                    attackKeyPressed = true;
+                    combatSystem.handlePlayerAction(null, keyboardEvent); // Trigger normal attack
                 }
 
+                // Handle 'E' key for special attack
+                if (keyCode == KeyboardEvent.VK_E) {
+                    combatSystem.handlePlayerAction(null, keyboardEvent); // Trigger special attack
+                }
+
+                // Handle 'Q' key for ultimate attack
+                if (keyCode == KeyboardEvent.VK_Q) {
+                    combatSystem.handlePlayerAction(null, keyboardEvent); // Trigger ultimate attack
+                }
+
+                // Handle player switching
                 if (keyCode == KeyboardEvent.VK_1) {
                     combatSystem.switchPlayer(1);
                 }
-
                 if (keyCode == KeyboardEvent.VK_2) {
                     combatSystem.switchPlayer(2);
                 }
@@ -413,10 +459,11 @@ private void updateCamera(tile.Map currentMap) {
         }
     }
 
+
     @Override
-    public void mouseEvent(MouseEvent mouseEvent) {
+    public void mouseEvent(nl.saxion.app.interaction.MouseEvent mouseEvent) {
         if (inBattle && mouseEvent.isMouseDown() && mouseEvent.isLeftMouseButton()) {
-            attackKeyPressed = true;
+            combatSystem.handlePlayerAction(mouseEvent, null); // Trigger normal attack
         }
 
         if (inMenu) {
@@ -428,5 +475,4 @@ private void updateCamera(tile.Map currentMap) {
             }
         }
     }
-
 }
