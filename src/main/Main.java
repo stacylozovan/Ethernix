@@ -172,11 +172,11 @@ public class Main implements GameLoop {
                 isIntroScene = false;
                 transitioningToNextScene = false;
                 Player naruto = characterManager.getNaruto();
-                naruto.x = 30 * Map.TILE_SIZE;
-                naruto.y = 10 * Map.TILE_SIZE;
+                naruto.x = 54 * Map.TILE_SIZE;
+                naruto.y = 13 * Map.TILE_SIZE;
                 naruto.direction = "down";
                 characterManager.changeScene("multiverse");
-                gameMap = new tile.Map("/object/outworld_map_2.txt");
+                gameMap = new tile.Map("/object/outworld_map.txt");
                 break;
         }
     }

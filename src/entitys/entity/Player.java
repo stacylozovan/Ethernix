@@ -30,7 +30,7 @@ public class Player extends Entity {
 
     public void setDefaultValues() {
         x = 18 * Map.TILE_SIZE;
-        y = 17 * Map.TILE_SIZE;
+        y = 25 * Map.TILE_SIZE;
         exactX = x;
         exactY = y;
         speed = 10;

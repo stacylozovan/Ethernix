@@ -32,14 +32,6 @@ public class CharacterManager {
 
         this.npcs = new ArrayList<>();
         loadNPCs(scene, npcDialogues);
-//        if (scene.equals("intro_scene")){
-//            npcs.add( new NPC("kakashi", 500, 1300, npcDialogues.get("kakashi"), "down", "dynamic"));
-//        } else {
-//            npcs.add(new NPC("mark", 850, 1100, npcDialogues.get("mark"), "down", "static"));
-//            npcs.add(new NPC("lucy", 1250, 950, npcDialogues.get("lucy"), "up", "static"));
-//        }
-//        npcs.add(new NPC("villager", 300, 300, npcDialogues.get("villager"), "down", "static"));
-//        npcs.add(new NPC("merchant", 500, 500, npcDialogues.get("merchant"), "down", "static"));
     }
 
     public void update(boolean[] keys,tile.Map gamemap) {
@@ -51,16 +43,16 @@ public class CharacterManager {
         npcs.clear();
 
         if (scene.equals("intro_scene")) {
-            npcs.add(new NPC("kakashi", 500, 1300, npcDialogues.get("kakashi"), "down", "dynamic"));
+            npcs.add(new NPC("kakashi", (18 * tile.Map.TILE_SIZE), (18 * tile.Map.TILE_SIZE), npcDialogues.get("kakashi"), "down", "dynamic"));
         } else if (scene.equals("multiverse")) {
-            npcs.add(new NPC("eren", 850, 1100, npcDialogues.get("eren"), "down", "static"));
-            npcs.add(new NPC("rengoku", 1200, 860, npcDialogues.get("rengoku"), "down", "static"));
-            npcs.add(new NPC("guts", 1300, 860, npcDialogues.get("guts"), "down", "static"));
-            npcs.add(new NPC("robin", 1400, 860, npcDialogues.get("robin"), "down", "static"));
-            npcs.add(new NPC("roshi", 1500, 860, npcDialogues.get("roshi"), "down", "static"));
-            npcs.add(new NPC("luffy", 1600, 860, npcDialogues.get("luffy"), "down", "static"));
-            npcs.add(new NPC("patrick", (30 * tile.Map.TILE_SIZE), (25 * tile.Map.TILE_SIZE), npcDialogues.get("patrick"), "down", "static"));
-            npcs.add(new NPC("gojo", (37 * tile.Map.TILE_SIZE), (44 * tile.Map.TILE_SIZE), npcDialogues.get("gojo"), "down", "static"));
+            npcs.add(new NPC("eren", (60 * tile.Map.TILE_SIZE), (35 * tile.Map.TILE_SIZE), npcDialogues.get("eren"), "down", "static"));
+            npcs.add(new NPC("rengoku", (66 * tile.Map.TILE_SIZE), (44 * tile.Map.TILE_SIZE), npcDialogues.get("rengoku"), "down", "static"));
+            npcs.add(new NPC("guts", (77 * tile.Map.TILE_SIZE), (41 * tile.Map.TILE_SIZE), npcDialogues.get("guts"), "down", "static"));
+            npcs.add(new NPC("robin", (41 * tile.Map.TILE_SIZE), (34 * tile.Map.TILE_SIZE), npcDialogues.get("robin"), "down", "static"));
+            npcs.add(new NPC("roshi", (38 * tile.Map.TILE_SIZE), (25 * tile.Map.TILE_SIZE), npcDialogues.get("roshi"), "down", "static"));
+            npcs.add(new NPC("luffy", (42 * tile.Map.TILE_SIZE), (20 * tile.Map.TILE_SIZE), npcDialogues.get("luffy"), "down", "static"));
+            npcs.add(new NPC("patrick", (26 * tile.Map.TILE_SIZE), (26 * tile.Map.TILE_SIZE), npcDialogues.get("patrick"), "down", "static"));
+            npcs.add(new NPC("gojo", (33 * tile.Map.TILE_SIZE), (44* tile.Map.TILE_SIZE), npcDialogues.get("gojo"), "down", "static"));
         }
     }
 
