@@ -184,7 +184,7 @@ public class Main implements GameLoop {
                 transitioningToNextScene = false; // Reset the flag to prevent repeated triggers
                 Player naruto = characterManager.getNaruto();
                 naruto.x = 54 * Map.TILE_SIZE;
-                naruto.y = 35 * Map.TILE_SIZE;
+                naruto.y = 13 * Map.TILE_SIZE;
                 naruto.direction = "down";
                 characterManager.changeScene("multiverse");
                 gameMap = new tile.Map("/object/outworld_map.txt");
