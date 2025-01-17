@@ -9,10 +9,10 @@ import tile.Map;
 import java.awt.*;
 
 public class Main implements GameLoop {
-    private tile.Map introMap;
+    private static tile.Map introMap;
     private tile.Map gameMap;
-    private CharacterManager characterManager;
-    private CombatSystemLogic combatSystem;
+    private static CharacterManager characterManager;
+    private static CombatSystemLogic combatSystem;
 
     private boolean[] keys = new boolean[256];
     private MainMenu mainMenu = new MainMenu();
@@ -29,7 +29,7 @@ public class Main implements GameLoop {
     private long transitionStartTime = 0;
 
     private boolean inLabyrinth = false;
-    private boolean inBattle = false;
+    private static boolean inBattle = false;
     private boolean attackKeyPressed = false;
     private String battleMapImage = "src/res/object/battlemap.png";
 
@@ -40,11 +40,17 @@ public class Main implements GameLoop {
     private int originalPlayerY = 0;
     private int blinkCount = 0;
 
+    private static long gameOverStartTime = 0;
+    private static final long GAME_OVER_DISPLAY_DURATION = 6000;
+    private static String gameOverImagePath = "src/res/scene/gameover.png";
 
     private String currentSong = null;
 
     private TriviaSystem triviaSystem;
     private boolean inTrivia = false;
+
+    private static boolean isGameOver = false;
+
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new Main(), 1000, 1000, 40);
@@ -61,6 +67,19 @@ public class Main implements GameLoop {
     @Override
     public void loop() {
         SaxionApp.clear();
+
+        if (isGameOver) {
+//            change the music to menu music
+
+            long currentTime = System.currentTimeMillis();
+            SaxionApp.drawImage("src/res/scene/gameover.png", 0, 0, 1000, 1000);
+
+            if (currentTime - gameOverStartTime >= GAME_OVER_DISPLAY_DURATION) {
+                resetGame();
+                return;
+            }
+            return;
+        }
 
         if (mainMenu.isInSettings()) {
             SaxionApp.drawImage("src/res/menu/rickroll.jpg",0,0,1000,1000);
@@ -85,6 +104,29 @@ public class Main implements GameLoop {
             }
         }
     }
+
+    private void startGameOverScreen() {
+        isGameOver = true;
+        gameOverStartTime = System.currentTimeMillis();
+        System.out.println("Game Over! Showing Game Over screen...");
+    }
+
+    private void resetGame() {
+        System.out.println("Restarting the game...");
+
+        isGameOver = false;
+        gameStarted = false;
+        isIntroScene = true;
+        inBattle = false;
+        inMenu = true;
+
+        characterManager = new CharacterManager(new CollisionChecker(introMap), "intro_scene");
+        characterManager.resetPlayerPosition();
+        combatSystem = null;
+
+        introMap = new tile.Map("/object/intro_map.txt");
+    }
+
 
     private void drawCaveEffect() {
         int playerScreenX = characterManager.getActivePlayer().getX() - cameraX;
@@ -184,15 +226,14 @@ public class Main implements GameLoop {
                 transitioningToNextScene = false; // Reset the flag to prevent repeated triggers
                 Player naruto = characterManager.getNaruto();
                 naruto.x = 54 * Map.TILE_SIZE;
-                naruto.y = 13 * Map.TILE_SIZE;
+                naruto.y = 36 * Map.TILE_SIZE;
                 naruto.direction = "down";
                 characterManager.changeScene("multiverse");
                 gameMap = new tile.Map("/object/outworld_map.txt");
                 break;
         }
     }
-
-
+    
     private void updateOverworld() {
         // Check for battle transition
         if (combatSystem != null && !inBattle) {
@@ -240,6 +281,7 @@ public class Main implements GameLoop {
         if (combatSystem.isBattleOver()) {
             System.out.println("Battle is over!");
             endBattle();
+            startGameOverScreen();
             return;
         }
 
@@ -252,6 +294,7 @@ public class Main implements GameLoop {
             combatSystem.displayActionMenu();
         }
     }
+
 
     private void playBackgroundMusic() {
         String[] introSongs = {
