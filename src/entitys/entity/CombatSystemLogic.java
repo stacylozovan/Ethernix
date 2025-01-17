@@ -133,8 +133,6 @@ public class CombatSystemLogic {
         System.out.println("Madara's Position: " + madara.getX() + ", " + madara.getY());
     }
 
-
-
     public void drawHealthBars() {
         SaxionApp.setFill(Color.RED);
         int madaraHealthWidth = madara.getHealth() * 2;
@@ -156,7 +154,6 @@ public class CombatSystemLogic {
             );
         }
     }
-
 
     public void drawBattleField() {
         if (isTutorialPhase) {
@@ -213,7 +210,6 @@ public class CombatSystemLogic {
             }
         }
     }
-
 
     public void handleCombat() {
         if (inBattleMode && playerTurn) {
@@ -287,7 +283,6 @@ public class CombatSystemLogic {
     }
 
 
-
     private void displayActionMessage(String attacker, String attackType, String target, boolean isPlayer) {
         if (isPlayer) {
             // Player's turn
@@ -301,12 +296,27 @@ public class CombatSystemLogic {
 
 
     public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
+        if (naruto.health <= 25 || gojo.health <= 25) {
+            narutoUltimateReady = true;
+        }
+
         if (playerTurn) {
             // Handle normal attack via left mouse button
             if (mouseEvent != null && mouseEvent.isLeftMouseButton() && mouseEvent.isMouseDown()) {
                 startNarutoAttackAnimation("normal");
-                madara.takeDamage(15); // Normal attack damage
+                madara.takeDamage((int) (Math.random() * (22 - 15 + 1)) + 15); // Normal attack damage , randomize between 15 and 22;
                 System.out.println("Player performed a normal attack. Madara takes 15 damage.");
+
+                // ✅ earn between 15 to 30 special points
+                int gainedPoints = (int) (Math.random() * (30 - 15 + 1)) + 15;
+                narutoSpecialPoints += gainedPoints;
+                System.out.println("Naruto gained " + gainedPoints + " special points. Total: " + narutoSpecialPoints);
+
+                // ✅ check is special attack is ready
+                if (narutoSpecialPoints >= 100) {
+                    narutoSpecialReady = true;
+                    System.out.println("Naruto's Special Attack is now READY!");
+                }
 
                 // Display action message
                 displayActionMessage(activePlayer.getName(), "normal", "Madara", true);
@@ -346,8 +356,6 @@ public class CombatSystemLogic {
             System.out.println("It's not the player's turn.");
         }
     }
-
-
 
     public boolean isPlayerTurn() {
 
@@ -626,7 +634,7 @@ public class CombatSystemLogic {
     }
 
     public void triggerSpecialAttack() {
-        if (narutoSpecialReady && activePlayer == naruto) {
+        if (narutoSpecialReady) {
             startNarutoAttackAnimation("special");
             madara.takeDamage(50); // Special attack deals 50 damage
             narutoSpecialReady = false; // Reset readiness
@@ -638,7 +646,7 @@ public class CombatSystemLogic {
     }
 
     public void triggerUltimateAttack() {
-        if (narutoUltimateReady && activePlayer == naruto) {
+        if (narutoUltimateReady) {
             startNarutoAttackAnimation("ultimate");
             madara.takeDamage(100); // Ultimate attack deals 100 damage
             narutoUltimateReady = false; // Reset readiness

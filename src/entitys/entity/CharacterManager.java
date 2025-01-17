@@ -47,7 +47,7 @@ public class CharacterManager {
         npcs.clear();
 
         if (scene.equals("intro_scene")) {
-            npcs.add(new NPC("kakashi", (18 * tile.Map.TILE_SIZE), (18 * tile.Map.TILE_SIZE), npcDialogues.get("kakashi"), "down", "dynamic"));
+            npcs.add(new NPC("kakashi", (18 * tile.Map.TILE_SIZE), (11 * tile.Map.TILE_SIZE), npcDialogues.get("kakashi"), "down", "dynamic"));
         } else if (scene.equals("multiverse")) {
             npcs.add(new NPC("eren", (60 * tile.Map.TILE_SIZE), (35 * tile.Map.TILE_SIZE), npcDialogues.get("eren"), "down", "static"));
             npcs.add(new NPC("rengoku", (66 * tile.Map.TILE_SIZE), (44 * tile.Map.TILE_SIZE), npcDialogues.get("rengoku"), "down", "static"));
