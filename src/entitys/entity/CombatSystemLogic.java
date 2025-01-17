@@ -83,7 +83,7 @@ public class CombatSystemLogic {
     public void startBattle() {
         if (isBattleCompleted) {
             System.out.println("Battle has already ended. Tutorial phase will not restart.");
-            return;
+            return; // Do not start the tutorial phase if the battle is already over
         }
 
         System.out.println("Starting tutorial phase...");
@@ -156,6 +156,7 @@ public class CombatSystemLogic {
             );
         }
     }
+
 
     public void drawBattleField() {
         if (isTutorialPhase) {
@@ -301,25 +302,25 @@ public class CombatSystemLogic {
 
     public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
         if (playerTurn) {
-
+            // Handle normal attack via left mouse button
             if (mouseEvent != null && mouseEvent.isLeftMouseButton() && mouseEvent.isMouseDown()) {
                 startNarutoAttackAnimation("normal");
                 madara.takeDamage(15); // Normal attack damage
                 System.out.println("Player performed a normal attack. Madara takes 15 damage.");
 
-
+                // Display action message
                 displayActionMessage(activePlayer.getName(), "normal", "Madara", true);
 
                 endPlayerTurn();
                 return;
             }
 
-
+            // Handle special attack via 'E' key
             if (keyboardEvent != null && keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
                 if (narutoSpecialReady || gojoUltimateCooldown) {
                     triggerSpecialAttack(); // Execute special attack
 
-
+                    // Display action message
                     displayActionMessage(activePlayer.getName(), "special", "Madara", true);
                 } else {
                     System.out.println("Special attack is not ready.");
@@ -358,7 +359,6 @@ public class CombatSystemLogic {
             startNarutoAttackAnimation("normal");
             madara.takeDamage(15);
             narutoDamageCounter += 15;
-            updateNarutoSpecialAndUltimateReadiness();
             System.out.println("Normal attack dealt 15 damage to Madara.");
             playerTurn = false;
         } else {
@@ -450,20 +450,6 @@ public class CombatSystemLogic {
 
             // Draw the projectile at the current position
             SaxionApp.drawImage(currentProjectileImage, currentX - 15, currentY - 15, 60, 60);
-        }
-    }
-    private void updateNarutoSpecialAndUltimateReadiness() {
-        // Example condition: Special becomes ready after dealing 100 damage
-        narutoSpecialReady = (narutoDamageCounter >= 50);
-
-        // Example condition: Ultimate becomes ready after dealing 200 damage
-        narutoUltimateReady = (narutoDamageCounter >= 100);
-
-        if (narutoSpecialReady) {
-            System.out.println("Naruto's special attack is ready!");
-        }
-        if (narutoUltimateReady) {
-            System.out.println("Naruto's ultimate attack is ready!");
         }
     }
 
