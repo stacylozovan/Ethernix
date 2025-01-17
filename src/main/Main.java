@@ -263,10 +263,7 @@ public class Main implements GameLoop {
         };
 
         String[] battleSongs = {
-//                "src/res/audio/battle_music_1.wav",
-                "src/res/audio/first_map_audio_1.wav",
-                "src/res/audio/first_map_audio_2.wav",
-                "src/res/audio/first_map_audio_3.wav"
+                "src/res/audio/battle_music.wav",
         };
 
         String[] selectedSongs;

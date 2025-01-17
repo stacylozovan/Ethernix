@@ -53,7 +53,7 @@ public class TriviaSystem {
         questions.add(new TriviaQuestion("What is Goku’s signature attack?",
                 new String[]{"Kamehameha", "Final Flash", "Bankai"}, 1));
         questions.add(new TriviaQuestion("Yoriichi is the creator of which breathing style in Demon Slayer?",
-                new String[]{"Water Breathing", "Peter's Breathing", "Sun Breathing"}, 3));
+                new String[]{"Water Breathing", "Patrick's Breathing", "Sun Breathing"}, 3));
     }
 
     public void startTrivia() {
