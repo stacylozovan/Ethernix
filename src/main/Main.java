@@ -124,7 +124,7 @@ public class Main implements GameLoop {
         characterManager.resetPlayerPosition();
         combatSystem = null;
 
-        introMap = new tile.Map("/object/intro_map.txt");
+        introMap = new tile.Map("/object/intro_map2.txt");
     }
 
 
@@ -226,7 +226,7 @@ public class Main implements GameLoop {
                 transitioningToNextScene = false; // Reset the flag to prevent repeated triggers
                 Player naruto = characterManager.getNaruto();
                 naruto.x = 54 * Map.TILE_SIZE;
-                naruto.y = 36 * Map.TILE_SIZE;
+                naruto.y = 13 * Map.TILE_SIZE;
                 naruto.direction = "down";
                 characterManager.changeScene("multiverse");
                 gameMap = new tile.Map("/object/outworld_map.txt");
