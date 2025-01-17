@@ -52,7 +52,7 @@ public class Main implements GameLoop {
 
     @Override
     public void init() {
-        introMap = new tile.Map("/object/intro_map.txt");
+        introMap = new tile.Map("/object/intro_map2.txt");
         CollisionChecker collisionChecker = new CollisionChecker(introMap);
         characterManager = new CharacterManager(collisionChecker, "intro_scene");
         triviaSystem = new TriviaSystem();
