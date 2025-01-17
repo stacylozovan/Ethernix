@@ -111,8 +111,6 @@ public class CombatSystemLogic {
         System.out.println("Madara's Position: " + madara.getX() + ", " + madara.getY());
     }
 
-
-
     public void drawHealthBars() {
         SaxionApp.setFill(Color.RED);
         int madaraHealthWidth = madara.getHealth() * 2;
@@ -134,7 +132,6 @@ public class CombatSystemLogic {
             );
         }
     }
-
 
     public void drawBattleField() {
         if (isTutorialPhase) {
@@ -188,7 +185,6 @@ public class CombatSystemLogic {
             }
         }
     }
-
 
     public void handleCombat() {
         if (inBattleMode && playerTurn) {
@@ -262,7 +258,6 @@ public class CombatSystemLogic {
     }
 
 
-
     private void displayActionMessage(String attacker, String attackType, String target, boolean isPlayer) {
         if (isPlayer) {
             // Player's turn
@@ -282,6 +277,17 @@ public class CombatSystemLogic {
                 startNarutoAttackAnimation("normal");
                 madara.takeDamage(15); // Normal attack damage
                 System.out.println("Player performed a normal attack. Madara takes 15 damage.");
+
+                // ✅ earn between 15 to 30 special points
+                int gainedPoints = (int) (Math.random() * (30 - 15 + 1)) + 15;
+                narutoSpecialPoints += gainedPoints;
+                System.out.println("Naruto gained " + gainedPoints + " special points. Total: " + narutoSpecialPoints);
+
+                // ✅ check is special attack is ready
+                if (narutoSpecialPoints >= 100) {
+                    narutoSpecialReady = true;
+                    System.out.println("Naruto's Special Attack is now READY!");
+                }
 
                 // Display action message
                 displayActionMessage(activePlayer.getName(), "normal", "Madara", true);
@@ -321,8 +327,6 @@ public class CombatSystemLogic {
             System.out.println("It's not the player's turn.");
         }
     }
-
-
 
     public boolean isPlayerTurn() {
 
@@ -519,8 +523,6 @@ public class CombatSystemLogic {
             playerTurn = true; // End Madara's turn
         }
     }
-
-
 
     private int calculateMadaraDamage(String attackType) {
         switch (attackType) {
