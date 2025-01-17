@@ -271,11 +271,14 @@ public class CombatSystemLogic {
 
 
     public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
+        if (activePlayer.health <= 20){
+            narutoUltimateReady = true;
+        }
         if (playerTurn) {
             // Handle normal attack via left mouse button
             if (mouseEvent != null && mouseEvent.isLeftMouseButton() && mouseEvent.isMouseDown()) {
                 startNarutoAttackAnimation("normal");
-                madara.takeDamage(15); // Normal attack damage
+                madara.takeDamage((int) (Math.random() * (22 - 15 + 1)) + 15); // Normal attack damage , randomize between 15 and 22;
                 System.out.println("Player performed a normal attack. Madara takes 15 damage.");
 
                 // ✅ earn between 15 to 30 special points
@@ -605,7 +608,7 @@ public class CombatSystemLogic {
     }
 
     public void triggerSpecialAttack() {
-        if (narutoSpecialReady && activePlayer == naruto) {
+        if (narutoSpecialReady) {
             startNarutoAttackAnimation("special");
             madara.takeDamage(50);
             narutoSpecialPoints = 0;
@@ -615,7 +618,7 @@ public class CombatSystemLogic {
     }
 
     public void triggerUltimateAttack() {
-        if (narutoUltimateReady && activePlayer == naruto) {
+        if (narutoUltimateReady) {
             startNarutoAttackAnimation("ultimate");
             madara.takeDamage(100);
             narutoUltimateReady = false;
