@@ -271,9 +271,10 @@ public class CombatSystemLogic {
 
 
     public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
-        if (activePlayer.health <= 20){
+        if (naruto.health <= 25 || gojo.health <= 25) {
             narutoUltimateReady = true;
         }
+
         if (playerTurn) {
             // Handle normal attack via left mouse button
             if (mouseEvent != null && mouseEvent.isLeftMouseButton() && mouseEvent.isMouseDown()) {
