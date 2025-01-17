@@ -102,7 +102,7 @@ public class CombatSystemLogic {
                     System.out.println("Transitioned to battle mode!");
                 }
             }
-        }, 0, 3000); // Change tutorial images every 3 seconds
+        }, 0, 4000); // Change tutorial images every 3 seconds
     }
 
 
