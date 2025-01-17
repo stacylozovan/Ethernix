@@ -50,7 +50,12 @@ public class CombatSystemLogic {
     private final long messageDuration = 2000; // Display duration in milliseconds
     private boolean isTutorialPhase = true; // Starts in the tutorial phase
     private final String tutorialImage = "src/res/battle/tutorial.png"; // Path to the tutorial image
-    private boolean isBattleCompleted = false; // Tracks whether the battle has ended
+    private final String tutorialImage1 = "src/res/battle/tutorial1.png";
+    private final String tutorialImage2 = "src/res/battle/tutorial2.png";
+    private final String tutorialImage3 = "src/res/battle/tutorial3.png";
+    private final String tutorialImage4 = "src/res/battle/tutorial4.png";
+    private final String tutorialImage5 = "src/res/battle/tutorial5.png";
+    private boolean isBattleCompleted = false;
 
 
 
@@ -64,26 +69,43 @@ public class CombatSystemLogic {
 
         startMadaraAttackCycle();
     }
+    private final String[] tutorialImages = {
+            "src/res/battle/tutorial1.png",
+            "src/res/battle/tutorial2.png",
+            "src/res/battle/tutorial3.png",
+            "src/res/battle/tutorial4.png",
+            "src/res/battle/tutorial5.png",
+            "src/res/battle/tutorial.png" // Final tutorial image
+    };
+    private int currentTutorialStep = 0; // Track the current step globally
+
+
     public void startBattle() {
         if (isBattleCompleted) {
             System.out.println("Battle has already ended. Tutorial phase will not restart.");
-            return; // Do not start the tutorial phase if the battle is already over
+            return;
         }
 
         System.out.println("Starting tutorial phase...");
 
-        // Schedule transition to battle mode after 7 seconds
-        new Timer().schedule(new TimerTask() {
+        Timer tutorialTimer = new Timer();
+        tutorialTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (!isBattleCompleted) { // Ensure the battle hasn't been completed during the delay
+                if (currentTutorialStep < tutorialImages.length - 1) {
+                    currentTutorialStep++; // Move to the next tutorial step
+                    System.out.println("Moved to tutorial step: " + currentTutorialStep);
+                } else {
                     isTutorialPhase = false; // End tutorial phase
                     inBattleMode = true; // Begin battle mode
+                    tutorialTimer.cancel(); // Stop the timer
                     System.out.println("Transitioned to battle mode!");
                 }
             }
-        }, 7000);
+        }, 0, 3000); // Change tutorial images every 3 seconds
     }
+
+
 
     public void endBattle() {
         if (!isBattleCompleted) {
@@ -135,27 +157,29 @@ public class CombatSystemLogic {
         }
     }
 
-
     public void drawBattleField() {
         if (isTutorialPhase) {
-            // Draw the tutorial image during the tutorial phase
-            SaxionApp.drawImage(tutorialImage, 0, 0, 1000, 1000);
-            System.out.println("Displaying tutorial image...");
-            return; // Skip drawing the battlefield
+            // Draw the current tutorial image
+            if (currentTutorialStep < tutorialImages.length) {
+                String currentImage = tutorialImages[currentTutorialStep];
+                SaxionApp.drawImage(currentImage, 0, 0, 1000, 1000);
+                System.out.println("Displaying tutorial image: " + currentImage);
+            }
+            return;
         }
 
         if (inBattleMode) {
-            // Draw the battlefield during battle mode
+
             SaxionApp.drawImage(charactersChoiceImage, 150, 730, 300, 250);
 
-            // Draw the active player's battle sprite
+
             if (activePlayer == naruto) {
                 SaxionApp.drawImage(narutoBattleSprite, 150, 470, 300, 300);
             } else if (activePlayer == gojo) {
                 SaxionApp.drawImage(gojoBattleSprite, 150, 470, 300, 300);
             }
 
-            // Draw Madara's battle sprite
+
             SaxionApp.drawImage(madaraBattleSprite, 350, 230, 420, 420);
         } else {
             // Draw players and Madara in non-battle mode
@@ -277,25 +301,25 @@ public class CombatSystemLogic {
 
     public void handlePlayerAction(nl.saxion.app.interaction.MouseEvent mouseEvent, KeyboardEvent keyboardEvent) {
         if (playerTurn) {
-            // Handle normal attack via left mouse button
+
             if (mouseEvent != null && mouseEvent.isLeftMouseButton() && mouseEvent.isMouseDown()) {
                 startNarutoAttackAnimation("normal");
                 madara.takeDamage(15); // Normal attack damage
                 System.out.println("Player performed a normal attack. Madara takes 15 damage.");
 
-                // Display action message
+
                 displayActionMessage(activePlayer.getName(), "normal", "Madara", true);
 
                 endPlayerTurn();
                 return;
             }
 
-            // Handle special attack via 'E' key
+
             if (keyboardEvent != null && keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
                 if (narutoSpecialReady || gojoUltimateCooldown) {
                     triggerSpecialAttack(); // Execute special attack
 
-                    // Display action message
+
                     displayActionMessage(activePlayer.getName(), "special", "Madara", true);
                 } else {
                     System.out.println("Special attack is not ready.");
@@ -332,23 +356,26 @@ public class CombatSystemLogic {
     private void handleNormalAttack() {
         if (playerTurn) {
             startNarutoAttackAnimation("normal");
-            madara.takeDamage(15); // Normal attack deals fixed damage
+            madara.takeDamage(15);
+            narutoDamageCounter += 15;
+            updateNarutoSpecialAndUltimateReadiness();
             System.out.println("Normal attack dealt 15 damage to Madara.");
-            playerTurn = false; // End player's turn
+            playerTurn = false;
         } else {
             System.out.println("It's not the player's turn!");
         }
     }
+
     private void endPlayerTurn() {
         playerTurn = false;
 
-        // Introduce a delay before Madara's turn
+
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                handleCombat(); // Trigger Madara's turn
+                handleCombat();
             }
-        }, 1000); // Delay of 1 second (adjust as needed)
+        }, 1000);
     }
 
     private void applyStunEffect(Madara madara, int duration) {
@@ -425,6 +452,20 @@ public class CombatSystemLogic {
             SaxionApp.drawImage(currentProjectileImage, currentX - 15, currentY - 15, 60, 60);
         }
     }
+    private void updateNarutoSpecialAndUltimateReadiness() {
+        // Example condition: Special becomes ready after dealing 100 damage
+        narutoSpecialReady = (narutoDamageCounter >= 50);
+
+        // Example condition: Ultimate becomes ready after dealing 200 damage
+        narutoUltimateReady = (narutoDamageCounter >= 100);
+
+        if (narutoSpecialReady) {
+            System.out.println("Naruto's special attack is ready!");
+        }
+        if (narutoUltimateReady) {
+            System.out.println("Naruto's ultimate attack is ready!");
+        }
+    }
 
     private void startMadaraAttackCycle() {
         attackTimer = new Timer();
@@ -468,8 +509,6 @@ public class CombatSystemLogic {
                 currentProjectileImage = madaraUltimateBall;
                 break;
         }
-
-        // Schedule the attack animation
         Timer animationTimer = new Timer();
         animationTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -516,22 +555,20 @@ public class CombatSystemLogic {
                 }
             }
 
-            playerTurn = true; // End Madara's turn
+            playerTurn = true;
         }
     }
-
-
 
     private int calculateMadaraDamage(String attackType) {
         switch (attackType) {
             case "normal":
-                return 20; // Damage for normal attack
+                return 20;
             case "special":
-                return 35; // Damage for special attack
+                return 35;
             case "ultimate":
-                return 70; // Damage for ultimate attack
+                return 70;
             default:
-                return 0;  // Fallback
+                return 0;
         }
     }
 
@@ -567,7 +604,7 @@ public class CombatSystemLogic {
     }
 
     private void checkMadaraHealthForUltimate() {
-        int madaraMaxHealth = 300;
+        int madaraMaxHealth = 200;
 
 
         if (!ultimateUsedAt50 && madara.getHealth() <= madaraMaxHealth * 0.4) {
@@ -605,19 +642,24 @@ public class CombatSystemLogic {
     public void triggerSpecialAttack() {
         if (narutoSpecialReady && activePlayer == naruto) {
             startNarutoAttackAnimation("special");
-            madara.takeDamage(50);
-            narutoSpecialPoints = 0;
-            narutoSpecialReady = false;
+            madara.takeDamage(50); // Special attack deals 50 damage
+            narutoSpecialReady = false; // Reset readiness
+            narutoDamageCounter = 0; // Reset damage counter for special
             System.out.println("Naruto used his special attack! Madara takes 50 damage.");
+        } else {
+            System.out.println("Special attack is not ready.");
         }
     }
 
     public void triggerUltimateAttack() {
         if (narutoUltimateReady && activePlayer == naruto) {
             startNarutoAttackAnimation("ultimate");
-            madara.takeDamage(100);
-            narutoUltimateReady = false;
+            madara.takeDamage(100); // Ultimate attack deals 100 damage
+            narutoUltimateReady = false; // Reset readiness
+            narutoDamageCounter = 0; // Reset damage counter for ultimate
             System.out.println("Naruto uses his ultimate attack! Madara takes 100 damage.");
+        } else {
+            System.out.println("Ultimate attack is not ready.");
         }
     }
 
@@ -633,7 +675,6 @@ public class CombatSystemLogic {
             activePlayer = null; // This indicates no active players remaining.
         }
     }
-
 
     public boolean isBattleOver() {
         boolean allPlayersDefeated = naruto.getHealth() <= 0 && (gojo == null || gojo.getHealth() <= 0);
