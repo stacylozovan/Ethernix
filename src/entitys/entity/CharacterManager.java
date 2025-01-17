@@ -35,7 +35,6 @@ public class CharacterManager {
     }
 
     public void resetPlayerPosition() {
-        this.activePlayer = this.naruto;
         this.naruto.setDefaultValues();
     }
 

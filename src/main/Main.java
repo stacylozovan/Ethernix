@@ -75,10 +75,10 @@ public class Main implements GameLoop {
             SaxionApp.drawImage("src/res/scene/gameover.png", 0, 0, 1000, 1000);
 
             if (currentTime - gameOverStartTime >= GAME_OVER_DISPLAY_DURATION) {
-                resetGame(); // Reinicia o jogo após 6 segundos
+                resetGame();
                 return;
             }
-            return; // Não continua renderizando o jogo enquanto Game Over está ativo
+            return;
         }
 
         if (mainMenu.isInSettings()) {
@@ -120,16 +120,11 @@ public class Main implements GameLoop {
         inBattle = false;
         inMenu = true;
 
-        // Reseta personagens e batalha
         characterManager = new CharacterManager(new CollisionChecker(introMap), "intro_scene");
         characterManager.resetPlayerPosition();
         combatSystem = null;
 
-        // Reinicia o mapa
         introMap = new tile.Map("/object/intro_map.txt");
-
-        // Reseta a posição inicial do jogador
-        characterManager.getNaruto().setPosition(100, 100); // Ajuste conforme necessário
     }
 
 
